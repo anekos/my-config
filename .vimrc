@@ -107,12 +107,14 @@ NeoBundle 'vim-jp/vimdoc-ja'
 
 " Other plugins {{{
 
-set runtimepath+=~/.vim-plugins/qfixapp
-set runtimepath+=~/project/vim-plugins/runes-vim
-set runtimepath+=~/project/vim-plugins/unite-zsh-history
-set runtimepath+=~/project/vim-plugins/char-counter-vim
-set runtimepath+=~/project/vim-plugins/unite-haskellimport
-" set runtimepath+=~/.vim-plugins/im_control
+if has('vim_starting')
+  set runtimepath+=~/.vim-plugins/qfixapp
+  set runtimepath+=~/project/vim-plugins/runes-vim
+  set runtimepath+=~/project/vim-plugins/unite-zsh-history
+  set runtimepath+=~/project/vim-plugins/char-counter-vim
+  set runtimepath+=~/project/vim-plugins/unite-haskellimport
+  " set runtimepath+=~/.vim-plugins/im_control
+endif
 
 
 " }}}
@@ -125,6 +127,7 @@ set runtimepath+=~/project/vim-plugins/unite-haskellimport
 " Init {{{
 
 filetype plugin indent on
+filetype off
 syntax on
 language messages C
 
@@ -137,9 +140,6 @@ set langmenu=none
 
 " マウスのモード
 behave mswin
-
-" 非互換モード
-set nocompatible
 
 " 改行コード
 set fileformat=unix
@@ -254,13 +254,10 @@ set wildchar=<Tab>
 set wildignore=*.o,*.obj,*.la,*.a,*.exe,*.com,*.so,*.beam,*.hi,*.~*
 
 " 描画を抑える
-set lazyredraw
+" set lazyredraw
 
 " 折り返し検索
 set wrapscan
-
-" 数字フォーマット for <C-a> <C-x>
-set nrformats=hex
 
 " vim7
 if v:version >= 700
@@ -305,16 +302,16 @@ cnoremap <C-b> <Left>
 cnoremap <C-d> <Del>
 
 " 検索のハイライト
-nnoremap <Esc><Esc> :<C-u>set nohlsearch<CR>
+nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 " nnoremap / :<C-u>set hlsearch<CR>/
-nnoremap / :<C-u>set hlsearch<CR>:M/
-nnoremap ? :<C-u>set hlsearch<CR>?
+nnoremap / :<C-u>M/
+nnoremap ? :<C-u>?
 " nnoremap * :<C-u>set hlsearch<CR>*zz
-nnoremap * :<C-u>set hls<CR>:execute 'M/\<' . expand('<cword>') . '\>' <CR>zz
-nnoremap # :<C-u>set hlsearch<CR>#zz
+nnoremap * :<C-u>execute 'M/\<' . expand('<cword>') . '\>' <CR>zz
+nnoremap # #zz
 " nnoremap g* :<C-u>set hlsearch<CR>g*zz
-nnoremap g* :<C-u>set hls<CR>:execute 'M/' . expand('<cword>') <CR>zz
-nnoremap g# :<C-u>set hlsearch<CR>g#zz
+nnoremap g* :<C-u>execute 'M/' . expand('<cword>') <CR>zz
+nnoremap g# g#zz
 
 " for US KBD
 nnoremap ; :
@@ -644,7 +641,7 @@ function! s:LoadTemplate()
   endif
   execute '0read ' . filename
   normal G
-  set fileencoding=utf8
+  setlocal fileencoding=utf8
 endfunction
 
 command! LoadTemplate :call s:LoadTemplate()
@@ -656,7 +653,7 @@ command! LoadTemplate :call s:LoadTemplate()
 
 function! s:HighlightTrailingSpaces ()
   highlight WhitespaceEOL ctermbg=red guibg=red
-  match WhitespaceEOL /\s\+$/
+  match WhitespaceEOL /\[\s　\]\+$/
 endfunction
 
 MeowtoCmd BufNewFile,WinEnter * call s:HighlightTrailingSpaces()
@@ -701,7 +698,7 @@ command! Src e ~/.bashrc | split ~/.zshrc
 command! -nargs=1 Reenco e ++enc=<args>
 
 " 日付挿入
-command! Date normal o<ESC>!!date<CR>==
+command! Date normal! o<ESC>!!date<CR>==
 command! Idate normal! :call InsertDate()<CR>
 
 " Vimp のテンプレ挿入
@@ -824,7 +821,6 @@ set fileencoding=utf-8
 
 " helptag ~/.vim/doc
 function! s:MakeHelpTags ()
-  let pathlist =  split(&runtimepath, ",")
   for path in split(&runtimepath, ",")
     echo path
     let path .= "/doc"
@@ -944,10 +940,10 @@ command! -nargs=0 ReplaceVersions call ReplaceVersions()
 " let - プラグイン設定 {{{
 
 " OutLine Mode
-let Tlist_Ctags_Cmd = 'ctags'
+let g:Tlist_Ctags_Cmd = 'ctags'
 
 " Ruby Syntax
-let ruby_minlines = 100
+let g:ruby_minlines = 100
 
 " ChangeLog
 let g:changelog_dateformat="%Y-%m-%d (%a)"
@@ -1027,8 +1023,8 @@ endfunction
 command! -range -nargs=? VimShellJoinedSendString call s:vs_send_string(<line1>, <line2>)
 "command! VimShellIntRestart :call vimshell#int_mappings#restart_command()
 
-vnoremap <silent> ,S :VimShellJoinedSendString<CR>
-vnoremap <silent> ,s :VimShellSendString<CR>
+vnoremap <silent> <Leader>S :VimShellJoinedSendString<CR>
+vnoremap <silent> <Leader>s :VimShellSendString<CR>
 
 
 "}}}
@@ -1304,7 +1300,7 @@ call Pl#Theme#InsertSegment('charcode', 'after', 'filetype')
 
 " color {{{
 
-colors anekos
+colorscheme anekos
 
 " }}}
 
