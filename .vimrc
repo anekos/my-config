@@ -727,6 +727,8 @@ command! SSF syntax sync fromstart
 " LiName
 command! LiNameSort sort /^\d\+\t/
 
+" }}}
+
 " スクラッチバッファ {{{
 
 function! s:Scratch ()
