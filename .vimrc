@@ -653,7 +653,7 @@ command! LoadTemplate :call s:LoadTemplate()
 
 function! s:HighlightTrailingSpaces ()
   highlight WhitespaceEOL ctermbg=red guibg=red
-  match WhitespaceEOL /[ 　\t]\+$/
+  match WhitespaceEOL /[[:space:]　\t]\+$/
 endfunction
 
 MeowtoCmd BufNewFile,WinEnter * call s:HighlightTrailingSpaces()
