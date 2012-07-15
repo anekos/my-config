@@ -1028,7 +1028,7 @@ command! -range -nargs=? VimShellJoinedSendString call s:vs_send_string(<line1>,
 vnoremap <silent> <Leader>S :VimShellJoinedSendString<CR>
 vnoremap <silent> <Leader>s :VimShellSendString<CR>
 
-command! Ghci :VimShllInteractive ghci
+command! Ghci :VimShellInteractive ghci
 
 
 "}}}
