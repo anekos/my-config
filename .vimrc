@@ -303,14 +303,11 @@ cnoremap <C-d> <Del>
 
 " 検索のハイライト
 nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
-" nnoremap / :<C-u>set hlsearch<CR>/
 nnoremap / :<C-u>M/
 nnoremap ? :<C-u>?
-" nnoremap * :<C-u>set hlsearch<CR>*zz
-nnoremap * :<C-u>execute 'M/\<' . expand('<cword>') . '\>' <CR>zz
+nnoremap * :<C-u>set hls<Bar>execute 'M/\<' . expand('<cword>') . '\>' <CR>zz
 nnoremap # #zz
-" nnoremap g* :<C-u>set hlsearch<CR>g*zz
-nnoremap g* :<C-u>execute 'M/' . expand('<cword>') <CR>zz
+nnoremap g* :<C-u>set hls<Bar>execute 'M/' . expand('<cword>') <CR>zz
 nnoremap g# g#zz
 
 " for US KBD
