@@ -869,19 +869,6 @@ endfunction
 
 " }}}
 
-" FoldRange {{{
-
-function! s:FoldRange (begin, end)
-  " TODO use commentstring
-  call setline(a:begin, getline(a:begin) . " // {{{")
-  call setline(a:end, getline(a:end) . " // }}}")
-endfunction
-command! -range FoldRange call s:FoldRange(<line1>, <line2>)
-vnoremap <Leader>f :FoldRange<CR>
-nnoremap <Leader>f :FoldRange<CR>
-
-" }}}
-
 " Execlip {{{
 
 function! s:Execlip()
