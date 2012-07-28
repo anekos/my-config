@@ -330,6 +330,10 @@ inoremap <C-r>* <C-o>:set paste<CR><C-r>*<C-o>:set nopaste<CR>
 inoremap kk <Esc>
 inoremap jj <Esc>
 
+" 誤爆防止
+nnoremap qq q
+nnoremap q <ESC>
+
 " }}}
 
 " map {{{
@@ -408,7 +412,7 @@ noremap <Leader>x :<C-u>bdelete<CR>
 nnoremap <Leader>r :<C-u>Ref<Space>
 
 " 改行
-noremap <Leader><CR> o<ESC>
+nnoremap <CR> o<ESC>
 
 " tab
 nnoremap <Leader>tn :<C-u>tabnew<CR>
@@ -525,7 +529,7 @@ endif
 " CUI - カラースキーム {{{
 
 if !has('gui')
-  command! ReloadColors set t_Co=256 t_SI=[3\ q t_EI=[1\ q | colorscheme molokai | colorscheme molokai-fix
+  command! -bar ReloadColors set t_Co=256 t_SI=[3\ q t_EI=[1\ q | colorscheme molokai | colorscheme molokai-fix
   MeowtoCmd VimEnter * ReloadColors
 endif
 
@@ -617,7 +621,7 @@ if 0
     endif
   endfunc
 
-  command! InitStatusLine set statusline=%<[%n]%m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).':'.&ff.']'}%y\ %f%=[%{GetB()}]\ %l,%c%V,%{CharCount()}%8P
+  command! -bar InitStatusLine set statusline=%<[%n]%m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).':'.&ff.']'}%y\ %f%=[%{GetB()}]\ %l,%c%V,%{CharCount()}%8P
   MeowtoCmd VimEnter * InitStatusLine
 endif
 
@@ -641,7 +645,7 @@ function! s:LoadTemplate()
   setlocal fileencoding=utf8
 endfunction
 
-command! LoadTemplate :call s:LoadTemplate()
+command! -bar LoadTemplate :call s:LoadTemplate()
 " MeowtoCmd BufNewFile,BufRead * :call s:LoadTemplate()
 
 " }}}
@@ -687,25 +691,25 @@ cmap <C-x> <Plug>(cmdline-toggle-bang)
 " 一行コマンド {{{
 
 " vimrc編集
-command! Rc e ~/.vimrc
-command! Grc e ~/.gvimrc
-command! Src e ~/.bashrc | split ~/.zshrc
+command! -bar Rc e ~/.vimrc
+command! -bar Grc e ~/.gvimrc
+command! -bar Src e ~/.bashrc | split ~/.zshrc
 
 " 再エンコード
 command! -nargs=1 Reenco e ++enc=<args>
 
 " 日付挿入
-command! Date normal! o<ESC>!!date<CR>==
-command! Idate normal! :call InsertDate()<CR>
+command! -bar Date normal! o<ESC>!!date<CR>==
+command! -bar Idate normal! :call InsertDate()<CR>
 
 " Vimp のテンプレ挿入
-command! -nargs=0 VimpTemplate r ~/.vimperator/default/script/plugin-template.js
+command! -bar -nargs=0 VimpTemplate r ~/.vimperator/default/script/plugin-template.js
 
 " 読みモード
-command! Reader setlocal scrolloff=666 | :highlight Cursor guifg=NONE guibg=NONE | FontVL
+command! -bar Reader setlocal scrolloff=666 | :highlight Cursor guifg=NONE guibg=NONE | FontVL
 
 " 行末の空白をのぞく
-command! RemoveTrailingSpaces %S/[\s　]+$//c
+command! -bar RemoveTrailingSpaces %S/[\s　]+$//c
 
 " エンコーディング指定オープン
 command! -bang -complete=file -nargs=? Utf8 edit<bang> ++enc=utf-8 <args>
@@ -719,10 +723,10 @@ command! -bang -complete=file -nargs=? WEuc write<bang> ++enc=eucjp <args>
 command! -nargs=1 -complete=file Rename f <args>|call delete(expand('#'))
 
 "シンタックスの再同期
-command! SSF syntax sync fromstart
+command! -bar SSF syntax sync fromstart
 
 " LiName
-command! LiNameSort sort /^\d\+\t/
+command! -bar LiNameSort sort /^\d\+\t/
 
 " }}}
 
@@ -732,7 +736,7 @@ function! s:Scratch ()
   new
   setlocal buftype=nowrite
 endfunction
-command! Scratch :call s:Scratch()
+command! -bar Scratch :call s:Scratch()
 
 " }}}
 
@@ -835,7 +839,7 @@ function! s:MakeHelpTags ()
   echo "Done."
 endfunction
 
-command! MakeHelpTags :call s:MakeHelpTags()
+command! -bar MakeHelpTags :call s:MakeHelpTags()
 
 " }}}
 
@@ -858,7 +862,7 @@ command! -bar -bang -nargs=? -complete=file GScouter
 
 " カレントファイルのパスをクリプボぅ! {{{
 
-command! CopyCurrentFilepath :call s:CopyCurrentFilepath()
+command! -bar CopyCurrentFilepath :call s:CopyCurrentFilepath()
 function! s:CopyCurrentFilepath ()
   if has('win32')
     let @*=substitute(expand('%:p'), '\\/', '\\', 'g')
@@ -876,7 +880,7 @@ function! s:Execlip()
     execute l:cmd
   endfor
 endfunction
-command! Execlip call s:Execlip()
+command! -bar Execlip call s:Execlip()
 
 " }}}
 
@@ -914,7 +918,7 @@ function! ReplaceVersions ()
   let new = input('new version number: ', current)
   execute '%s/' . current . '/' . new . '/gc'
 endfunction
-command! -nargs=0 ReplaceVersions call ReplaceVersions()
+command! -bar -nargs=0 ReplaceVersions call ReplaceVersions()
 
 " }}}
 
@@ -995,7 +999,7 @@ let g:vimshell_split_command = 'split'
 let g:vimshell_interactive_cygwin_path = "e:/cygwin/bin/"
 
 " lein repl を起動
-command! Lein execute ":VimShellInteractive lein repl"
+command! -bar Lein execute ":VimShellInteractive lein repl"
 
 " VimShell に選択文字列を送信
 function! s:vs_send_string (line1, line2)
@@ -1006,13 +1010,13 @@ function! s:vs_send_string (line1, line2)
   execute 'VimShellSendString ' . l:string
 endfunction
 
-command! -range -nargs=? VimShellJoinedSendString call s:vs_send_string(<line1>, <line2>)
+command! -bar -range -nargs=? VimShellJoinedSendString call s:vs_send_string(<line1>, <line2>)
 "command! VimShellIntRestart :call vimshell#int_mappings#restart_command()
 
 vnoremap <silent> <Leader>S :VimShellJoinedSendString<CR>
 vnoremap <silent> <Leader>s :VimShellSendString<CR>
 
-command! Ghci :VimShellInteractive ghci
+command! -bar Ghci :VimShellInteractive ghci
 
 
 "}}}
