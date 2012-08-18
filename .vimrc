@@ -77,10 +77,12 @@ NeoBundle 'Shougo/vimshell'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'gregsexton/VimCalc'
 NeoBundle 'h1mesuke/vim-alignta'
+NeoBundle 'hrsh7th/vim-unite-vcs'
 NeoBundle 'http://conque.googlecode.com/svn/trunk/', {'directory' : 'conque'}
 NeoBundle 'kana/vim-altercmd'
 NeoBundle 'mattn/benchvimrc-vim'
 NeoBundle 'mattn/mkdpreview-vim'
+NeoBundle 'mattn/togetter-vim'
 NeoBundle 'mattn/vimplenote-vim'
 NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'thinca/vim-quickrun'
@@ -128,7 +130,7 @@ endif
 
 filetype plugin indent on
 filetype off
-syntax on
+syntax enable
 language messages C
 
 " }}}
@@ -331,8 +333,8 @@ inoremap kk <Esc>
 inoremap jj <Esc>
 
 " 誤爆防止
-nnoremap qq q
-nnoremap q <ESC>
+" nnoremap qq q
+" nnoremap q <ESC>
 
 " }}}
 
@@ -350,8 +352,10 @@ noremap <Up> :<C-u>noautocmd bprev<CR>
 noremap <Down> :<C-u>noautocmd bnext<CR>
 
 " 検索時に結果が中央に来るようにする
-noremap n nzz
-noremap N Nzz
+noremap * *zzzv
+noremap # #zzzv
+noremap n nzzzv
+noremap N Nzzzv
 
 " 挿入モードでの移動
 inoremap <C-a> <Home>
@@ -434,6 +438,7 @@ nnoremap <Leader>ug :<C-u>Unite grep<CR>
 nnoremap <Leader>ur :<C-u>Unite register<CR>
 nnoremap <Leader>ut :<C-u>Unite tag<CR>
 nnoremap <Leader>uT :<C-u>Unite tab:no-current<CR>
+nnoremap <Leader>uv :<C-u>Unite vcs/status<CR>
 nnoremap <Leader>uw :<C-u>Unite window:no-current<CR>
 
 " QuickRun
@@ -704,9 +709,6 @@ command! -bar Idate normal! :call InsertDate()<CR>
 
 " Vimp のテンプレ挿入
 command! -bar -nargs=0 VimpTemplate r ~/.vimperator/default/script/plugin-template.js
-
-" 読みモード
-command! -bar Reader setlocal scrolloff=666 | :highlight Cursor guifg=NONE guibg=NONE | FontVL
 
 " 行末の空白をのぞく
 command! -bar RemoveTrailingSpaces %S/[\s　]+$//c
@@ -1104,7 +1106,7 @@ let g:user_zen_settings = {
 
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
-let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_at_startup = 0
 let g:neocomplcache_enable_smart_case = 1
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
@@ -1165,7 +1167,7 @@ let g:unite_enable_start_insert = 1
 let g:unite_enable_smart_case = 1
 let g:unite_source_file_ignore_pattern = ''
 let g:unite_source_file_ignore_pattern .=
-      \ '_darcs\|\.git\|\%(' . substitute('png jpeg jpg gif jar dcu manifest dll exe exp o so bak sw res dep idb pdb user ilk ncb class', ' ', '\\|', 'g') . '\)$'
+      \ '_build\|_darcs\|\.git\|\%(' . substitute('png jpeg jpg gif jar dcu manifest dll exe exp o so bak sw res dep idb pdb user ilk ncb class', ' ', '\\|', 'g') . '\)$'
 let g:unite_source_file_rec_ignore_pattern = g:unite_source_file_ignore_pattern
 let g:unite_source_directory_mru_ignore_pattern = ''
 
