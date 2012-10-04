@@ -52,6 +52,7 @@ NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'mattn/unite-mcdonalds-vim'
 NeoBundle 'mfumi/unite-mpc'
 NeoBundle 'pekepeke/unite-fileline'
+NeoBundle 't9md/vim-unite-ack'
 NeoBundle 'tsukkee/unite-help'
 NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'ujihisa/unite-colorscheme'
@@ -69,22 +70,23 @@ NeoBundle 'tyru/banban.vim'
 NeoBundle 'teramako/jscomplete-vim'
 
 " Misc
-NeoBundle 'Lokaltog/vim-powerline'
-NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'Shougo/vimfiler'
-NeoBundle 'Shougo/vimproc'
-NeoBundle 'Shougo/vimshell'
 NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'derekwyatt/vim-scala'
 NeoBundle 'gregsexton/VimCalc'
 NeoBundle 'h1mesuke/vim-alignta'
 NeoBundle 'hrsh7th/vim-unite-vcs'
 NeoBundle 'http://conque.googlecode.com/svn/trunk/', {'directory' : 'conque'}
 NeoBundle 'kana/vim-altercmd'
+NeoBundle 'Lokaltog/vim-powerline'
 NeoBundle 'mattn/benchvimrc-vim'
 NeoBundle 'mattn/mkdpreview-vim'
 NeoBundle 'mattn/togetter-vim'
 NeoBundle 'mattn/vimplenote-vim'
 NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/vimfiler'
+NeoBundle 'Shougo/vimproc'
+NeoBundle 'Shougo/vimshell'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'toritori0318/vim-redmine'
 NeoBundle 'tpope/vim-abolish'
@@ -398,6 +400,10 @@ imap <C-z>s <Plug>(runes_start_sweden)
 " Toggle NeoCon
 nnoremap <Leader>n :<C-u>NeoComplCacheToggle<CR>
 
+" Emacs ライクなキャンセル
+cnoremap <C-g> <C-c>
+
+
 " }}}
 
 " map <Leader> {{{
@@ -425,19 +431,21 @@ nnoremap <Leader>tx :<C-u>tabclose<CR>
 
 " Unite
 noremap <Leader>b :<C-u>Unite -buffer-name=files buffer_tab<CR>
-nnoremap <Leader>uu :<C-u>Unite<Space>
 nnoremap <Leader>U :<C-u>Unite<Space>
+nnoremap <Leader>ua :<C-u>Unite ack<CR>
+nnoremap <Leader>ud :<C-u>Unite -buffer-name=files -default-action=cd<Space>directory_mru<CR>
+nnoremap <Leader>uF :<C-u>Unite -buffer-name=files file<CR>
+nnoremap <Leader>uf :<C-u>Unite -buffer-name=files file_rec/async<CR>
+nnoremap <Leader>ug :<C-u>Unite grep<CR>
+nnoremap <Leader>uh :<C-u>Unite help<CR>
+nnoremap <Leader>ul :<C-u>Unite line<CR>
 nnoremap <Leader>um :<C-u>Unite -buffer-name=files file_mru<CR>
 nnoremap <Leader>uM :<C-u>Unite mapping<CR>
-nnoremap <Leader>uf :<C-u>Unite -buffer-name=files file_rec/async<CR>
-nnoremap <Leader>uF :<C-u>Unite -buffer-name=files file<CR>
-nnoremap <Leader>ud :<C-u>Unite -buffer-name=files -default-action=cd<Space>directory_mru<CR>
-nnoremap <Leader>uh :<C-u>Unite help<CR>
 nnoremap <Leader>uo :<C-u>Unite outline<CR>
-nnoremap <Leader>ug :<C-u>Unite grep<CR>
 nnoremap <Leader>ur :<C-u>Unite register<CR>
-nnoremap <Leader>ut :<C-u>Unite tag<CR>
 nnoremap <Leader>uT :<C-u>Unite tab:no-current<CR>
+nnoremap <Leader>ut :<C-u>Unite tag<CR>
+nnoremap <Leader>uu :<C-u>Unite<Space>
 nnoremap <Leader>uv :<C-u>Unite vcs/status<CR>
 nnoremap <Leader>uw :<C-u>Unite window:no-current<CR>
 
@@ -688,6 +696,21 @@ cmap <C-x> <Plug>(cmdline-toggle-bang)
 
 " }}}
 
+" Vim の矩形選択の痒いところに手を届かせる - TIM Labs {{{
+" http://labs.timedia.co.jp/2012/10/vim-more-useful-blockwise-insertion.html
+vnoremap <expr> I <SID>force_blockwise_visual('I')
+vnoremap <expr> A <SID>force_blockwise_visual('A')
+function! s:force_blockwise_visual(next_key)
+  if mode() ==# 'v'
+    return "\<C-v>" . a:next_key
+  elseif mode() ==# 'V'
+    return "\<C-v>0o$" . a:next_key
+  else  " mode() ==# "\<C-v>"
+    return a:next_key
+  endif
+endfunction
+" }}}
+
 
 "---------------------------------------
 " コマンド
@@ -924,6 +947,13 @@ command! -bar -nargs=0 ReplaceVersions call ReplaceVersions()
 
 " }}}
 
+" chmod {{{
+function! s:Chmod(perm)
+  let res = system("chmod " . a:perm . " " . shellescape(expand("%")))
+endfunction
+command! -nargs=1 Chmod :call s:Chmod(<q-args>)
+" }}}
+
 
 "---------------------------------------
 " プラグイン用設定
@@ -947,6 +977,9 @@ let g:qb_hotkey = "\\\\"
 
 " haskell_doc.vim を無視
 let g:haddock_index = 1
+
+" unite-ack
+let g:unite_source_ack_command="ack --nocolor --nogroup"
 
 let g:lisp_instring = 1
 let g:lisp_rainbow = 1
@@ -1167,7 +1200,7 @@ let g:unite_enable_start_insert = 1
 let g:unite_enable_smart_case = 1
 let g:unite_source_file_ignore_pattern = ''
 let g:unite_source_file_ignore_pattern .=
-      \ '_build\|_darcs\|\.git\|\%(' . substitute('png jpeg jpg gif jar dcu manifest dll exe exp o so bak sw res dep idb pdb user ilk ncb class', ' ', '\\|', 'g') . '\)$'
+      \ 'tmp\|bundle\|_build\|_darcs\|\.git\|\%(' . substitute('png jpeg jpg gif jar dcu manifest dll exe exp o so bak sw res dep idb pdb user ilk ncb class', ' ', '\\|', 'g') . '\)$'
 let g:unite_source_file_rec_ignore_pattern = g:unite_source_file_ignore_pattern
 let g:unite_source_directory_mru_ignore_pattern = ''
 
