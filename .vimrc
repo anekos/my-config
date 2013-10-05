@@ -59,14 +59,28 @@ endif
 NeoBundle 'Shougo/neobundle.vim'
 
 " Color tool
+NeoBundleLazy 'cocopon/colorswatch.vim', {'autoload' : {'commands' : ['ColorSwatchGenerate']}}
 NeoBundle 'Rykka/colorv.vim'
 NeoBundle 'Rykka/galaxy.vim'
 
 " Color
+NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'bluecloud'
+NeoBundle 'fisadev/fisa-vim-colorscheme'
 NeoBundle 'itchyny/landscape.vim'
+NeoBundle 'jonathanfilip/vim-lucius'
+NeoBundle 'jpo/vim-railscasts-theme'
 NeoBundle 'junegunn/seoul256.vim'
+NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'Pychimp/vim-sol'
+NeoBundle 'rdark'
+NeoBundle 'sjl/badwolf'
+NeoBundle 'tomasr/molokai'
+NeoBundle 'twilight'
 NeoBundle 'vol2223/vim-colorblind-colorscheme'
+NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'wabisabi'
+NeoBundle 'Wombat'
 
 " Completer
 NeoBundle 'teramako/jscomplete-vim'
@@ -81,6 +95,7 @@ NeoBundle 'h1mesuke/vim-alignta'
 " Game
 NeoBundle 'mattn/habatobi-vim'
 NeoBundle 'mattn/invader-vim'
+NeoBundle 'rbtnn/puyo.vim'
 
 " Haskell
 NeoBundle 'bitc/lushtags'
@@ -97,6 +112,8 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'anekos/felis-cat-igirisu-toast-express'
 
 " Library
+NeoBundle 'kana/vim-operator-user'
+NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'Shougo/vimproc', {'build' : {'windows' : 'make -f make_mingw32.mak', 'cygwin' : 'make -f make_cygwin.mak', 'mac' : 'make -f make_mac.mak', 'unix' : 'make -f make_unix.mak'}}
 NeoBundle 'vim-jp/vital.vim'
@@ -104,7 +121,7 @@ NeoBundle 'vim-jp/vital.vim'
 " Life Hack
 NeoBundle 'tyru/banban.vim'
 
-" lisp
+" Lisp
 NeoBundle 'mopemope/unite-hyperspec'
 NeoBundle 'vim-scripts/slimv.vim'
 
@@ -114,6 +131,9 @@ NeoBundle 'basyura/TweetVim'
 NeoBundle 'basyura/twibill.vim'
 NeoBundle 'tsukkee/lingr-vim'
 
+" Operator
+NeoBundle 'kana/vim-operator-replace'
+
 " Ref
 NeoBundle 'taka84u9/vim-ref-ri'
 NeoBundle 'thinca/vim-ref'
@@ -122,21 +142,32 @@ NeoBundle 'ujihisa/ref-hoogle'
 " Scala
 NeoBundle 'derekwyatt/vim-scala'
 
-" theme
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'sjl/badwolf'
-NeoBundle 'wabisabi'
+" Text Object
+"     b   = Any brackets
+"     fX  = beetween X - http://d.hatena.ne.jp/thinca/20100614/1276448745
+"     i   = Indent Level
+"     u   = URL
+"     y   = Syntax
+"     z   = Fold
+NeoBundle 'kana/vim-textobj-fold'
+NeoBundle 'kana/vim-textobj-indent'
+NeoBundle 'kana/vim-textobj-syntax'
+NeoBundle 'mattn/vim-textobj-url'
+NeoBundle 'osyo-manga/vim-textobj-multiblock'
+NeoBundle 'thinca/vim-textobj-plugins'
 
 " Unite
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'mattn/httpstatus-vim'
 NeoBundle 'mfumi/unite-mpc'
 NeoBundle 'osyo-manga/unite-nyancat_anim'
+NeoBundle 'osyo-manga/unite-quickfix'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'tsukkee/unite-help'
 NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'ujihisa/unite-font'
+NeoBundle 'ujihisa/unite-locate'
 
 " VCS
 NeoBundle 'airblade/vim-gitgutter'
@@ -150,27 +181,38 @@ NeoBundle 'http://conque.googlecode.com/svn/trunk/', {'directory' : 'conque'}
 NeoBundle 'HybridText'
 NeoBundle 'itchyny/thumbnail.vim'
 NeoBundle 'kana/vim-submode'
+NeoBundleLazy 'LeafCage/nebula.vim', {'autoload': {'commands': ['NebulaPutLazy', 'NebulaPutFromClipboard', 'NebulaYankOptions', 'NebulaPutConfig']}}
 NeoBundleLazy 'majutsushi/tagbar', {'autoload' : {'commands' : ['Tagbar']}}
 NeoBundle 'mattn/benchvimrc-vim'
 NeoBundle 'mattn/mkdpreview-vim'
 NeoBundle 'mattn/zencoding-vim'
-NeoBundle 'mhinz/vim-startify'
 NeoBundle 'othree/eregex.vim'
 NeoBundle 'rbtnn/vimconsole.vim'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'Shougo/vimshell'
-NeoBundle 'Shougo/vinarise'
-NeoBundle 'ShowMarks'
+NeoBundleLazy 'Shougo/vinarise', {
+  \'autoload': {
+  \   'unite_sources': ['vinarise_analysis'],
+  \   'commands': [
+  \     {'complete': 'customlist,vinarise#complete', 'name': 'VinariseScript2Hex'},
+  \     'VinarisePluginBitmapView',
+  \     {'complete': 'customlist,vinarise#complete', 'name': 'Vinarise'},
+  \     'VinarisePluginDump',
+  \     {'complete': 'customlist,vinarise#complete', 'name': 'VinariseDump'},
+  \     {'complete': 'file', 'name': 'VinariseHex2Script'}]}}
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 't9md/vim-quickhl'
 NeoBundle 'taku-o/vim-batch-source'
 NeoBundle 'tasuten/gcalc.vim'
 NeoBundle 'thinca/vim-fontzoom'
 NeoBundle 'thinca/vim-portal'
+NeoBundle 'thinca/vim-poslist'
+NeoBundle 'thinca/vim-qfreplace'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-speeddating'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'tyru/foldballoon.vim'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'tyru/restart.vim'
 NeoBundle 'tyru/vim-altercmd'
@@ -191,20 +233,25 @@ endif
 
 " Our plugins {{{
 
-function! s:LoadMyPlugin(name)
+function! s:LoadMyPlugin(name, ...)
   for l:base in ['', '~/project/', '~/repos/', '~/project/vim-plugins/']
     let l:dir = expand(l:base . a:name)
     if isdirectory(l:dir)
       let &runtimepath .= ',' . l:dir
-      break
+      return
     endif
   endfor
+
+  if a:0 > 0
+    call neobundle#parser#bundle('"' . a:1 . '"')
+  endif
 endfunction
 
 if has('vim_starting')
-  call s:LoadMyPlugin('runes-vim')
+  call s:LoadMyPlugin('runes-vim', 'anekos/runes-vim')
   call s:LoadMyPlugin('manga-osort')
   call s:LoadMyPlugin('liname-hs/res/vim')
+  call s:LoadMyPlugin('unite-located_session')
   call s:LoadMyPlugin('~/.xmonad/res/vim')
 endif
 
@@ -303,7 +350,7 @@ set cmdheight=1
 set nrformats=
 
 " 背景色を教える
-" set background=dark
+set background=dark
 
 " スクロール余白
 set scrolloff=0
@@ -327,10 +374,7 @@ set list
 set foldmethod=marker
 
 " タブ＆インデント
-set shiftwidth=2
-set tabstop=2
-set expandtab
-set smarttab
+set tabstop=2 shiftwidth=2 autoindent expandtab smarttab copyindent preserveindent
 
 " 補完メニュー強化
 set wildmenu
@@ -361,6 +405,9 @@ set secure
 " Don't save options.
 set viewoptions-=options
 
+" K
+set keywordprg=
+
 " }}}
 
 
@@ -376,7 +423,7 @@ let mapleader = ','
 
 " }}}
 
-" map - override {{{
+" override {{{
 
 " コマンドモード時にカーソル移動するのに便利ー
 inoremap <C-a> <C-o>^
@@ -386,12 +433,16 @@ cnoremap <C-f> <Right>
 cnoremap <C-b> <Left>
 cnoremap <C-d> <Del>
 
+" 検索時に結果が中央に来るようにする
+noremap n nzzzv
+noremap N Nzzzv
+
 " 検索のハイライト
 nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
-nnoremap * :<C-u>set hls<Bar>execute 'M/\<' . expand('<cword>') . '\>' <CR>zz
-nnoremap # #zz
-nnoremap g* :<C-u>set hls<Bar>execute 'M/' . expand('<cword>') <CR>zz
-nnoremap g# g#zz
+nnoremap * :<C-u>set hls<Bar>execute 'M/\<' . expand('<cword>') . '\>' <CR><C-o>
+nnoremap # #<C-o>
+nnoremap g* :<C-u>set hls<Bar>execute 'M/' . expand('<cword>') <CR><C-o>
+nnoremap g# g#<C-o>
 
 " for US KBD
 nnoremap ; :
@@ -416,12 +467,22 @@ nnoremap o A<CR>
 nnoremap * *<C-o>
 nnoremap # #<C-o>
 
+" Operator
+vmap p <Plug>(operator-replace)
+
+" Strong refresh
+nnoremap <C-l> :<C-u>XMonadRefreshWindow<CR><C-l>
+
+" 自然派
+nnoremap Y y$
+
 " }}}
 
 " map {{{
 
 " Save like Emacs
 inoremap <C-x><C-s> <ESC>:<C-u>w<CR>a
+inoremap <C-x>s <ESC>:<C-u>w<CR>a
 
 " Short
 noremap <Space><Space> :<C-u>noautocmd bnext<CR>
@@ -430,12 +491,6 @@ noremap <Left> :<C-u>noautocmd tabprev<CR>
 noremap <Right> :<C-u>noautocmd tabnext<CR>
 noremap <Up> :<C-u>noautocmd bprev<CR>
 noremap <Down> :<C-u>noautocmd bnext<CR>
-
-" 検索時に結果が中央に来るようにする
-noremap * *zzzv
-noremap # #zzzv
-noremap n nzzzv
-noremap N Nzzzv
 
 " 挿入モードでの移動
 inoremap <C-a> <Home>
@@ -456,8 +511,8 @@ nnoremap Q <Nop>
 " Tab
 "   ウィンドウを作成しているときに切り替えると、
 "   描画がおかしい問題があるので、<C-l> で再描画する。
-nnoremap <C-n> :tabnext<Bar>redraw<CR>
-nnoremap <C-p> :tabprev<Bar>redraw<CR>
+nnoremap <C-n> :tabnext<CR><C-l>
+nnoremap <C-p> :tabprev<CR><C-l>
 
 " window walker
 nnoremap <M-j> <C-w>j
@@ -468,14 +523,6 @@ inoremap <M-j> <Esc><C-w>j
 inoremap <M-k> <Esc><C-w>k
 inoremap <M-h> <Esc><C-w>h
 inoremap <M-l> <Esc><C-w>l
-
-" runes
-imap <C-z>z <Plug>(runes_toggle)
-imap <C-z><C-z> <Plug>(runes_toggle)
-imap <C-z>g <Plug>(runes_start_german)
-imap <C-z>a <Plug>(runes_start_anglosaxon)
-imap <C-z>d <Plug>(runes_start_denmark)
-imap <C-z>s <Plug>(runes_start_sweden)
 
 " Toggle NeoCon
 nnoremap <Leader>n :<C-u>NeoComplCacheToggle<CR>
@@ -492,7 +539,7 @@ inoremap <S-CR> <C-o>O
 
 " }}}
 
-" map <Leader> {{{
+" <Leader> {{{
 
 " Leaders
 nmap s <Leader>
@@ -501,7 +548,7 @@ nmap s <Leader>
 noremap <Leader>/ :<C-u>Migemo<Space>
 
 " buffer
-nnoremap <Leader>x :<C-u>bdelete<CR>
+nnoremap <Leader>x :<C-u>wincmd c<CR>
 nnoremap <Leader><Space> :<C-u>Thumbnail<CR>
 
 " ref.vim
@@ -519,6 +566,7 @@ nnoremap <Leader>tx :<C-u>tabclose<CR>
 nnoremap <Leader>b :<C-u>Unite -buffer-name=files buffer_tab<CR>
 nnoremap <Leader>U :<C-u>Unite<Space>
 nnoremap <Leader>ua :<C-u>Unite grep:.<CR>
+nnoremap <Leader>ub :<C-u>Unite bookmark<CR>
 nnoremap <Leader>uC :<C-u>Unite colorscheme -auto-preview<CR>
 nnoremap <Leader>uc :<C-u>Unite hyperspec<CR>
 nnoremap <Leader>ud :<C-u>Unite -buffer-name=files -default-action=cd<Space>directory_mru<CR>
@@ -528,10 +576,12 @@ nnoremap <Leader>ug :<C-u>Unite grep:.<CR>
 nnoremap <expr> <Leader>uh ':<C-u>Unite help ' . (getbufvar('%', '&filetype') == 'help' ? '' : '-tab') . '<CR>'
 nnoremap <Leader>uj :<C-u>Unite jump -auto-preview<CR>
 nnoremap <Leader>ul :<C-u>Unite line<CR>
+nnoremap <Leader>uL :<C-u>Unite locate<CR>
 nnoremap <Leader>um :<C-u>Unite -buffer-name=files file_mru<CR>
 nnoremap <Leader>uM :<C-u>Unite mapping<CR>
 nnoremap <Leader>uo :<C-u>Unite outline<CR>
 nnoremap <Leader>ur :<C-u>Unite register<CR>
+nnoremap <Leader>us :<C-u>Unite located_session<CR>
 nnoremap <Leader>uT :<C-u>Unite tab:no-current<CR>
 nnoremap <Leader>ut :<C-u>Unite tag<CR>
 nnoremap <Leader>uu :<C-u>Unite<Space>
@@ -548,7 +598,7 @@ vmap <Leader>o <Plug>(openbrowser-smart-search)
 
 " IndentLine
 nnoremap <Leader>i :<C-u>IndentLinesToggle<CR>
-nnoremap <Leader>I :<C-u>setlocal cursorcolumn!<CR>
+nnoremap <Leader>I :<C-u>setlocal cursorcolumn! cursorline!<CR>
 
 " QuickHl
 nmap <Leader>hh <Plug>(quickhl-toggle)
@@ -556,6 +606,28 @@ nmap <Leader>hr <Plug>(quickhl-reset)
 nmap <Leader>hm <Plug>(quickhl-match)
 nnoremap <Leader>hd :<C-u>QuickhlDel<CR>
 nnoremap <Leader>ha :<C-u>QuickhlAdd<Space>
+
+" }}}
+
+" for plugin {{{
+
+" runes
+imap <C-z>z <Plug>(runes_toggle)
+imap <C-z><C-z> <Plug>(runes_toggle)
+imap <C-z>g <Plug>(runes_start_german)
+imap <C-z>a <Plug>(runes_start_anglosaxon)
+imap <C-z>d <Plug>(runes_start_denmark)
+imap <C-z>s <Plug>(runes_start_sweden)
+
+" multiblock
+omap ab <Plug>(textobj-multiblock-a)
+omap ib <Plug>(textobj-multiblock-i)
+vmap ab <Plug>(textobj-multiblock-a)
+vmap ib <Plug>(textobj-multiblock-i)
+
+" poslist
+map <Leader><C-o> <Plug>(poslist-prev-buf)
+map <Leader><C-i> <Plug>(poslist-next-buf)
 
 " }}}
 
@@ -668,6 +740,9 @@ MeowtoCmd QuickFixCmdPost vimgrep cwin
 MeowtoCmd BufWritePost * if expand('%') != '' && &buftype !~ 'nofile' | mkview | endif
 MeowtoCmd BufRead * if expand('%') != '' && &buftype !~ 'nofile' | silent loadview | endif
 
+" セッションロード後に、XMonad 的なリフレッシュ
+MeowtoCmd SessionLoadPost * XMonadRefreshWindow
+
 " }}}
 
 
@@ -688,9 +763,15 @@ let $PATH = $HOME . "/bin:" . $HOME . '/.cabal/bin:' . $PATH
 " ||__|||__|||__|||__|||__|||__||
 " |/__\|/__\|/__\|/__\|/__\|/__\|
 
-" textwidth 勝手に設定すんな {{{
+" 可愛いフォーマッタ殺害 {{{
 
-MeowtoCmd BufReadPost,FileReadPost * setlocal textwidth=0
+function! s:KillTheFuckingFormatters()
+  setlocal textwidth=0
+  " fo = formatoptions
+  setlocal fo-=o fo-=t fo-=c fo+=mM
+endfunction
+
+MeowtoCmd FileType * call s:KillTheFuckingFormatters()
 
 " }}}
 
@@ -751,6 +832,7 @@ function! s:LoadTemplate()
   if &filetype == ''
     return
   endif
+  " ファイルがほとんど空の時だけだよ！
   if getfsize(bufname('')) > 10
     return
   endif
@@ -761,10 +843,12 @@ function! s:LoadTemplate()
   execute '0read ' . filename
   normal G
   setlocal fileencoding=utf8
+  update
+  edit
 endfunction
 
 command! -bar LoadTemplate :call s:LoadTemplate()
-" MeowtoCmd BufNewFile,BufRead * :call s:LoadTemplate()
+MeowtoCmd FileType * :call s:LoadTemplate()
 
 " }}}
 
@@ -816,7 +900,7 @@ set listchars+=trail:#
 
 function! s:HighlightTrailingSpaces ()
   " 一部のバッファでは、やらない
-  if &modifiable && match(bufname('%'), '_ColorV_3\.0') < 0 && match(&filetype, '^\(help\|J6uil\)$') < 0
+  if &modifiable && match(bufname('%'), '_ColorV_3\.0') < 0 && match(&filetype, '^\(help\|J6uil\|vimshell\|int-.*\)$') < 0
     match WhitespaceEOL /[[:space:]　\t]\+$/
   else
     match WhitespaceEOL /\[^\s\S\]/
@@ -1139,6 +1223,44 @@ command! Numeronym call ReplaceWithNumeronym()
 
 " }}}
 
+" XMonad xc を使ってウィンドウをリフレッシュ {{{
+
+let s:previous_window_refreshed_time = [0, 0]
+function! s:XMonadRefreshWindow()
+  let l:delta = reltime(s:previous_window_refreshed_time)
+  " FIXME 短期間に連続して実行しない
+  if (l:delta[1] > 400000) || (l:delta[0] > 0)
+    silent call vimproc#system('~/.xmonad/bin/xc command refresh-window')
+    let s:previous_window_refreshed_time = reltime()
+  endif
+endfunction
+
+command! XMonadRefreshWindow call s:XMonadRefreshWindow()
+
+" }}}
+
+" バルーンで Syntax 情報を得てみる {{{
+
+function! s:BallonSyntax(name)
+  set ballooneval
+  if a:name == 'syntax'
+    set balloonexpr=synIDattr(synID(v:beval_lnum,\ v:beval_col,\ 1),\ 'name')
+  elseif a:name == 'fold'
+    set balloonexpr=foldballoon#balloonexpr()
+  else
+    echoerr 'Unknown type: ' . a:name
+  endif
+endfunction
+
+function! s:BalloonCompl(...)
+  return ['syntax', 'fold']
+endfunction
+
+command! -nargs=1 -complete=customlist,s:BalloonCompl BallonSyntax call s:BallonSyntax(<q-args>)
+
+" }}}
+
+
 "  ____ ____ ____ ____ ____ ____
 " ||p |||l |||u |||g |||i |||n ||
 " ||__|||__|||__|||__|||__|||__||
@@ -1213,7 +1335,9 @@ AlterCommand cd TabpageCD
 AlterCommand execlip Execlip
 AlterCommand nyancat Unite -update-time=50 -winheight=30 nyancat_anim
 AlterCommand ref Ref
+AlterCommand res Restart
 AlterCommand ssf SSF
+AlterCommand tm tabmove
 
 " }}}
 
@@ -1247,9 +1371,9 @@ let g:eskk#dictionary = {
 "
 let g:fontzoom_no_default_key_mappings=1
 nnoremap <silent> +
-\  :<C-u>Fontzoom +<C-r>=v:count1<CR><CR>:call vimproc#system('~/.xmonad/bin/xc command refresh-window')<CR>
+\  :<C-u>Fontzoom +<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
 nnoremap <silent> -
-\  :<C-u>Fontzoom -<C-r>=v:count1<CR><CR>:call vimproc#system('~/.xmonad/bin/xc command refresh-window')<CR>
+\  :<C-u>Fontzoom -<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
 
 " }}}
 
@@ -1277,6 +1401,24 @@ let g:haddock_index = 1
 
 let g:indentLine_enabled = 0
 let g:indentLine_color_gui = '#343434'
+
+" }}}
+
+" J6uil {{{
+
+let g:J6uil_no_default_keymappings = 1
+
+function! s:J6uilInit()
+  nmap <silent> <buffer> a                  <Plug>(J6uil_open_say_buffer)
+  nmap <silent> <buffer> <Leader><Leader>r  <Plug>(J6uil_reconnect)
+  nmap <silent> <buffer> <Leader><Leader>d  <Plug>(J6uil_disconnect)
+  nmap <silent> <buffer> r                  <Plug>(J6uil_unite_rooms)
+  nmap <silent> <buffer> u                  <Plug>(J6uil_unite_members)
+  nmap <silent> <buffer> <CR>               <Plug>(J6uil_action_enter)
+  nmap <silent> <buffer> o                  <Plug>(J6uil_action_open_links)
+endfunction
+
+MeowtoCmd FileType J6uil call s:J6uilInit()
 
 " }}}
 
@@ -1320,7 +1462,10 @@ let g:lisp_rainbow = 1
 
 let g:manga_osort_default_options = {'ignorecase' : 1}
 let g:manga_osort_alias = {
-  \   '#zsh' : {'ignorecase' : 1, 'pattern' : '^#', 'key' : 1}
+  \   '#zsh' : {'pattern' : '^#', 'key' : 1},
+  \   '#paragraph' : {'pattern' : '^\S'},
+  \   '#neobundle' : {'keyprefix' : 'NeoBundle\S*', 'pattern' : 'NeoBundle'},
+  \   '#vimrc' : {'pattern' : '^"'},
   \ }
 
 " }}}
@@ -1389,6 +1534,12 @@ endif
 
 " }}}
 
+" poslist {{{
+
+let g:poslist_histsize = 1000
+
+" }}}
+
 " powerline {{{
 
 " Do :PowerlineClearCache and restart, when you changed.
@@ -1412,6 +1563,30 @@ let g:ref_clojure_precode = "(use '(clojure.contrib str-utils def repl-utils mac
 
 " たぶんいらない
 "let g:ref_clojure_classpath = ['/usr/local/java/clojure-contrib.jar']
+
+let g:ref_detect_filetype = {
+  \   'zsh': 'man',
+  \   'bash': 'man',
+  \   'sh': 'man',
+  \ }
+
+let g:ref_source_webdict_use_cache = 1
+
+let g:ref_source_webdict_sites = {
+  \   'wikipedia:ja': 'http://ja.wikipedia.org/wiki/%s',
+  \   'wiktionary': {
+  \     'url': 'http://ja.wiktionary.org/wiki/%s',
+  \     'keyword_encoding': 'utf-8',
+  \     'cache': 1,
+  \   },
+  \ }
+
+let g:ref_source_webdict_sites.default = 'wikipedia:ja'
+
+" wiktionary 出力に対するフィルタ。最初の数行を削除している。
+function! g:ref_source_webdict_sites.wiktionary.filter(output)
+  return join(split(a:output, "\n")[18 :], "\n")
+endfunction
 
 MeowtoCmd FileType ref call s:initialize_ref_viewer()
 function! s:initialize_ref_viewer()
@@ -1506,38 +1681,11 @@ let g:runes_table = {
 
 " }}}
 
-" ShowMarks {{{
-
-let g:showmarks_enable = 0
-
-" }}}
-
 " slimv {{{
 
 let g:paredit_mode = 0
 let g:slimv_swank_cmd = '! xterm -e sbcl --load ~/.vim-temp/bundle/slimv.vim/slime/start-swank.lisp &'
 let g:slimv_leader = ',,'
-
-" }}}
-
-" startify {{{
-
-" figlet や cowsay で日付を表示
-if executable('cowsay')
-  let s:cowsay_font = split(system('cowsay -l | tail -n +2'), '[ \n]')
-  let s:cowsay_selected = s:cowsay_font[eval(strftime('%s %% ' . len(s:cowsay_font)))]
-  let g:startify_custom_header = split(system("LANG=C date +'%Y/%m/%d %a %H:%M:%S' | cowsay -f " . s:cowsay_selected . " | sed 's/ *$//g'"), "\n") + ['']
-  unlet s:cowsay_font s:cowsay_selected
-elseif executable('figlet')
-  let g:startify_custom_header = split(system("LANG=C date +'%m/%d %a' | figlet -f colossal | sed 's/ *$//g'"), "\n")
-else
-  let g:startify_custom_header = []
-endif
-
-let g:startify_bookmarks = ['~/.vimrc']
-let g:startify_list_order = ['bookmarks', 'files', 'sessions']
-let g:startify_restore_position = 1
-let g:startify_session_autoload = 1
 
 " }}}
 
@@ -1609,7 +1757,7 @@ let g:unite_kind_openable_cd_command = 'TabpageCD'
 let g:unite_source_file_mru_ignore_pattern = 'temp'
 
 " Grep with ag
-let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_command = '/bin/ag'
 let g:unite_source_grep_default_opts = '--nocolor --nogroup'
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 200
@@ -1650,12 +1798,6 @@ let vimclojure#NailgunClient = '~/.vim-plugins/vimclojure/bin/ng'
 
 " VimShell {{{
 
-let g:vimshell_split_command = 'split'
-let g:vimshell_interactive_cygwin_path = 'e:/cygwin/bin/'
-
-" lein repl を起動
-command! -bar Lein execute ':VimShellInteractive lein repl'
-
 " VimShell に選択文字列を送信
 function! s:vs_send_string (line1, line2)
   let l:string = ''
@@ -1665,6 +1807,52 @@ function! s:vs_send_string (line1, line2)
   execute 'VimShellSendString ' . l:string
 endfunction
 
+" エラー行のファイルを開く
+function! OpenerizedOpen(path)
+  for l:tn in range(1, tabpagenr('$'))
+    for l:bn in tabpagebuflist(l:tn)
+      if a:path == expand('#' . l:bn . ':p')
+        execute string(l:tn) . 'tabnext'
+        let l:wn = bufwinnr(l:bn)
+        if l:wn >= 0
+          execute 'normal ' . l:wn . "\<C-w>\<C-w>"
+          return 666
+        endif
+      endif
+    endfor
+  endfor
+  execute 'tabedit ' . a:path
+endfunction
+
+function! JumpSourceLine()
+  let l:curln = getpos('.')[1]
+
+  for l:back in range(0, 10)
+    let l:line = getline(l:curln - l:back)
+    let l:match = matchlist(l:line, '\(/[-a-zA-Z./0-9]\+\):\(\d\+\)')[1:2]
+    if len(l:match) > 0
+      break
+    endif
+  endfor
+
+  if len(l:match) <= 0
+    return 0
+  endif
+
+  let [filepath, linenum] = l:match
+  call OpenerizedOpen(l:filepath)
+  execute l:linenum
+  nnoremap <buffer> <Leader>x :<C-u>tabclose<CR>
+  normal zz
+endfunction
+
+let g:vimshell_split_command = 'split'
+let g:vimshell_interactive_cygwin_path = 'e:/cygwin/bin/'
+let g:vimshell_no_default_keymappings = 1
+
+" lein repl を起動
+command! -bar Lein execute ':VimShellInteractive lein repl'
+
 command! -bar -range -nargs=? VimShellJoinedSendString call s:vs_send_string(<line1>, <line2>)
 "command! VimShellIntRestart :call vimshell#int_mappings#restart_command()
 
@@ -1673,6 +1861,43 @@ vnoremap <silent> <Leader>s :VimShellSendString<CR>
 
 command! -bar Ghci :VimShellInteractive ghci
 
+function! s:DefineVimshellMappings()
+  nmap <buffer>   <CR>       <Plug>(vimshell_enter)
+  nmap <buffer>   <CR>       <Plug>(vimshell_enter)
+  nmap <buffer>   q          <Plug>(vimshell_hide)
+  nmap <buffer>   Q          <Plug>(vimshell_exit)
+  nmap <buffer>   <Leader>p  <Plug>(vimshell_previous_prompt)
+  nmap <buffer>   <Leader>n  <Plug>(vimshell_next_prompt)
+  nmap <buffer>   <C-k>      <Plug>(vimshell_delete_previous_output)
+  nmap <buffer>   <C-y>      <Plug>(vimshell_paste_prompt)
+  nmap <buffer>   E          <Plug>(vimshell_move_end_argument)
+  nmap <buffer>   cc         <Plug>(vimshell_change_line)
+  nmap <buffer>   dd         <Plug>(vimshell_delete_line)
+  nmap <buffer>   I          <Plug>(vimshell_insert_head)
+  nmap <buffer>   A          <Plug>(vimshell_append_end)
+  nmap <buffer>   i          <Plug>(vimshell_insert_enter)
+  nmap <buffer>   a          <Plug>(vimshell_append_enter)
+  nmap <buffer>   ^          <Plug>(vimshell_move_head)
+  nmap <buffer>   <C-c>      <Plug>(vimshell_hangup)
+  nmap <buffer>   <C-l>      <Plug>(vimshell_clear)
+  nmap <buffer>   <C-z>      <Plug>(vimshell_execute_by_background)
+
+  imap <buffer>   <CR>       <Plug>(vimshell_enter)
+  imap <buffer>   <C-l>      <Plug>(vimshell_history_unite)
+  imap <buffer>   <TAB>      <Plug>(vimshell_command_complete)
+  imap <buffer>   <C-a>      <Plug>(vimshell_move_head)
+  imap <buffer>   <C-u>      <Plug>(vimshell_delete_backward_line)
+  imap <buffer>   <C-w>      <Plug>(vimshell_delete_backward_word)
+  imap <buffer>   <C-z>      <Plug>(vimshell_execute_by_background)
+  imap <buffer>   <C-t>      <Plug>(vimshell_insert_last_word)
+  imap <buffer>   <C-c>      <Plug>(vimshell_interrupt)
+  imap <buffer>   <C-h>      <Plug>(vimshell_delete_backward_char)
+  imap <buffer>   <BS>       <Plug>(vimshell_delete_backward_char)
+  imap <buffer>   <C-k>      <Plug>(vimshell_delete_forward_line)
+
+  nnoremap <buffer> <Leader>o :<C-u>call s:JumpSourceLine()<CR>
+endfunction
+MeowtoCmd! FileType vimshell call s:DefineVimshellMappings()
 
 "}}}
 
@@ -1700,15 +1925,58 @@ let g:user_zen_settings = {
 
 " }}}
 
+" セッションの保存 {{{
+
+function! s:MkSession(name)
+  let l:fn = a:name
+
+  if match(a:name, '\S\+') < 0
+    let l:fn = (v:this_session ==# '' ? 'Session.vim' : v:this_session)
+  elseif match(a:name, 'Session\.vim$')
+    let l:fn = a:name . 'Session.vim'
+  endif
+
+  let l:fn = fnamemodify(l:fn, ':p')
+  let l:hfn = fnamemodify(l:fn, ':~')
+
+  if filereadable(l:fn) && (input('Overwrite to "' . l:hfn . '"? (y/n) ') !=# 'y')
+    echoerr 'Canceled!'
+    return 0
+  endif
+  redraw
+  echo 'Session has been made: ' . l:hfn
+  execute 'mksession! ' . l:hfn
+endfunction
+
+command! -complete=file -nargs=* MkSession call s:MkSession(<q-args>)
+AlterCommand mks MkSession
+
+" }}}
+
 
 "  ____ ____ ____ ____ ____ ____ ____ ____
 " ||f |||i |||l |||e |||t |||y |||p |||e ||
 " ||__|||__|||__|||__|||__|||__|||__|||__||
 " |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
 
-" buildfile {{{
+" Set filetype {{{
 
-MeowtoCmd BufNewFile,BufRead buildfile set filetype=ruby
+MeowtoCmd BufNewFile,BufRead buildfile setlocal filetype=ruby
+
+" }}}
+
+" Quickfix {{{
+
+function! s:InitQuickfix()
+  nnoremap <buffer> r :<C-u>Qfreplace<CR>
+  nnoremap <buffer> <CR> <CR>
+
+  if neobundle#is_installed('unite-quickfix')
+    nnoremap <buffer> u :<C-u>cclose<Bar>Unite quickfix<CR>
+  endif
+endfunction
+
+MeowtoCmd FileType qf call s:InitQuickfix()
 
 " }}}
 
@@ -1763,10 +2031,12 @@ endfunction
 
 " color {{{
 
-colorscheme anekos
+colorscheme olive
 " colorscheme random
 
-let g:airline_theme = 'ubaryd'
+MeowtoCmd ColorScheme * silent! execute 'AirlineTheme ' . g:colors_name
+
+let g:airline_theme = 'zenburn'
 
 " }}}
 

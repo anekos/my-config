@@ -8,9 +8,6 @@ let &guifont="Migu 1M for Powerline 13"
 " 読みモード
 command! -bar Reader setlocal scrolloff=666 | :highlight Cursor guifg=NONE guibg=NONE | let &guifont="VL ゴシック 14"
 
-" カーソル縦横
-set cursorline
-
 " タブの表示 {{{
 
 function! GuiTabLabel()
