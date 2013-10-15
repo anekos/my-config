@@ -47,7 +47,6 @@ command! -bang -nargs=* MeowtoCmd autocmd<bang> Meowrc <args>
 
 " NeoBundle {{{
 
-set nocompatible               " be iMproved
 filetype plugin indent off     " required!
 
 if has('vim_starting')
@@ -64,19 +63,28 @@ NeoBundle 'Rykka/colorv.vim'
 NeoBundle 'Rykka/galaxy.vim'
 
 " Color
+NeoBundle 'aereal/vim-magica-colors'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'bluecloud'
+NeoBundle 'bluntpeak/bluntpeak-vim-colors'
+NeoBundle 'chriskempson/vim-tomorrow-theme'
+NeoBundle 'Colour-Sampler-Pack'
 NeoBundle 'fisadev/fisa-vim-colorscheme'
+NeoBundle 'git://gist.github.com/187578.git', { 'name' : 'h2u_colors' }
 NeoBundle 'itchyny/landscape.vim'
 NeoBundle 'jonathanfilip/vim-lucius'
 NeoBundle 'jpo/vim-railscasts-theme'
 NeoBundle 'junegunn/seoul256.vim'
 NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'noahfrederick/vim-noctu'
 NeoBundle 'Pychimp/vim-sol'
 NeoBundle 'rdark'
+NeoBundle 'sickill/vim-monokai'
 NeoBundle 'sjl/badwolf'
 NeoBundle 'tomasr/molokai'
+NeoBundle 'trapd00r/neverland-vim-theme'
 NeoBundle 'twilight'
+NeoBundle 'uu59/vim-herokudoc-theme'
 NeoBundle 'vol2223/vim-colorblind-colorscheme'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'wabisabi'
@@ -171,10 +179,13 @@ NeoBundle 'ujihisa/unite-locate'
 
 " VCS
 NeoBundle 'airblade/vim-gitgutter'
+NeoBundleLazy 'gregsexton/gitv', {'autoload': {'commands': ['Gitv']}}
 NeoBundle 'hrsh7th/vim-unite-vcs'
+NeoBundle 'kmnk/vim-unite-giti'
 NeoBundle 'tpope/vim-fugitive'
 
 " Misc
+NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'basyura/rmine.vim'
 NeoBundle 'gregsexton/VimCalc'
 NeoBundle 'http://conque.googlecode.com/svn/trunk/', {'directory' : 'conque'}
@@ -204,6 +215,7 @@ NeoBundle 'sjl/gundo.vim'
 NeoBundle 't9md/vim-quickhl'
 NeoBundle 'taku-o/vim-batch-source'
 NeoBundle 'tasuten/gcalc.vim'
+NeoBundle 'thinca/vim-ambicmd'
 NeoBundle 'thinca/vim-fontzoom'
 NeoBundle 'thinca/vim-portal'
 NeoBundle 'thinca/vim-poslist'
@@ -251,7 +263,7 @@ if has('vim_starting')
   call s:LoadMyPlugin('runes-vim', 'anekos/runes-vim')
   call s:LoadMyPlugin('manga-osort')
   call s:LoadMyPlugin('liname-hs/res/vim')
-  call s:LoadMyPlugin('unite-located_session')
+  call s:LoadMyPlugin('unite-located-session')
   call s:LoadMyPlugin('~/.xmonad/res/vim')
 endif
 
@@ -263,6 +275,16 @@ filetype plugin indent on
 filetype off
 syntax enable
 silent! language messages ja_JP.UTF-8
+
+
+" プラグインが入っていないっぽいときは、エラーになりがちなので、ここで終わり
+" ~/script/vim/init && NeobundleInstall しようね！
+if len(split(expand("~/.vim-temp/bundle/*"))) < 3
+  nnoremap ; :
+  nnoremap : ;
+  echoerr 'Give me "NeoBundleInstall" !!'
+  finish
+endif
 
 " }}}
 
@@ -286,6 +308,7 @@ set fileformats=dos,unix,mac
 
 " 行数表示
 set number
+set relativenumber
 
 " 検索結果をハイライト
 set hlsearch
@@ -316,7 +339,7 @@ set selectmode=
 " 保存していないバッファを隠せるようにする
 set hidden
 
-" バックアップする
+" バックアップしない (念の為ディレクトリ設定しておく)
 set nobackup
 set backupdir=~/.vim-temp/backup/
 
@@ -476,6 +499,9 @@ nnoremap <C-l> :<C-u>XMonadRefreshWindow<CR><C-l>
 " 自然派
 nnoremap Y y$
 
+" 自分で「:.!」って打てばええんや
+nnoremap ! :Switch<CR>
+
 " }}}
 
 " map {{{
@@ -531,7 +557,7 @@ nnoremap <Leader>n :<C-u>NeoComplCacheToggle<CR>
 cnoremap <C-g> <C-c>
 
 " like ranger
-nnoremap cd :TabpageCD<Space>~/
+nnoremap <expr> cd ":\<C-u>TabpageCD\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.')
 
 " 改行
 nnoremap <CR> A<CR><ESC>
@@ -561,10 +587,13 @@ nnoremap <Leader>tb :<C-u>Tagbar<CR>
 nnoremap <Leader>tn :<C-u>tabnew<CR>
 nnoremap <Leader>te :<C-u>tabedit<Space>
 nnoremap <Leader>tx :<C-u>tabclose<CR>
+nnoremap <Leader>tt :<C-u>Unite -immediately tab:no-current<CR>
 
 " Unite
-nnoremap <Leader>b :<C-u>Unite -buffer-name=files buffer_tab<CR>
-nnoremap <Leader>U :<C-u>Unite<Space>
+nnoremap <Leader>uu :<C-u>Unite<Space>
+nnoremap <Leader>U :<C-u>UniteResume<CR>
+nnoremap <Leader>b :<C-u>Unite -immediately -buffer-name=files buffer_tab<CR>
+nnoremap <Leader>B :<C-u>Unite tab:no-current<CR>
 nnoremap <Leader>ua :<C-u>Unite grep:.<CR>
 nnoremap <Leader>ub :<C-u>Unite bookmark<CR>
 nnoremap <Leader>uC :<C-u>Unite colorscheme -auto-preview<CR>
@@ -584,7 +613,6 @@ nnoremap <Leader>ur :<C-u>Unite register<CR>
 nnoremap <Leader>us :<C-u>Unite located_session<CR>
 nnoremap <Leader>uT :<C-u>Unite tab:no-current<CR>
 nnoremap <Leader>ut :<C-u>Unite tag<CR>
-nnoremap <Leader>uu :<C-u>Unite<Space>
 nnoremap <Leader>uv :<C-u>Unite vcs/status<CR>
 nnoremap <Leader>uw :<C-u>Unite window:no-current<CR>
 
@@ -596,16 +624,14 @@ let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap <Leader>o <Plug>(openbrowser-smart-search)
 vmap <Leader>o <Plug>(openbrowser-smart-search)
 
-" IndentLine
-nnoremap <Leader>i :<C-u>IndentLinesToggle<CR>
-nnoremap <Leader>I :<C-u>setlocal cursorcolumn! cursorline!<CR>
-
 " QuickHl
-nmap <Leader>hh <Plug>(quickhl-toggle)
-nmap <Leader>hr <Plug>(quickhl-reset)
-nmap <Leader>hm <Plug>(quickhl-match)
-nnoremap <Leader>hd :<C-u>QuickhlDel<CR>
-nnoremap <Leader>ha :<C-u>QuickhlAdd<Space>
+nmap <Leader>hh <Plug>(quickhl-manual-this)
+nmap <Leader>hr <Plug>(quickhl-manual-reset)
+nnoremap <Leader>hd :<C-u>QuickhlManualDelete<CR>
+nnoremap <Leader>ha :<C-u>QuickhlManualAdd<Space>
+
+" 保存 ﾎﾟﾗﾎﾟﾗﾎﾟﾗ
+nnoremap <Leader>ss :<C-u>update<CR>
 
 " }}}
 
@@ -628,6 +654,9 @@ vmap ib <Plug>(textobj-multiblock-i)
 " poslist
 map <Leader><C-o> <Plug>(poslist-prev-buf)
 map <Leader><C-i> <Plug>(poslist-next-buf)
+
+" ambcmd
+cnoremap <expr> <C-o> ambicmd#expand("\<Space>")
 
 " }}}
 
@@ -843,8 +872,13 @@ function! s:LoadTemplate()
   execute '0read ' . filename
   normal G
   setlocal fileencoding=utf8
-  update
-  edit
+
+  " 新規の時エラーになるげら
+  try
+    update
+    edit
+  catch
+  endtry
 endfunction
 
 command! -bar LoadTemplate :call s:LoadTemplate()
@@ -863,28 +897,6 @@ function! Size ()
   endfor
   echo r
 endfunction
-
-function! InsertText (s)
-  let px = getpos('.')[2]
-  let line = getline('.')
-  let oline = strpart(line, 0, px)  . a:s . strpart(line, px, 1000)
-  echo oline
-  call setline('.', oline)
-endfunction
-
-function! InsertDate ()
-  let d = system('date')
-  call InsertText(strpart(d, 0, strlen(d) - 1))
-endfunction
-
-function! EatChar (pat)
-  let c = nr2char(getchar(0))
-  return (c =~ a:pat) ? '' : c
-endfunc
-
-function! EatSpace ()
-  return EatChar('\s')
-endfunc
 
 " }}}
 
@@ -915,16 +927,16 @@ MeowtoCmd BufNewFile,WinEnter,BufEnter,BufWinEnter,FileType * call s:HighlightTr
 " 地蔵でディレクトリ作る {{{
 " http://vim-users.jp/2011/02/hack202/
 
-augroup vimrc-auto-mkdir
-  autocmd!
-  autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
-  function! s:auto_mkdir(dir, force)
-    if !isdirectory(a:dir) && (a:force ||
-    \    input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
-      call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
-    endif
-  endfunction
-augroup END
+MeowtoCmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
+function! s:auto_mkdir(dir, force)
+  if isdirectory(a:dir)
+    return
+  endif
+
+  if a:force || input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$'
+    call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
+  endif
+endfunction
 
 " }}}
 
@@ -949,8 +961,14 @@ function! Archive(comment) range
     let l:prefix = ''
   endif
   let l:content = "\n\n\n[" . l:prefix . system('date | tr --delete "\n"') . "]\n\n" . @"
-  call vimproc#write(l:basefn . '.archive', l:content, 'a')
+
+  " call vimproc#write(l:basefn . '.archive', l:content, 'a')
+
+  let l:file = vimproc#fopen(l:basefn . '.archive', "O_WRONLY | O_CREAT | O_APPEND")
+  call file.write(l:content)
+  call l:file.close()
 endfunction
+
 command! -nargs=* -range Archive <line1>,<line2>call Archive(<q-args>)
 
 " }}}
@@ -1164,10 +1182,6 @@ command! -bar Src e ~/.bashrc | split ~/.zshrc
 " 再エンコード
 command! -nargs=1 Reenco e ++enc=<args>
 
-" 日付挿入
-command! -bar Date normal! o<ESC>!!date<CR>==
-command! -bar Idate normal! :call InsertDate()<CR>
-
 " Vimp のテンプレ挿入
 command! -bar -nargs=0 VimpTemplate r ~/.vimperator/default/script/plugin-template.js
 
@@ -1227,6 +1241,9 @@ command! Numeronym call ReplaceWithNumeronym()
 
 let s:previous_window_refreshed_time = [0, 0]
 function! s:XMonadRefreshWindow()
+  if !has('gui_running')
+    return
+  endif
   let l:delta = reltime(s:previous_window_refreshed_time)
   " FIXME 短期間に連続して実行しない
   if (l:delta[1] > 400000) || (l:delta[0] > 0)
@@ -1235,7 +1252,7 @@ function! s:XMonadRefreshWindow()
   endif
 endfunction
 
-command! XMonadRefreshWindow call s:XMonadRefreshWindow()
+command! -bar XMonadRefreshWindow call s:XMonadRefreshWindow()
 
 " }}}
 
@@ -1260,6 +1277,119 @@ command! -nargs=1 -complete=customlist,s:BalloonCompl BallonSyntax call s:Ballon
 
 " }}}
 
+" 日付挿入 {{{
+
+function! s:InsertDate (header)
+  let l:text = substitute(system('LANG=ja_JP.UTF-8 date'), '\n', '', '')
+  if a:header
+    let l:text = '<<' . l:text . '>>'
+  endif
+  call append(line('.'), [l:text, ''])
+  normal zzG
+endfunction
+
+command! -bar Date normal! :call s:InsertDate(1)<CR>
+
+" }}}
+
+" セッションの保存 {{{
+
+function! s:MkSession(name)
+  let l:fn = a:name
+
+  if match(a:name, '\S\+') < 0
+    let l:fn = (v:this_session ==# '' ? 'Session.vim' : v:this_session)
+  elseif match(a:name, 'Session\.vim$') < 0
+    let l:fn = a:name . 'Session.vim'
+  else
+    let l:fn = a:name
+  endif
+
+  let l:fn = fnamemodify(l:fn, ':p')
+  let l:hfn = fnamemodify(l:fn, ':~')
+
+  if filereadable(l:fn) && (input('Overwrite to "' . l:hfn . '"? (y/n) ') !=# 'y')
+    echoerr 'Canceled!'
+    return 0
+  endif
+
+  redraw
+  echo 'Session has been made: ' . l:hfn
+  execute 'mksession! ' . l:hfn
+endfunction
+
+command! -complete=file -nargs=* MkSession call s:MkSession(<q-args>)
+
+" }}}
+
+" 下線を引く for rst とか {{{
+
+function! UnderLine(up)
+  let l:prev_len = strdisplaywidth(getline('.'))
+  let l:char = nr2char(getchar())
+
+  if l:char == 'l' && exists('s:previous_underline_char')
+    let l:char = s:previous_underline_char
+  else
+    let s:previous_underline_char = l:char
+  endif
+
+  let l:text = ''
+
+  while len(l:text) < l:prev_len
+    let l:text .= l:char
+  endwhile
+
+  " 改行消さないために a を入れる
+  if a:up
+    return "o\a\<C-u>" . l:text . "\<Esc>kO\<C-u>" . l:text . "\<Esc>"
+  else
+    return "o\a\<C-u>" . l:text . "\<Esc>"
+  endif
+endfunction
+
+" l を押すと最後に使った文字になる
+nnoremap <expr> <Leader>l UnderLine(0)
+nnoremap <expr> <Leader>L UnderLine(1)
+command! UnderLine call UnderLine
+
+" }}}
+
+" 表示に関する設定切り替え {{{
+
+function! s:InitUniteDisplaySettingMenu()
+  if !exists('g:unite_source_menu_menus')
+    let g:unite_source_menu_menus = {}
+  endif
+
+  " menu の説明
+  let l:commands = {
+    \   'description' : 'display-setting',
+    \}
+
+  " コマンドを登録
+  let l:commands.candidates = {
+    \   'indent-line'     : 'IndentLinesToggle',
+    \   'cross'           : 'setlocal cursorcolumn! cursorline!',
+    \   'relative-number' : 'setlocal relativenumber!',
+    \   'quickhl'         : 'QuickhlManualEnable',
+    \}
+
+  " 上記で登録したコマンドを評価する関数
+  " 最終的にこれで評価した結果が unite に登録される
+  function l:commands.map(key, value)
+    return {'word' : a:key, 'kind' : 'command', 'action__command' : a:value}
+  endfunction
+
+  let g:unite_source_menu_menus['display'] = deepcopy(l:commands)
+
+  " 呼び出しのキーマップ
+  nnoremap <silent> <Leader>i :Unite -immediately menu:display<CR>
+endfunction
+
+call s:InitUniteDisplaySettingMenu()
+
+" }}}
 
 "  ____ ____ ____ ____ ____ ____
 " ||p |||l |||u |||g |||i |||n ||
@@ -1332,7 +1462,9 @@ call altercmd#load()
 AlterCommand ag Ag
 AlterCommand align Alignta
 AlterCommand cd TabpageCD
+AlterCommand date Date
 AlterCommand execlip Execlip
+AlterCommand mks MkSession
 AlterCommand nyancat Unite -update-time=50 -winheight=30 nyancat_anim
 AlterCommand ref Ref
 AlterCommand res Restart
@@ -1407,6 +1539,8 @@ let g:indentLine_color_gui = '#343434'
 " J6uil {{{
 
 let g:J6uil_no_default_keymappings = 1
+let g:J6uil_display_icon = 1
+let g:J6uil_empty_separator = 1
 
 function! s:J6uilInit()
   nmap <silent> <buffer> a                  <Plug>(J6uil_open_say_buffer)
@@ -1463,10 +1597,14 @@ let g:lisp_rainbow = 1
 let g:manga_osort_default_options = {'ignorecase' : 1}
 let g:manga_osort_alias = {
   \   '#zsh' : {'pattern' : '^#', 'key' : 1},
+  \   '#haskell-import' : {'pattern' : '^import', 'keyprefix' : 'import\s\+\(qualified\s\)\?'},
   \   '#paragraph' : {'pattern' : '^\S'},
   \   '#neobundle' : {'keyprefix' : 'NeoBundle\S*', 'pattern' : 'NeoBundle'},
   \   '#vimrc' : {'pattern' : '^"'},
   \ }
+let g:manga_osort_context = [
+  \   {'pattern' : '^NeoBundle ', 'arguments': '#neobundle'},
+  \ ]
 
 " }}}
 
@@ -1540,17 +1678,36 @@ let g:poslist_histsize = 1000
 
 " }}}
 
-" powerline {{{
+" Puyo {{{
 
-" Do :PowerlineClearCache and restart, when you changed.
-" let g:Powerline_symbols = 'fancy'
-" call Pl#Theme#InsertSegment('charcode', 'after', 'filetype')
+function! s:StartPuyo()
+  " 1000以上推奨。
+  set maxfuncdepth=1000
+  " 数値が低いほど難しい.100～500あたりを推奨。
+  set updatetime=450
+  " フォント
+  if has('gui_running')
+    set guifont=Ricty\ 4
+  else
+    call system(printf("set-font '' 4 '' %d 1", v:windowid))
+  endif
+  " ゲームを始める
+  call puyo#new()
+  XMonadRefreshWindow
+  nmap <buffer> <Space><Space> :
+  wincmd o
+  1
+endfunction
+
+command!  Puyo :call s:StartPuyo()
 
 " }}}
 
 " Quickhl {{{
 
-let g:quickhl_keywords = [
+" 1 だと重いョ
+let g:quickhl_tag_enable_at_startup = 0
+let g:quickhl_manual_keywords = [
 \ 'IMPLEMENTME',
 \ ]
 
@@ -1601,9 +1758,12 @@ endfunction
 " restart.vim {{{
 
 function! s:OnRestart()
+  call s:SaveLastColor()
   return join([
   \   printf("let &guifont = '%s'", &guifont),
-  \   'call system("~/.xmonad/bin/xc command refresh-window")'
+  \   'XMonadRefreshWindow',
+  \   printf('colorscheme %s', g:colors_name),
+  \   printf('autocmd VimEnter * let v:this_session = %s', string(v:this_session)),
   \ ], ' | ')
 endfunction
 
@@ -1743,6 +1903,12 @@ let g:tagbar_type_scala = {
 
 " }}}
 
+" tweetvim {{{
+"
+let g:tweetvim_empty_separator = 1
+
+" }}}
+
 " Unite {{{
 
 let g:unite_enable_start_insert = 1
@@ -1756,11 +1922,34 @@ let g:unite_source_directory_mru_ignore_pattern = ''
 let g:unite_kind_openable_cd_command = 'TabpageCD'
 let g:unite_source_file_mru_ignore_pattern = 'temp'
 
+function! s:UniteInit()
+  nmap <silent> <buffer> J      <Plug>(unite_toggle_mark_current_candidate)
+  nmap <silent> <buffer> K      <Plug>(unite_toggle_mark_current_candidate-up)
+  nmap <silent> <buffer> <C-a>  <Plug>(unite_toggle_mark_all_candidates)
+  imap <silent> <buffer> <C-j>  <Plug>(unite_do_default_action)
+endfunction
+
+MeowtoCmd FileType unite call s:UniteInit()
+
+" }}}
+
+" unite-grep {{{
+
 " Grep with ag
 let g:unite_source_grep_command = '/bin/ag'
 let g:unite_source_grep_default_opts = '--nocolor --nogroup'
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 200
+
+function! s:GrepSelected()
+  let l:backup = @z
+  normal vgv"zy
+  let l:str = @z
+  let @z = l:backup
+  call unite#start([['grep', '.', '', l:str]])
+endfunction
+
+vnoremap sua :call <SID>GrepSelected()<CR>
 
 " }}}
 
@@ -1925,34 +2114,6 @@ let g:user_zen_settings = {
 
 " }}}
 
-" セッションの保存 {{{
-
-function! s:MkSession(name)
-  let l:fn = a:name
-
-  if match(a:name, '\S\+') < 0
-    let l:fn = (v:this_session ==# '' ? 'Session.vim' : v:this_session)
-  elseif match(a:name, 'Session\.vim$')
-    let l:fn = a:name . 'Session.vim'
-  endif
-
-  let l:fn = fnamemodify(l:fn, ':p')
-  let l:hfn = fnamemodify(l:fn, ':~')
-
-  if filereadable(l:fn) && (input('Overwrite to "' . l:hfn . '"? (y/n) ') !=# 'y')
-    echoerr 'Canceled!'
-    return 0
-  endif
-  redraw
-  echo 'Session has been made: ' . l:hfn
-  execute 'mksession! ' . l:hfn
-endfunction
-
-command! -complete=file -nargs=* MkSession call s:MkSession(<q-args>)
-AlterCommand mks MkSession
-
-" }}}
-
 
 "  ____ ____ ____ ____ ____ ____ ____ ____
 " ||f |||i |||l |||e |||t |||y |||p |||e ||
@@ -1962,6 +2123,12 @@ AlterCommand mks MkSession
 " Set filetype {{{
 
 MeowtoCmd BufNewFile,BufRead buildfile setlocal filetype=ruby
+
+" }}}
+
+" git {{{
+
+MeowtoCmd FileType gitcommit call feedkeys('ggA')
 
 " }}}
 
@@ -2031,12 +2198,68 @@ endfunction
 
 " color {{{
 
-colorscheme olive
-" colorscheme random
+let s:fallback_colorscheme = 'anekos'
+let s:last_color_filename = fnamemodify('~/.vim.lastcolor', ':p')
+let g:unite_colorscheme_command = 'Colorscheme'
 
-MeowtoCmd ColorScheme * silent! execute 'AirlineTheme ' . g:colors_name
+function! s:SaveLastColor()
+  if filereadable(s:last_color_filename)
+    call delete(s:last_color_filename)
+  endif
 
-let g:airline_theme = 'zenburn'
+  let l:file = vimproc#fopen(s:last_color_filename, "O_WRONLY | O_CREAT")
+  call file.write(g:colors_name)
+  call l:file.close()
+
+  " call vimproc#write(s:last_color_filename, g:colors_name, 'w')
+endfunction
+
+function! s:LoadLastColor()
+  try
+    let l:file = vimproc#fopen(s:last_color_filename, "O_RDONLY", 0)
+
+    let l:name = file.read()
+    if l:name =~ '^\s*$'
+      throw 'empty name'
+    endif
+    execute 'colorscheme ' . l:name
+
+    call l:file.close()
+  catch
+    execute 'colorscheme ' . s:fallback_colorscheme
+  endtry
+endfunction
+
+function! s:SetAirLineTheme()
+  if has('vim_starting')
+    return
+  endif
+
+  try
+    slient execute 'AirlineTheme ' . g:colors_name
+  catch
+    AirlineTheme zenburn
+  endtry
+endfunction
+
+function! s:MeowColorscheme(name, save)
+  execute 'colorscheme ' . a:name
+  if a:name !~ '^\s*$'
+    let g:colors_name = a:name
+  endif
+
+  if a:save
+    call s:SaveLastColor()
+  endif
+endfunction
+
+call s:LoadLastColor()
+
+MeowtoCmd VimLeave * call s:SaveLastColor()
+MeowtoCmd VimEnter * call s:SetAirLineTheme()
+MeowtoCmd ColorScheme * call s:SetAirLineTheme()
+
+command! -bang -nargs=? -complete=color Colorscheme call s:MeowColorscheme(<q-args>, <bang>0)
 
 " }}}
 
