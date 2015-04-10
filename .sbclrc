@@ -1,0 +1,32 @@
+
+;;; The following lines added by ql:add-to-init-file:
+#-quicklisp
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                       (user-homedir-pathname))))
+  (when (probe-file quicklisp-init)
+    (load quicklisp-init)))
+
+;  ;;; Check for --no-linedit command-line option.
+;  (eval-when (:compile-toplevel :load-toplevel :execute)
+;    (defvar *use-linedit* (not (member "--no-linedit" sb-ext:*posix-argv* :test 'equal)))
+;    (if *use-linedit*
+;      (when (interactive-stream-p *terminal-io*)
+;        (require :sb-aclrepl)
+;        (require :linedit)
+;        (defvar *use-linedit* t)
+;        (funcall (intern "INSTALL-REPL" :linedit) :wrap-current t))
+;      (setf sb-ext:*posix-argv*
+;            (remove "--no-linedit" sb-ext:*posix-argv* :test 'equal))))
+;  
+;  (when *use-linedit*
+;    (defun linedit-exit (chord editor)
+;      (declare (ignore chord editor))
+;      (sb-ext:exit))
+;    (macrolet
+;      ((defcommand (command &optional action)
+;         (when action
+;           `(setf (gethash ,command (eval (intern "*COMMANDS*" :linedit))) ,action))))
+;      (defcommand "C-Backspace" 'linedit::delete-char-backwards)
+;      (defcommand "C-W" 'linedit::delete-word-backwards)
+;      (defcommand "C-Q" 'linedit-exit)))
+
