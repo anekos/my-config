@@ -1,0 +1,3 @@
+[submodule ".xmonad"]
+	path = .xmonad
+	url = https://bitbucket.org/anekos/xmonad-conf.git
