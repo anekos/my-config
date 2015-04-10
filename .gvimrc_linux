@@ -1,9 +1,9 @@
 
-" 右スクロールバー削除
-set guioptions-=r
+" スクロールバー削除
+set guioptions-=r guioptions-=R guioptions-=l guioptions-=L
 
 " let &guifont="Ricty 12"
-let &guifont="Migu 1M for Powerline 13"
+let &guifont = "Source Code Pro SemiBold 12"
 
 " 読みモード
 command! -bar Reader setlocal scrolloff=666 | :highlight Cursor guifg=NONE guibg=NONE | let &guifont="VL ゴシック 14"

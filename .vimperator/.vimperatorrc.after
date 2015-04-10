@@ -1,0 +1,87 @@
+
+" alias                                                                      {{{
+
+alias e echo
+alias ri reloadimage
+alias vc videocontrol
+alias p panorama
+alias tm tabmove
+
+" }}}
+
+" GUI {{{
+
+set gui=addons,tabs,nonavigation
+"js document.getElementById('toolbar-menubar').collapsed = true
+
+" }}}
+
+" feedSomeKeys_3                                                             {{{
+
+" GMail
+fmaps -u='^https://mail\.google\.com/mail' -events=vkeydown,keypress,vkeyup j k
+fmaps -u='^https://mail\.google\.com/mail' c n p o u x s r a ? gi gs gt gd ga gc gl I
+fmaps -u='^https://mail\.google\.com/mail' -p=<Leader> d,# s,! e
+fmaps -u='^https://mail\.google\.com/mail/.*/[0-9a-f]+$' c j,n k,p n,j p,k o u x s r a ? gi gs gt gd ga gc
+fmaps -u='^https://mail\.google\.com/mail/.*/[0-9a-f]+$' -p=<Leader> d,# s,! e
+
+" Google Calendar                                                                day         week       month        custom      agenda      prev   next  create  quick
+fmaps -u='^https://www\.google\.com/calendar/' -events=vkeydown,vkeypress,vkeyup <Leader>d,d <Leader>w,w <Leader>m,m <Leader>c,4 <Leader>a,a h,p    l,n   c       q
+
+" GReader
+fmaps -u='www\.google\.co\.jp/reader' -events=vkeypress j k n p m s v A r S N P X O gh ga gs gt gu u / ? J K
+
+" LDR
+fmaps -u='(fastladder|livedoor)\.com/reader' j k s a p o c <Space> <S-Space> z < > e,g
+fmaps -u='(fastladder|livedoor)\.com/reader' q w
+
+" Google Code
+fmaps -u='http://code.google.com/p/vimperator-labs/issues/list' o j k
+fmaps -u='http://code.google.com/p/vimperator-labs/issues/detail' u
+
+" Remember The Milk
+fmaps -u='https?://www\.rememberthemilk\.com/home/' j k m i c ? G,g S,s Y,y M,m <Del>
+fmaps -u='https?://www\.rememberthemilk\.com/home/' -p=<Leader> 1 2 3 4 f t h l d r
+
+" LDRize
+fmaps J,j K,k P,p I,p
+
+" new Twitter
+fmaps -urls='^https?://twitter\.com/' -events=vkeydown j k ?
+fmaps -urls='^https?://twitter\.com/' -events=vkeydown m r gh gr gp gf gm
+fmaps -urls='^https?://twitter\.com/' -events=keydown c,<Esc>
+
+" INSERT
+fmaps -modes=i -events=keypress,keydown <C-p>,<Up> <C-n>,<Down>
+
+" epub reader
+fmaps -urls '^chrome://epubreader/content/reader\.xul' -frame 1 -events keydown j,<Right> k,<Left> <Del>
+fmaps -urls '^chrome://epubreader/content/reader\.xul' -frame 1 -events vkeydown c D s
+nnoremap -urls '^chrome://epubreader/content/reader\.xul' o :epubreader<Space>
+
+" PinCat
+fmaps -urls='^http://pincat\.kazlab\.org/' -events=keypress h j k l <CR> i p t <ESC>
+
+
+" }}}
+
+" feedeen {{{
+
+style -name feedeen https://www.feedeen.com/d -append .fd_feed_select > div > div { background-color: orange !important }
+
+" feedeen
+fmaps -u='https?://www.feedeen.com/d' -events=vkeydown j k ch cs cd cf cm
+fmaps -u='https?://www.feedeen.com/d' -events=keydown,keypress J,<Space> K,<S-Space>
+nnoremap -urls='^https?:\/\/www.feedeen.com\/' s :<C-u>feedeen nextfeed!<CR>
+nnoremap -urls='^https?:\/\/www.feedeen.com\/' a :<C-u>feedeen prevfeed!<CR>
+nnoremap -urls='^https?:\/\/www.feedeen.com\/' S :<C-u>feedeen nextfeed<CR>
+nnoremap -urls='^https?:\/\/www.feedeen.com\/' A :<C-u>feedeen prevfeed<CR>
+nnoremap -urls='^https?:\/\/www.feedeen.com\/' i :<C-u>feedeen readitlater<CR>
+nnoremap -urls='^https?:\/\/www.feedeen.com\/' v :<C-u>feedeen open<CR>
+nnoremap -urls='^https?:\/\/www.feedeen.com\/' b :<C-u>feedeen go<Space>
+nnoremap -urls='^https?:\/\/www.feedeen.com\/' cc :feedeen group set Level\<Space>
+
+fmaps -u='^https?://feedly\.com/' j k n p o v a m x v g <S-v> <S-j> <S-k>
+fmaps -u='^https?://feedly\.com/' -events=keydown,keyup q,<Esc>
+
+" }}}

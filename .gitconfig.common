@@ -1,0 +1,89 @@
+# vim: set noet ts=2 sw=2 ft=gitconfig noet :
+
+[alias]
+	aa = add --all
+	ap = add --patch
+	br = branch
+	ci = commit --verbose
+	co = checkout
+	di = diff --color --color-words --find-renames --find-copies
+	dich = diff --cached --color-words --find-renames --find-copies
+	dimo = diff master origin/master
+	me = merge
+	ranking = shortlog --summary --numbered --no-merges
+	logrep = log --grep
+	lp = log --patch
+	sh = show --color-words --find-renames --find-copies
+	st = status --branch --short
+	tree = log --graph --pretty=oneline --abbrev-commit --decorate
+	# safety http://d.hatena.ne.jp/thinca/20120924/1348491052
+	cancel = !git commit -a -m \"Temporary commit for cancel at `date`\" && git reset --hard HEAD~
+	# stash
+	z = stash
+	zl = stash list
+	zp = stash pop
+	zs = stash show
+	zsp = stash show -p
+	zz = stash save
+	# log graph
+	glog = log --graph
+	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+	lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+	lg3 = log --graph --date-order -C -M --pretty=format:"<%h> %ad [%an] %Cgreen%d%Creset %s" --date=short
+	lg4 = log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset'
+	tree = "forest --pretty=format:\"%C(red)%h %C(blue)%an %C(reset)%s\" --style=15 --reverse"
+	cch= "!f() { git cherry -v "$@" | awk '{ if($1 == \"+\"){ color = \"green\" } if($1 == \"-\"){ color = \"red\" } cmd = \"git show --date=short --no-notes --pretty=format:\\047%C\" color $1 \" %h %Cgreen%cd %Creset%s\\047 --summary \" $2; cmd | getline t; close(cmd); print t }' ;}; f"
+	# ignore
+	ignore = update-index --assume-unchanged
+	unignore = update-index --no-assume-unchanged
+	ignored = !git ls-files -v | grep "^[a-z]"
+	# for typo
+	pus = push
+
+[color]
+	branch = auto
+	diff = auto
+	grep = auto
+	interactive = auto
+	status = auto
+	ui = auto
+
+[core]
+	# git での改行コード - http://qiita.com/shuhei@github/items/2da839de8803cb335f86
+	autocrlf = false
+	safecrlf = false
+	# ファイルモードの変更を毎回検出して UZZZeeee 問題 (cygwin)
+	# filemode = false
+	# マルチバイトなファイル名が化ける問題
+	quotepath = false
+	# editor = gvim --nofork --role git
+	excludesfile = ~/.gitignore
+
+# [http]
+# 	sslVerify = false
+
+[i18n]
+	commitencoding = UTF-8
+
+[merge]
+	ff = false
+	tool = meld
+
+[pull]
+	rebase = preserve
+
+[push]
+	default = simple # カレントブランチと同名のリモートブランチが存在する場合のみ、カレントブランチのpushが行われる - http://dqn.sakusakutto.jp/2012/10/git_push.html
+
+[rerere]
+	enabled = true
+
+[tig "bind"]
+	generic = g move-first-line
+	generic = G move-last-line
+	generic = <Ctrl-G> toggle-rev-graph
+
+# Github の PullRequest を fetch できるようにする
+# [remote "origin"]
+# 	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
