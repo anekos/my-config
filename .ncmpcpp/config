@@ -1,0 +1,5 @@
+# vim: set ft=conf :
+#
+# ref: /usr/share/doc/ncmpcpp/keys
+
+enable_window_title = no

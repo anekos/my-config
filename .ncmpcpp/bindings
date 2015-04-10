@@ -1,0 +1,36 @@
+
+# ref: /usr/share/doc/ncmpcpp/bindings
+
+def_key "k"
+  scroll_up
+
+def_key "j"
+  scroll_down
+
+
+def_key "K"
+  move_selected_items_up
+
+def_key "J"
+  move_selected_items_down
+
+def_key "d"
+  delete_playlist_items
+def_key "D"
+  clear_main_playlist
+
+
+def_key "H"
+  show_help
+
+
+# Mode
+
+def_key "z"
+  toggle_random
+def_key "r"
+  toggle_repeat
+def_key "c"
+  toggle_consume
+def_key "y"
+  toggle_single
