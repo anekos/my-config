@@ -1,45 +1,55 @@
 # vim: set noet ts=2 sw=2 ft=gitconfig noet :
 
 [alias]
+	# for typo
+	# ignore
+	# log graph
+	# safety http://d.hatena.ne.jp/thinca/20120924/1348491052
+	# stash
 	aa = add --all
 	ap = add --patch
 	br = branch
+	cancel = !git commit -a -m \"Temporary commit for cancel at `date`\" && git reset --hard HEAD~
+	cch= "!f() { git cherry -v "$@" | awk '{ if($1 == \"+\"){ color = \"green\" } if($1 == \"-\"){ color = \"red\" } cmd = \"git show --date=short --no-notes --pretty=format:\\047%C\" color $1 \" %h %Cgreen%cd %Creset%s\\047 --summary \" $2; cmd | getline t; close(cmd); print t }' ;}; f"
 	ci = commit --verbose
 	co = checkout
 	di = diff --color --color-words --find-renames --find-copies
 	dich = diff --cached --color-words --find-renames --find-copies
 	dimo = diff master origin/master
-	me = merge
-	ranking = shortlog --summary --numbered --no-merges
+	fe = fetch
+	glog = log --graph
+	ignore = update-index --assume-unchanged
+	ignored = !git ls-files -v | grep "^[a-z]"
+	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+	lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+	lg3 = log --graph --date-order -C -M --pretty=format:"<%h> %ad [%an] %Cgreen%d%Creset %s" --date=short
+	lg4 = log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset'
 	logrep = log --grep
 	lp = log --patch
+	ls = log --stat --oneline
+	ls-untracked = ls-files --others --exclude-standard
+	me = merge
+	mt = mergetool
+	pl = pull
+	ps = push
+	pscb = push-current-branch
+	ra = rebase --abort
+	ranking = shortlog --summary --numbered --no-merges
+	rc = rebase --continue
+	ri = rebase --interactive
 	sh = show --color-words --find-renames --find-copies
+	shs = show --stat
 	st = status --branch --short
+	tree = "forest --pretty=format:\"%C(red)%h %C(blue)%an %C(reset)%s\" --style=15 --reverse"
 	tree = log --graph --pretty=oneline --abbrev-commit --decorate
-	# safety http://d.hatena.ne.jp/thinca/20120924/1348491052
-	cancel = !git commit -a -m \"Temporary commit for cancel at `date`\" && git reset --hard HEAD~
-	# stash
+	unignore = update-index --no-assume-unchanged
 	z = stash
 	zl = stash list
 	zp = stash pop
 	zs = stash show
 	zsp = stash show -p
 	zz = stash save
-	# log graph
-	glog = log --graph
-	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
-	lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
-	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
-	lg3 = log --graph --date-order -C -M --pretty=format:"<%h> %ad [%an] %Cgreen%d%Creset %s" --date=short
-	lg4 = log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset'
-	tree = "forest --pretty=format:\"%C(red)%h %C(blue)%an %C(reset)%s\" --style=15 --reverse"
-	cch= "!f() { git cherry -v "$@" | awk '{ if($1 == \"+\"){ color = \"green\" } if($1 == \"-\"){ color = \"red\" } cmd = \"git show --date=short --no-notes --pretty=format:\\047%C\" color $1 \" %h %Cgreen%cd %Creset%s\\047 --summary \" $2; cmd | getline t; close(cmd); print t }' ;}; f"
-	# ignore
-	ignore = update-index --assume-unchanged
-	unignore = update-index --no-assume-unchanged
-	ignored = !git ls-files -v | grep "^[a-z]"
-	# for typo
-	pus = push
 
 [color]
 	branch = auto
@@ -57,8 +67,10 @@
 	# filemode = false
 	# マルチバイトなファイル名が化ける問題
 	quotepath = false
-	# editor = gvim --nofork --role git
+	editor = panty summon -w -r git
+	# editor = gvim --nofork --role git -geometry 50x50+1820x980 -c 'set lines=999 columns=237' -c 'winpos 0 0' -geometry は効いていない…
 	excludesfile = ~/.gitignore
+	precomposeunicode = true # for Mac OS X - http://faithandbrave.hateblo.jp/entry/2016/02/08/144948
 
 # [http]
 # 	sslVerify = false

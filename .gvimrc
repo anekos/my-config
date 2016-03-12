@@ -5,23 +5,17 @@
 
 " GUI Options {{{
 
-" ツールバー削除
-set guioptions-=T
+" i = 繧｢繧､繧ｳ繝ｳ繧剃ｽｿ逕ｨ, g = 繝｡繝九Η繝ｼ縺ｮ轣ｰ濶ｲ陦ｨ遉ｺ, t = 繝｡繝九Η繝ｼ縺ｮ蛻�繧企屬縺玲ｩ溯�ｽ
+set guioptions=git
 
-" GUIタブを使わない
-set guioptions-=e
-
-" メニュー削除
-set guioptions-=m
-
-" ラベル
+" 繝ｩ繝吶Ν
 set guitablabel=%N:\ %f
 
 " }}}
 
 " set {{{
 
-" コマンドライン行数
+" 繧ｳ繝槭Φ繝峨Λ繧､繝ｳ陦梧焚
 set cmdheight=1
 
 " }}}
@@ -33,4 +27,3 @@ endif
 if has('unix')
   source ~/.gvimrc_linux
 endif
-

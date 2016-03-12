@@ -1,12 +1,66 @@
 
+" GUI オプション {{{
+
 " スクロールバー削除
 set guioptions-=r guioptions-=R guioptions-=l guioptions-=L
 
-" let &guifont="Ricty 12"
-let &guifont = "Source Code Pro SemiBold 12"
+" }}}
 
-" 読みモード
-command! -bar Reader setlocal scrolloff=666 | :highlight Cursor guifg=NONE guibg=NONE | let &guifont="VL ゴシック 14"
+" GUI フォント {{{
+
+let s:font_settings = {
+\   'nerd': {
+\     'font': 'Droid Sans Mono for Powerline Plus Nerd File Types 10',
+\     'wide': 'Ricty 10'
+\   },
+\   'source code pro': {
+\     'font': 'Source Code Pro SemiBold 12'
+\   },
+\   'ricty': {
+\     'font': 'Ricty 12'
+\   },
+\   'runez': {
+\     'font': 'RUNEZ 12',
+\     'wide': 'Ricty 12'
+\   },
+\   'vl gothic': {
+\     'font': 'VL ゴシック 12'
+\   }
+\ }
+
+function! s:SetGUIFont (setting)
+  let &guifont = a:setting.font
+  let &guifontwide = has_key(a:setting, 'wide') ? a:setting.wide : ''
+endfunction
+
+function! s:ComleteGUIFont (...)
+  return keys(s:font_settings)
+endfunction
+
+command! -nargs=* -complete=customlist,s:ComleteGUIFont GUIFont call s:SetGUIFont(s:font_settings[<q-args>])
+
+" デフォルトのフォント
+GUIFont nerd
+
+" J6uil バッファでは自動でフォント変更
+function! J6uilGUIInit()
+  if !exists('b:anekos_j6uil_initialized')
+    GUIFont vl gothic
+    XMonadRefreshWindow
+    let b:anekos_j6uil_initialized = 1
+  endif
+endfunction
+
+MeowtoCmd FileType J6uil call J6uilGUIInit()
+
+" }}}
+
+" 読書モード {{{
+
+command! Yomi call yomi#start()
+AlterCommand yomi Yomi
+
+" }}}
 
 " タブの表示 {{{
 

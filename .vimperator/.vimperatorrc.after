@@ -62,7 +62,6 @@ nnoremap -urls '^chrome://epubreader/content/reader\.xul' o :epubreader<Space>
 " PinCat
 fmaps -urls='^http://pincat\.kazlab\.org/' -events=keypress h j k l <CR> i p t <ESC>
 
-
 " }}}
 
 " feedeen {{{

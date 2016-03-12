@@ -511,11 +511,9 @@ esac
 
 export EDITOR=vim
 
-export LANG="ja_JP.UTF-8"
-export LC_COLLATE="C"
-export LANGUAGE="ja_JP:en"
+export LESSOPEN='| /usr/bin/lesspipe.sh %s'
 
-export NOX_DOCUMENT=~/nox
+export ANSIBLE_COW_SELECTION=random
 
 # }}}
 
@@ -738,7 +736,9 @@ alias -g 2N='2> /dev/null'
 alias -g 12N='&> /dev/null'
 has-command osd_cat && alias -g OSDCAT='| cut -b-100 | osd_cat --pos=middle --align=center  --font="-*-*-medium-*-*-*-20-*-*-*-*-*-*-*"'
 has-command dzen2 && alias -g DZEN='| dzen2 -bg orange -fg black -xs 1 -e "onstart=uncollapse"'
-has-command python && alias -g JSON='| python -mjson.tool'
+# has-command python && alias -g JSON='| python -mjson.tool'
+has-command python2 && alias -g JSON="| python2 -c 'import sys,json;print json.dumps(json.loads(sys.stdin.read()),indent=4,ensure_ascii=False)'"
+has-command jq && alias -g JQ='| jq'
 
 # H1 〜 H100、T1 〜 T100
 function () {
@@ -768,6 +768,8 @@ fi
 
 alias eclear="echo -e '\026\033c'"
 
+has-command fu || has-command fu.py && alias fu=fu.py
+
 # extension
 # alias -s vim="vi"
 # alias -s txt="vi"
@@ -782,6 +784,9 @@ then
     (echo '' ; tput clear; longcat $((`tput lines` - 20)); sleep $wait)
   }
 fi
+
+# vim
+alias p='panty summon'
 
 # OS
 case "$OSTYPE" in
@@ -800,6 +805,17 @@ esac
 # TMUX
 [ -n "$TMUX" ] && alias copy=~/script/tmux/copy
 
+# the fuck
+# alias fuck='eval $(thefuck $(fc -ln -1))'
+
+# workaround
+alias gitk='LC_ALL=C gitk'
+
+# }}}
+
+# 外部コマンドを使うためのエイリアス {{{
+
+[ -x /bin/time ] && alias time=/bin/time
 
 # }}}
 
@@ -907,19 +923,26 @@ function saycode {
 # 履歴に記録する条件 {{{
 # http://d.hatena.ne.jp/mollifier/20090728/p1
 zshaddhistory() {
-    local ok=$?
+    local ok=$? # 上手くいかない
     local line=${1%%$'\n'}
-    local cmd=`basename "${line%% *}"`
+    local cmd_path="${line%% *}"
+    local cmd=`basename "$cmd_path"`
+    local exists=0
+
+    if has-command "$cmd" || [[ $cmd_path =~ [~/] ]]
+    then
+      exists=1
+    fi
 
     # 以下の条件をすべて満たすものだけをヒストリに追加する
     [[ ${#line} -ge 4
         && ${cmd} != (exit|halt|reboot)
         && ${cmd} != (rm|rmdir)
         && ${cmd} != (man)
-        #&& ${cmd} != (l[salr])
-        #&& ${cmd} != (c|cd)
-        && ( ${ok} = 0 || ${ok} = 130 )
-    ]]
+        && ${cmd} != (l[salr])
+        && ${cmd} != (c|cd)
+        && ${exists} -eq 1
+    ]] # && echo record "$ok"
 }
 # }}}
 
@@ -1060,13 +1083,13 @@ function marker () {
 # p (syntax highligitng) {{{
 # easy_install-2.7 --user pygments
 
-_p_command_base='pygmentize -O style=monokai -f console256 -g'
+_pygments_command_base='pygmentize -O style=monokai -f console256 -g'
 
-function p () {
+function pyg () {
   eval $_p_command_base "$@" 2> /dev/null | less -R
 }
 
-function pl () {
+function pygl () {
   eval $_p_command_base "$@" 2> /dev/null | nl -n ln -b a | less -R
 }
 
@@ -1204,9 +1227,20 @@ then
       if has-command nyancat
       then
         nyancat -f 5 --no-count --no-title -e
-      elif has-command  ~/script/shell/cat
-      then
-        ~/script/shell/cat
+      #elif has-command  ~/script/shell/cat
+      #then
+      #  ~/script/shell/cat
+      else
+        echo -e '\e[H\e[2J
+          \e[1;36m.
+         \e[1;36m/#\
+        \e[1;36m/###\      \e[1;37m               #     \e[1;36m| *
+       \e[1;36m/p^###\     \e[1;37m a##e #%" a#"e 6##%  \e[1;36m| | |-^-. |   | \ /
+      \e[1;36m/##P^q##\    \e[1;37m.oOo# #   #    #  #  \e[1;36m| | |   | |   |  X
+     \e[1;36m/##(   )##\   \e[1;37m%OoO# #   %#e" #  #  \e[1;36m| | |   | ^._.| / \ \e[0;37mTM
+    \e[1;36m/###P   q#,^\
+   \e[1;36m/P^         ^q\ \e[0;37mTM
+'
       fi
     fi
   }
@@ -1407,6 +1441,8 @@ function init-rbenv {
   fi
 }
 
+init-rbenv
+
 # }}}
 
 # node.js - nvm {{{
@@ -1445,6 +1481,13 @@ stty erase '^h'
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 has-command pacmatic && alias pacman=pacmatic
+
+# }}}
+
+# Workaround {{{
+
+# なぜか source しないと有効にならない…
+[ -f ~/.zsh_func/_irmagi ] && source ~/.zsh_func/_irmagi
 
 # }}}
 

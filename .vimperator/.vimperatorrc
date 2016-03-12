@@ -28,7 +28,7 @@ let g:multi_requester_default_sites = "alc"
 let g:hints_copy_maps = "k K <nop> <nop>"
 
 " twittperator.js
-let g:twittperator_use_chirp = 1
+let g:twittperator_use_chirp = 0
 let g:twittperator_screen_name = "anekos"
 let g:twittperator_history_limit = 5000
 let g:twittperator_use_ssl_connection_for_api_ep = 1
@@ -136,6 +136,9 @@ let g:walk_input_map_backward = '<C-.> <C-S-,>'
 
 let g:edit_vimperator_files_directory_names = 'plugin colors styles style script common-script'
 
+" nox
+let g:nox_base_url = 'http://localhost:9199/noodler'
+
 " }}}
 
 " set {{{
@@ -145,8 +148,6 @@ set notabnumbers
 set status=tabcount,bookmark,position,input,location
 set history=5000
 set newtab=all
-set expandtemplate=true
- "smartorder"
 set hintchars=hjklasdfgyuiopqwertnmzxcvb
 set defsearch=google
 
@@ -370,8 +371,11 @@ nnoremap <Leader>ar :<C-u>autobookmark remove<Space>
 nnoremap <Leader>b :<C-u>buffer<Space>
 
 " read it later
-nnoremap <Leader>n :ril open<Space>
-nnoremap <Leader>l :ril add<Space>
+nnoremap <Leader>ln :ril open<Space>
+nnoremap <Leader>lN :ril open!<Space>
+nnoremap <Leader>lr :ril random<Space>
+nnoremap <Leader>le :ril empty<Space>
+nnoremap <Leader>ll :ril add<Space>
 
 " my-style
 nnoremap <Leader>ms :mystyle set<Space>
@@ -389,6 +393,12 @@ nnoremap <Leader>/ :sitesearch<Space>
 nnoremap <Leader>fn :font name<Space>
 nnoremap <Leader>ff :font name<Space>
 nnoremap <Leader>fs :font size<Space>
+
+" nox
+nnoremap <Leader>nn :nox<Space>
+nnoremap <Leader>no :nox open<Space>
+nnoremap <Leader>nw :nox wishlist<Space>
+nnoremap <Leader>ns :nox search<Space>
 
 " }}}
 
@@ -465,13 +475,7 @@ nnoremap > :tabhistory forward<CR>
 
 " カラースキーム                                                             {{{
 
-colorscheme theme
-colorscheme tab-numbers
-
-colorscheme fix-addon
-colorscheme fix-sites
-colorscheme fix-firefox
-colorscheme fix-vimperator
+colorscheme theme-hints
 
 " }}}
 
@@ -510,7 +514,6 @@ command! ramen -nargs=1 delay -interval=<args>m namakubi できたぞ、くえ�
 command! sopen js [liberator.open(a.href, liberator.NEW_BACKGROUND_TAB) for (a in util.evaluateXPath("//a")) if (content.window.getSelection().containsNode(a, true))]
 command! webcon :emenu Tools.Web Console
 command! gpum statusbarpanel gpum-statusbar-panel
-command! pushref :js io.File('~/repos/share/memo/refs.txt').write("\n" + buffer.title + "\n    " + buffer.URL + "\n", '>>')
 command! righttoleft -description "Copy Unicode 'RIGHT-TO-LEFT' to clipboard" js util.copyToClipboard("\u202e")
 
 " }}}
@@ -519,15 +522,14 @@ command! righttoleft -description "Copy Unicode 'RIGHT-TO-LEFT' to clipboard" js
 
 abbr jager          JagerMonkey
 abbr #v             #vimperator
-abbr pen            pentadactyl
-abbr #pen           #pentadactyl
 cabbr .fm           http://turntable.fm/metallum #turntablefm
 
-abbr -j .url        plugins.bitly.jmp(buffer.URL)
-abbr -j .tu         abbreviations.get(modes.INSERT, '.title').text + ' - ' + plugins.bitly.jmp(buffer.URL)
-abbr -j .impala     plugins.haneru.getc(buffer.URL)[0]
+abbr -j .title      buffer.title
+abbr -j .url        liberator.plugins.bitly.jmp(buffer.URL)
+abbr -j .tu         '"' + abbreviations.get(modes.INSERT, '.title').text + '" - ' + liberator.plugins.bitly.jmp(buffer.URL)
+abbr -j .impala     liberator.plugins.haneru.getc(buffer.URL)[0]
 
-abbr -j .song       let (song = plugins.mpdCurrentsong.API.getSongInfo()) <>{song.Title} / {song.Artist} #NowPlaying</>
+abbr -j .song       let (song = liberator.plugins.mpdCurrentsong.API.getSongInfo()) <>{song.Title} / {song.Artist} #NowPlaying</>
 
 iabbr -j .cmdline   commandline.command
 

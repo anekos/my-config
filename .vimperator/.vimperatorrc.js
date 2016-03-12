@@ -4,9 +4,8 @@
 
   // Plugins                                                                     {{{
   liberator.globalVariables.plugin_loader_plugins = [
-    '&#x8DF3;',
     '_libly',
-    '_smooziee',
+    // '_smooziee',
     'alert',
     'alias',
     'appendAnchor',
@@ -22,12 +21,10 @@
     'bitly',
     '!buffer-multiple-hints',
     'caret-hint',
-    'commandBookmarklet',
     'copy',
     // 'dc',
     'direct_bookmark',
     'edit-vimperator-files',
-    '!embed-esc',
     'epub-reader',
     'erection',
     'every',
@@ -35,22 +32,18 @@
     'feedeen.com',
     'forcefocuscontent',
     'gmail-commando',
-    'google-plus-commando',
+    'google-exopen',
     'google-results',
     'google-tasks',
-    // 'google-translator',
-    // 'grep',
     'hatenaStar',
     'happy_hacking_vimperator',
     'hint-tombloo',
     'hints-for-embedded',
     'hints-yank-paste',
-    // 'hints-ext',
     'liberator-overlay-ext',
     'lo',
     'longcat',
     'loginManager',
-    // 'maine_coon',
     'memo',
     'multi-exec',
     'multi_requester',
@@ -94,11 +87,11 @@
 
   function around (obj, name, func) {
     let next = obj[name];
-    obj[name] = function ()
-      let (self = this, args = arguments)
-        func.call(self,
-                  function () next.apply(self, args),
-                  args);
+    obj[name] = function () {
+      let self = this;
+      let args = arguments;
+      return func.call(self, function () next.apply(self, args), args);
+    };
   }
 
   function commandMap (maps, cmd, args, cmdModes) {
@@ -192,14 +185,14 @@
     }
   );
 
-  let (
-    remove = mappings.getDefault(modes.NORMAL, 'd').action
-  )
-    around(
+  (function () {
+    let remove = mappings.getDefault(modes.NORMAL, 'd').action;
+    return around(
       mappings.getDefault(modes.NORMAL, '<C-o>'),
       'action',
       function (next) (gBrowser.sessionHistory.index > 0 ? next : remove)(-1)
     );
+  })();
 
 
   // }}}
@@ -245,12 +238,14 @@
   // }}}
 
   // Util funcitons for commandline {{{
-  {
+  if (0) {
+    // flasher は無くなったか、リネームされたぽい
     let flasher = Cc['@mozilla.org/inspector/flasher;1'].createInstance(Ci.inIFlasher);
     flasher.color = '#FF0000';
     flasher.thickness = 2;
 
-    let (c = modules.userContext) {
+    (function () {
+      let c = modules.userContext;
       c.__defineGetter__("doc", function() content.document.wrappedJSObject);
       c.__defineGetter__("win", function() content.window.wrappedJSObject);
       c.echo = liberator.echo;
@@ -278,7 +273,7 @@
         Application.log(msg);
         return msg;
       };
-    }
+    })();
   }
   // }}}
 
@@ -460,15 +455,19 @@
 
   if (1) { // Copy.js                                                                 {{{
     function shortAmazon () {
-      var asin = content.document.getElementById('ASIN').value;
-      var base = 'http://amazon.jp/';
-      var dirs = ['dp/', 'o/ASIN/', 'gp/product/'];
+      try {
+        var asin = content.document.querySelector('#ASIN, input[name="ASIN.0"]').value;
+        var base = 'http://amazon.jp/';
+        var dirs = ['dp/', 'o/ASIN/', 'gp/product/'];
 
-      if (asin) {
-        for each (var it in dirs) {
-          if (content.document.location.pathname.indexOf(it) != 1)
-            return base + it + asin;
+        if (asin) {
+          for each (var it in dirs) {
+            if (content.document.location.pathname.indexOf(it) != 1)
+              return base + it + asin;
+          }
         }
+      } catch(e) {
+        return buffer.URL;
       }
     }
 
@@ -491,7 +490,7 @@
         value: 'Title and URL for nox',
         custom: function () {
           let url = /amazon\./.test(content.document.location.host) ? shortAmazon() : buffer.URL;
-          return buffer.title + ' - ' + url;
+          return buffer.title + ' - ' + url + "\n";;
         }
       },
       {
@@ -499,7 +498,7 @@
         value: 'Title and URL for nox',
         custom: function () {
           let url = /amazon\./.test(content.document.location.host) ? shortAmazon() : buffer.URL;
-          return '[' + buffer.title + '](' + url + ')';
+          return '[' + buffer.title + '](' + url + ')' + "\n";;
         }
       },
       {
@@ -507,7 +506,7 @@
         value: 'Title and URL for nox',
         custom: function () {
           let url = /amazon\./.test(content.document.location.host) ? shortAmazon() : buffer.URL;
-          return buffer.title + "\n:   " + url;
+          return buffer.title + "\n:   " + url + "\n";
         }
       },
       {
@@ -573,6 +572,10 @@
       {
         label: 'link',
         value: '<a href="%URL%">%TITLE%</a>'
+      },
+      {
+        label: 'aozora-updater',
+        value: "# %TITLE%\nSites.auto('%URL%', '%TITLE%')"
       }
     ];
   } // }}}
@@ -655,9 +658,10 @@
       [modes.COMMAND_LINE],
       ['<C-o>'],
       'Expand bookmark keyword.',
-      function ()
-        let ([, cmd, bang, args] = commands.parseCommand(commandline.command))
-          (commandline.command = commandline.command.replace(args, util.stringToURLArray(args).join(', ')))
+      function () {
+        let [, cmd, bang, args] = commands.parseCommand(commandline.command);
+        return commandline.command = commandline.command.replace(args, util.stringToURLArray(args).join(', '));
+      }
     );
   } // }}}
 
@@ -760,14 +764,14 @@
   } // }}}
 
   if (1) { // autocmd を echomsg しないようにする {{{
-    let (original = liberator.echomsg)
-      liberator.echomsg = function (msg) {
-        const REAC = RegExp('-> liberator://template/chrome://liberator/content/autocommands\\.js:\\d+');
-        if (Error().stack.split(/\n/).some(RegExp.prototype.test.bind(REAC)) && /Executing .* Auto commands for .*/.test(msg))
-          liberator.log(msg);
-        else
-          original.apply(liberator, arguments);
-      };
+    let original = liberator.echomsg;
+    liberator.echomsg = function (msg) {
+      const REAC = RegExp('-> liberator://template/chrome://liberator/content/autocommands\\.js:\\d+');
+      if (Error().stack.split(/\n/).some(RegExp.prototype.test.bind(REAC)) && /Executing .* Auto commands for .*/.test(msg))
+        liberator.log(msg);
+      else
+        original.apply(liberator, arguments);
+    };
   } // }}}
 
   if (1) { // :mess の出力をコピーする {{{
@@ -777,12 +781,12 @@
       function () {
         util.copyToClipboard(
           commandline._messageHistory._messages.map(
-            function(it)
-              let (v = it.str) (
-                typeof v === 'xml'    ? v.textContent :
-                typeof v === 'object' ? (v + "\n" + v.stack) :
-                v
-              )
+            function(it) {
+              v = it.str;
+              return typeof v === 'xml'    ? v.textContent :
+                     typeof v === 'object' ? (v + "\n" + v.stack) :
+                     v;
+            }
           ).join("\n\n")
         );
       },

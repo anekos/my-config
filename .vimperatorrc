@@ -24,6 +24,15 @@
 js << EOM
 if (!liberator.globalVariables.anekos_rc_loaded) {
   ////////////////////////////////////////////////////////////////////////////////
+  // Hacks For Firefxx
+  ////////////////////////////////////////////////////////////////////////////////
+
+  liberator.modules.CompletionContext = liberator.eval('CompletionContext', modules);
+  liberator.modules.userContext = liberator.eval('userContext', modules);
+  Command = liberator.eval('Command', modules);
+  Editor = liberator.eval('Editor', modules);
+
+  ////////////////////////////////////////////////////////////////////////////////
   // USER SETTING
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +56,8 @@ if (!liberator.globalVariables.anekos_rc_loaded) {
   ////////////////////////////////////////////////////////////////////////////////
 
   try {
+    liberator.registerObserver('enter', function () sourceFromDirs(arcs, newrps));
+
     let joinPaths = function () Array.slice(arguments).join('/');
 
     let sourceFromDirs = function (paths, dirs) {
@@ -93,7 +104,6 @@ if (!liberator.globalVariables.anekos_rc_loaded) {
     //   // 参照: ~/.vimperator/default/plugin/my_readitlater_for_hints_ext.js
     //   sourceFromDirs(arcs, newrps);
     // });
-    liberator.registerObserver('enter', function () sourceFromDirs(arcs, newrps));
 
   } catch (e) {
     window.alert(e);
