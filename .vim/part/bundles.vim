@@ -325,6 +325,8 @@ NeoBundle 'todesking/vint-syntastic'
 NeoBundle 'anekos/felis-cat-igirisu-toast-express'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'tyru/open-browser.vim'
+NeoBundle 'Shougo/vimfiler.vim'
+NeoBundle 'Konfekt/FastFold'
 " }}}
 
 " White Zombie {{{

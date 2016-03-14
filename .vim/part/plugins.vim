@@ -36,6 +36,7 @@ AlterCommand agit Agit
 AlterCommand align Alignta
 AlterCommand bg BGrep
 AlterCommand burn Burn
+AlterCommand cap Capture
 AlterCommand co copen
 AlterCommand lo lopen
 AlterCommand cdp CdProjectRoot
@@ -74,6 +75,9 @@ AlterCommand tm tabmove
 AlterCommand w1 w!
 AlterCommand w2 w!
 AlterCommand w3 w!
+AlterCommand vs VimShell
+AlterCommand vf VimFiler
+AlterCommand vfe VimFileExplorer
 
 " }}}
 
@@ -541,6 +545,7 @@ let g:quickrun_config = {
 \   'clojure': {
 \     'type': 'clojure/lein/load-file'
 \   },
+\   'clojure/clj': {'command': 'clj', 'exec': '%c %s %a'},
 \   'clojure/watchdogs_checker': {
 \     'type': 'clojure/lein/eastwood'
 \   },
@@ -1018,10 +1023,8 @@ let g:textmanip_enable_mappings = 0
 
 " trailing whitespaces 行末のスペースを目立たせる {{{
 
-if neobundle#tap('vim-trailing-whitespace')
-  " uniteでスペースが表示されるので、設定でOFFにします。
-  let g:extra_whitespace_ignored_filetypes = ['unite']
-endif
+" uniteでスペースが表示されるので、設定でOFFにします。
+let g:extra_whitespace_ignored_filetypes = ['unite']
 
 " }}}
 
@@ -1194,6 +1197,12 @@ let g:haskell_conceal      = 0
 
 " }}}
 
+" vimfiler {{{
+
+let g:vimfiler_as_default_explorer = 1
+
+" }}}
+
 " VimShell {{{
 
 " VimShell に選択文字列を送信
@@ -1207,6 +1216,9 @@ endfunction
 
 let g:vimshell_split_command = 'rightbelow vsplit'
 let g:vimshell_no_default_keymappings = 1
+
+let g:vimshell_prompt_expr = 'fnamemodify(getcwd(), ":~:.") . "$ "'
+let g:vimshell_prompt_pattern = '^[^\$]\+\$ '
 
 " lein repl を起動
 command! -bar Lein execute ':VimShellInteractive lein repl'

@@ -210,6 +210,7 @@ nnoremap <Leader>uo :<C-u>Unite outline<CR>
 nnoremap <Leader>uq :<C-u>Unite -no-quit -auto-preview quickfix<CR>
 nnoremap <Leader>ur :<C-u>Unite quickrun_config -default-action=set_global_quickrun_config<CR>
 nnoremap <Leader>uR :<C-u>Unite quickrun_config -default-action=execute<CR>
+nnoremap <Leader>us :<C-u>Unite file_rec:~/.vim/part file_rec:~/.vim/dein<CR>
 nnoremap <Leader>uS :<C-u>Unite located_session<CR>
 nnoremap <Leader>uT :<C-u>Unite tab:no-current<CR>
 nnoremap <Leader>ut :<C-u>Unite tag<CR>
