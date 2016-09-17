@@ -8,133 +8,18 @@
 
 scriptencoding utf8
 
-" *.archive に選択範囲を移動 {{{
-
-function! Archive(comment) range
-  let l:basefn = expand('%:p')
-  if l:basefn ==# ''
-    echoerr 'No filename'
-    return
-  endif
-  execute (a:firstline . ',' . a:lastline) . 'delete'
-  if a:comment !=# ''
-    let l:prefix = a:comment . ' - '
-  else
-    let l:prefix = ''
-  endif
-  let l:content = "\n\n\n[" . l:prefix . system('date | tr --delete "\n"') . "]\n\n" . @"
-
-  " call vimproc#write(l:basefn . '.archive', l:content, 'a')
-
-  let l:file = vimproc#fopen(l:basefn . '.archive', 'O_WRONLY | O_CREAT | O_APPEND')
-  call l:file.write(l:content)
-  call l:file.close()
-endfunction
-
-command! -nargs=* -range Archive <line1>,<line2>call Archive(<q-args>)
-
-" }}}
-
-" chmod {{{
-function! s:Chmod(perm)
-  let l:perm = len(a:perm) > 0 ? a:perm : '+x'
-  let l:res = system('chmod ' . l:perm . ' ' . shellescape(expand('%')))
-  write
-  edit
-endfunction
-command! -bar -nargs=* Chmod :call s:Chmod(<q-args>)
-" }}}
-
-" Execlip {{{
-
-function! s:Execlip()
-  for l:cmd in split(@*, '\n')
-    execute l:cmd
-  endfor
-endfunction
-command! -bar Execlip call s:Execlip()
-
-" }}}
-
-" カレントファイルのパスをクリプボぅ! {{{
-
-command! -bang -bar CopyCurrentFilepath :call s:CopyCurrentFilepath('<bang>')
-function! s:CopyCurrentFilepath (bang)
-  let l:path = expand('%n')
-  let l:result = l:path
-  if a:bang ==# '!'
-    let l:result = printf('L%d@%s', line('.'), l:result)
-  endif
-  let @* = l:result
-endfunction
-
-" }}}
-
-" スクラッチバッファ {{{
-
-function! s:Scratch ()
-  new
-  setlocal buftype=nowrite
-endfunction
-command! -bar Scratch :call s:Scratch()
-
-" }}}
-
-" バージョン番号部分を置換 {{{
-
-function! ReplaceVersions ()
-  1
-  M/\d+\.\d+\.\d+
-  let l:current = matchstr(getline('.'), '\d\d*\.\d\d*\.\d\d*')
-  let l:new = input('new version number: ', l:current)
-  execute '%s/' . l:current . '/' . l:new . '/gc'
-endfunction
-command! -bar -nargs=0 ReplaceVersions call ReplaceVersions()
-
-" }}}
-
-" ヘルプタグ {{{
-
-" helptag ~/.vim/doc
-function! s:MakeHelpTags ()
-  echomsg 'Making help tags...'
-  for l:path in split(&runtimepath, ',')
-    let l:docpath = l:path . '/doc'
-    if match(l:path, '^/usr/') < 0 && isdirectory(l:docpath) && len(glob(l:docpath . '/*')) > 0
-      try
-        echomsg l:path
-        execute 'helptags ' . l:docpath
-      catch
-        echohl Error
-        echomsg 'Error (' . v:exception . '): ' . l:path
-        echohl None
-      endtry
-    endif
-  endfor
-  " No plugins on ~/.vim
-  " helptags ~/.vim/doc
-  echomsg 'Done.'
-endfunction
-
-command! -bar MakeHelpTags :call s:MakeHelpTags()
-
-" }}}
-
 " 一行コマンド {{{
-
-" 再エンコード
-command! -bar -nargs=1 Reenco e ++enc=<args>
 
 " 行末の空白をのぞく (space, ideographic-space, tab)
 command! -bar RemoveTrailingSpaces %s/[ 　	]\+$//c
 
 " エンコーディング指定オープン
-command! -bang -complete=file -nargs=? Utf8 edit<bang> ++enc=utf-8 <args>
-command! -bang -complete=file -nargs=? Sjis edit<bang> ++enc=cp932 <args>
-command! -bang -complete=file -nargs=? Euc edit<bang> ++enc=eucjp <args>
-command! -bang -complete=file -nargs=? WUtf8 write<bang> ++enc=utf-8 <args>
-command! -bang -complete=file -nargs=? WSjis write<bang> ++enc=cp932 <args>
-command! -bang -complete=file -nargs=? WEuc write<bang> ++enc=eucjp <args>
+command! -bang -complete=file -nargs=? Utf8 edit<bang> ++enc=utf-8 ++bad=keep<args>
+command! -bang -complete=file -nargs=? Sjis edit<bang> ++enc=cp932 ++bad=keep<args>
+command! -bang -complete=file -nargs=? Euc edit<bang> ++enc=eucjp ++bad=keep<args>
+command! -bang -complete=file -nargs=? WUtf8 write<bang> ++enc=utf-8 ++bad=keep<args>
+command! -bang -complete=file -nargs=? WSjis write<bang> ++enc=cp932 ++bad=keep<args>
+command! -bang -complete=file -nargs=? WEuc write<bang> ++enc=eucjp ++bad=keep<args>
 
 " ファイルリネーム - http://vim-users.jp/2009/05/hack17/
 command! -nargs=1 -complete=file Rename save <args>|call delete(expand('#'))
@@ -144,36 +29,81 @@ command! -bar SSF syntax sync fromstart
 
 " }}}
 
-" 戦闘力 {{{
+" *.archive に選択範囲を移動 {{{
 
-function! s:Scouter(file, ...)
-  let l:pat = '^\s*$\|^\s*"'
-  let l:lines = readfile(a:file)
-  if !a:0 || !a:1
-    let l:lines = split(substitute(join(l:lines, "\n"), '\n\s*\\', '', 'g'), "\n")
+function! s:archive(comment) range
+  let l:basefn = expand('%:p')
+  if l:basefn ==# ''
+    echoerr 'No filename'
+    return
   endif
-  return len(filter(l:lines,'v:val !~# l:pat'))
+
+  execute (a:firstline . ',' . a:lastline) . 'delete'
+
+  if a:comment !=# ''
+    let l:prefix = a:comment . ' - '
+  else
+    let l:prefix = ''
+  endif
+
+  let l:content = "\n\n\n[" . l:prefix . system('date | tr --delete "\n"') . "]\n\n" . @"
+
+  " call vimproc#write(l:basefn . '.archive', l:content, 'a')
+
+  let l:file = vimproc#fopen(l:basefn . '.archive', 'O_WRONLY | O_CREAT | O_APPEND')
+  call l:file.write(l:content)
+  call l:file.close()
 endfunction
-command! -bar -bang -nargs=? -complete=file Scouter
-\        echo s:Scouter(empty(<q-args>) ? $MYVIMRC : expand(<q-args>), <bang>0)
-command! -bar -bang -nargs=? -complete=file GScouter
-\        echo s:Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
+
+command! -nargs=* -range Archive <line1>,<line2>call s:archive(<q-args>)
+
+" }}}
+
+" chmod {{{
+
+function! s:chmod(perm)
+  let l:perm = len(a:perm) > 0 ? a:perm : '+x'
+  let l:res = system('chmod ' . l:perm . ' ' . shellescape(expand('%')))
+  write
+  edit
+endfunction
+
+command! -bar -nargs=* Chmod :call s:chmod(<q-args>)
+
+" }}}
+
+" カレントファイルのパスをクリプボぅ! {{{
+
+command! -nargs=* -bang -bar CopyCurrentFilepath :call s:copy_current_filepath('<bang>', <q-args>)
+
+function! s:copy_current_filepath (bang, modifier)
+  let l:path = expand('%' . a:modifier)
+  if a:bang ==# '!'
+    let l:path = printf('L%d@%s', line('.'), l:path)
+  endif
+  let @* = l:path
+  echo printf('>> %s', l:path)
+endfunction
 
 " }}}
 
 " numeronym -> n7m {{{
 
-function! Numeronym(word)
+function! s:get_numeronym(word)
   let l:m = matchlist(a:word, '^\(.\)\(.*\)\(.\)$')
   return l:m[1] . string(len(l:m[2])) . l:m[3]
 endfunction
 
-function! ReplaceWithNumeronym()
-  let l:word = Numeronym(expand('<cword>'))
-  execute 'normal ' . 'caw' . l:word
+function! s:numeronym(word)
+  if len(a:word) > 0
+    echo s:get_numeronym(a:word)
+  else
+    let l:word = s:get_numeronym(expand('<cword>'))
+    execute 'normal ' . 'ciw' . l:word
+  endif
 endfunction
 
-command! -bar Numeronym call ReplaceWithNumeronym()
+command! -bar -nargs=* Numeronym call s:numeronym(<q-args>)
 
 " }}}
 
@@ -184,7 +114,7 @@ augroup XMonadRefreshWindow
 augroup END
 
 " 念の為) この関数が実行されるまでに、'updatetime' が変更されても上書きされてしまう問題有り。
-function! s:XMonadRefreshWindowDelayed()
+function! s:xmonad_refresh_window_delayed()
   silent call vimproc#system('~/.xmonad/bin/xc command refresh-window')
 
   let &updatetime = s:xmonad_refresh_window_updatetime_backup
@@ -192,7 +122,7 @@ function! s:XMonadRefreshWindowDelayed()
   autocmd! XMonadRefreshWindow
 endfunction
 
-function! s:XMonadRefreshWindow()
+function! s:xmonad_refresh_window()
   if !has('gui_running')
     return
   endif
@@ -203,16 +133,16 @@ function! s:XMonadRefreshWindow()
 
   let s:xmonad_refresh_window_updatetime_backup = &updatetime
   set updatetime=200
-  autocmd XMonadRefreshWindow CursorHold * call s:XMonadRefreshWindowDelayed()
+  autocmd XMonadRefreshWindow CursorHold * call s:xmonad_refresh_window_delayed()
 endfunction
 
-command! -bar XMonadRefreshWindow call s:XMonadRefreshWindow()
+command! -bar XMonadRefreshWindow call s:xmonad_refresh_window()
 
 " }}}
 
 " バルーンで Syntax 情報を得てみる {{{
 
-function! s:BallonSyntax(name)
+function! s:balloon_syntax(name)
   set ballooneval
   if a:name ==# 'syntax'
     set balloonexpr=synIDattr(synID(v:beval_lnum,\ v:beval_col,\ 1),\ 'name')
@@ -223,197 +153,17 @@ function! s:BallonSyntax(name)
   endif
 endfunction
 
-function! s:BalloonCompl(...)
+function! s:balloon_syntax_compl(...)
   return ['syntax', 'fold']
 endfunction
 
-command! -bar -nargs=1 -complete=customlist,s:BalloonCompl BallonSyntax call s:BallonSyntax(<q-args>)
-
-" }}}
-
-" 日付挿入 {{{
-
-function! s:InsertDate ()
-  let l:text = substitute(system('LANG=ja_JP.UTF-8 date'), '\n', '', '')
-  if &filetype ==# 'nox'
-    let l:text = '# ' . l:text
-  else
-    let l:text = '<<' . l:text . '>>'
-  endif
-  call append(line('.'), [l:text, ''])
-  normal! zzG
-endfunction
-
-command! -bar Date normal! :call s:InsertDate()<CR>
-
-" }}}
-
-" セッションの保存 {{{
-
-function! s:MkSession(name)
-  let l:fn = a:name
-
-  if match(a:name, '\S\+') < 0
-    let l:fn = (v:this_session ==# '' ? 'Session.vim' : v:this_session)
-  elseif match(a:name, 'Session\.vim$') < 0
-    let l:fn = a:name . 'Session.vim'
-  else
-    let l:fn = a:name
-  endif
-
-  let l:fn = fnamemodify(l:fn, ':p')
-  let l:hfn = fnamemodify(l:fn, ':~')
-
-  if filereadable(l:fn) && (input('Overwrite to "' . l:hfn . '"? (y/n) ') !=# 'y')
-    echoerr 'Canceled!'
-    return 0
-  endif
-
-  redraw
-  echo 'Session has been made: ' . l:hfn
-  execute 'mksession! ' . l:hfn
-endfunction
-
-command! -bar -complete=file -nargs=* MkSession call s:MkSession(<q-args>)
-
-" }}}
-
-" 下線を引く for rst とか {{{
-
-function! UnderLine(up)
-  let l:prev_len = strdisplaywidth(getline('.'))
-  let l:char = nr2char(getchar())
-
-  if l:char ==# 'l' && exists('s:previous_underline_char')
-    let l:char = s:previous_underline_char
-  else
-    let s:previous_underline_char = l:char
-  endif
-
-  let l:text = ''
-
-  while len(l:text) < l:prev_len
-    let l:text .= l:char
-  endwhile
-
-  " 改行消さないために a を入れる
-  if a:up
-    return "o\a\<C-u>" . l:text . "\<Esc>kO\<C-u>" . l:text . "\<Esc>"
-  else
-    return "o\a\<C-u>" . l:text . "\<Esc>"
-  endif
-endfunction
-
-" l を押すと最後に使った文字になる
-nnoremap <expr> <Leader>l UnderLine(0)
-nnoremap <expr> <Leader>L UnderLine(1)
-command! -bar UnderLine call UnderLine
-
-" }}}
-
-" 色々なコマンドのメニュー {{{
-
-function! s:InitUniteSomethingMenu()
-  if !exists('g:unite_source_menu_menus')
-    let g:unite_source_menu_menus = {}
-  endif
-
-  " menu の説明
-  let l:commands = {
-    \   'description' : 'something-action',
-    \}
-
-  " コマンドを登録
-  let l:commands.candidates = {
-    \   'colorcolumn'             : 'ColorColumn',
-    \   'cross'                   : 'setlocal cursorcolumn! cursorline!',
-    \   'git-messager'            : 'GitMessengerToggle',
-    \   'googlesuggest'           : 'set completefunc=googlesuggest#Complete',
-    \   'indent-line'             : 'IndentLinesToggle',
-    \   'open-all-project-source' : 'OpenAllProjectSource',
-    \   'quickhl'                 : 'QuickhlManualEnable',
-    \   'relative-number'         : 'setlocal relativenumber!',
-    \   'table-mode'              : 'TableModeToggle',
-    \   'unite-zsh-history'       : 'Unite output/shellcmd:~/script/zsh/history-all -default-action=yank',
-    \   'write-at-escape'         : 'EscWrite',
-    \}
-
-  " 上記で登録したコマンドを評価する関数
-  " 最終的にこれで評価した結果が unite に登録される
-  function l:commands.map(key, value)
-    return {'word' : a:key, 'kind' : 'command', 'action__command' : a:value}
-  endfunction
-
-  let g:unite_source_menu_menus['something'] = deepcopy(l:commands)
-
-  " 呼び出しのキーマップ ("I"nstant command)
-  nnoremap <silent> <Leader>i :<C-u>Unite -immediately menu:something<CR>
-  vnoremap <silent> <Leader>i :<C-u>Unite -immediately menu:something<CR>
-endfunction
-
-call s:InitUniteSomethingMenu()
-
-" }}}
-
-" 隠れバッファの削除 {{{
-
-function! s:delete_hidden_buffer()
-  let l:list = filter(range(1, bufnr('$')), 'bufexists(v:val) && !buflisted(v:val)')
-  for l:num in l:list
-    execute 'bw ' . l:num
-  endfor
-endfunction
-
-command! -bar DeleteHiddenBuffer :call s:delete_Hidden_buffer()
-
-" }}}
-
-" Esc で保存 {{{
-
-let s:write_at_escape = 0
-function! s:ToggleWriteAtEscape()
-  if s:write_at_escape
-    set noautowrite
-    autocmd! WriteAtEscape
-    echomsg 'write-at-escape: Off'
-  else
-    set autowrite
-    augroup WriteAtEscape
-      MeowtoCmd CursorHold *  silent! wall
-      MeowtoCmd CursorHoldI *  silent! wall
-      MeowtoCmd InsertLeave *  silent! wall
-    augroup END
-    echomsg 'write-at-escape: On'
-  endif
-  let s:write_at_escape = !s:write_at_escape
-endfunction
-command! -bar EscWrite call s:ToggleWriteAtEscape()
-
-" }}}
-
-" mongo のシェルから貼り付けたものを適当に整形する {{{
-
-function! s:ReformMongoPaste()
-  %S/ISODate\((.+?)\)/\1
-  %S/ObjectId\((.+?)\)/\1
-  %G/.*/normal A,
-  normal! G$x
-  call append('^', '[')
-  call append('$', ']')
-  %!python -mjson.tool
-endfunction
-command! -bar ReformMongoPaste :call s:ReformMongoPaste()
-
-" }}}
-
-" エレクチオン {{{
-
-command! -bar Election inoremap ん ン
+command! -bar -nargs=1 -complete=customlist,s:balloon_syntax_compl BallonSyntax call s:balloon_syntax(<q-args>)
 
 " }}}
 
 " テンキー表記を矢印に変換 {{{
-function! s:KakugeReplace()
+"
+function! s:kakuge_replace()
   " vint: -ProhibitCommandRelyOnUser -ProhibitCommandWithUnintendedSideEffect
   silent! '<,'>s/1/↙/g
   silent! '<,'>s/2/↓/g
@@ -431,33 +181,14 @@ function! s:KakugeReplace()
   " vint: +ProhibitCommandRelyOnUser +ProhibitCommandWithUnintendedSideEffect
 endfunction
 
-command! -bar -range=% KakugeReplace call s:KakugeReplace()
-" }}}
-
-" 空の隠れバッファを削除 {{{
-
-function! s:KillHiddenEmptyBuffer()
-  let l:killed = 0
-  for l:nr in range(2, bufnr('$'))
-    " echo printf('%d %s %s %s', l:nr, buflisted(l:nr), bufloaded(l:nr), bufname(l:nr))
-    if buflisted(l:nr) == 1 && bufloaded(l:nr) == 1 && bufname(l:nr) ==# ''
-      let l:killed += 1
-      execute 'bdelete!' l:nr
-    endif
-  endfor
-  echomsg printf('%d buffers have been killed!', l:killed)
-endfunction
-
-" 空気燃焼
-command! -bar Burn call s:KillHiddenEmptyBuffer()
-
+command! -bar -range=% KakugeReplace call s:kakuge_replace()
 " }}}
 
 " らんらんコマンド (quickrun) {{{
 
 let s:anekos_fixed_run_command = 'QuickRun'
 
-function! s:FixRunCommand(command)
+function! s:fix_run_command(command)
   let l:command = len(a:command) ? a:command : getreg(':')
 
   let b:anekos_fixed_run_command = l:command
@@ -465,14 +196,14 @@ function! s:FixRunCommand(command)
   echo 'fixed: ' . l:command
 endfunction
 
-function! s:RunRunCommand()
+function! s:run_run_command()
   let l:cmd = get(b:, 'anekos_fixed_run_command', s:anekos_fixed_run_command)
-  echo 'RunRun: ' . l:cmd
+  echomsg 'RunRun: ' . l:cmd . "\n"
   execute l:cmd
 endfunction
 
-command! -nargs=* -range FixRunCommand call s:FixRunCommand(<q-args>)
-command! -bar -range RunRunCommand call s:RunRunCommand()
+command! -nargs=* -range FixRunCommand call s:fix_run_command(<q-args>)
+command! -bar -range RunRunCommand call s:run_run_command()
 
 noremap <Leader>r          :RunRunCommand<CR>
 noremap <Leader><Leader>r  :FixRunCommand<CR>
@@ -481,7 +212,7 @@ noremap <Leader><Leader>r  :FixRunCommand<CR>
 
 " 価格履歴 (price-watcher) {{{
 
-function! s:ExtractAmazonProductId (url)
+function! s:extract_amazon_product_id (url)
   let l:patterns = [
     \ '.*/dp/\([^/]\+\).*',
     \ '.*/gp/product/\([^/]\+\).*'
@@ -494,12 +225,12 @@ function! s:ExtractAmazonProductId (url)
   return 0
 endfunction
 
-function! s:ShowPriceLog (id)
-  let l:id = a:id ==# '' ? s:ExtractAmazonProductId(s:UrlOnCursor()) : a:id
+function! s:show_price_log (id)
+  let l:id = a:id ==# '' ? s:extract_amazon_product_id(s:url_on_cursor()) : a:id
   echo system('price-watcher log ' . shellescape(l:id))
 endfunction
 
-function! s:UrlOnCursor ()
+function! s:url_on_cursor ()
   let l:line = getline('.')
   let l:col = col('.')
   let l:left = l:line[0 : l:col - 2]
@@ -511,13 +242,13 @@ function! s:UrlOnCursor ()
   return l:url
 endfunction
 
-command! -bar -nargs=* PriceLog call s:ShowPriceLog(<q-args>)
+command! -bar -nargs=* PriceLog call s:show_price_log(<q-args>)
 
 " }}}
 
 " ファイル名っぽいのをカーソル周辺から探してジャンプするんだね {{{
 
-function! s:ExtractCodePath (line)
+function! s:extract_code_path (line)
   let l:match = matchlist(a:line, '\(/\=\([-_.a-z0-9]\+/\)*[-_.a-z0-9]\+\)\(:\(\d\+\)\)\=')
   if len(l:match) > 0
     let l:filepath = l:match[1]
@@ -531,7 +262,7 @@ function! s:ExtractCodePath (line)
   return [0, 0, 0, 1]
 endfunction
 
-function! s:JumpToFile (filepath, ln, col)
+function! s:jump_to_file (filepath, ln, col)
   let l:filepath = fnamemodify(a:filepath, ':p')
   let l:buf_nr = bufnr(a:filepath)
 
@@ -560,17 +291,17 @@ function! s:JumpToFile (filepath, ln, col)
   endif
 endfunction
 
-function! s:JumpCode ()
+function! s:jump_code ()
   let l:line = line('.')
 
   for l:i in range(0, 5)
 
     let l:target_ln = l:line - l:i
-    let [l:found, l:filepath, l:ln, l:col] = s:ExtractCodePath(getline(l:target_ln))
+    let [l:found, l:filepath, l:ln, l:col] = s:extract_code_path(getline(l:target_ln))
 
     if !l:found
       let l:target_ln = l:line + l:i
-      let [l:found, l:filepath, l:ln, l:col] = s:ExtractCodePath(getline(l:target_ln))
+      let [l:found, l:filepath, l:ln, l:col] = s:extract_code_path(getline(l:target_ln))
     endif
 
     if l:found
@@ -582,19 +313,19 @@ function! s:JumpCode ()
         endif
       endif
 
-      call s:JumpToFile(l:filepath, l:ln, l:col)
+      call s:jump_to_file(l:filepath, l:ln, l:col)
       return
     end
   endfor
 endfunction
 
-command! -bar JumpCode :call <SID>JumpCode()
+command! -bar JumpCode call s:jump_code()
 
 " }}}
 
 " chdir to project dirctory (git) {{{
 
-function! s:ChDirToPojectDirectory ()
+function! s:ch_dir_to_poject_directory ()
   let l:dir = expand('%:hp')
 
   while 1
@@ -612,13 +343,13 @@ function! s:ChDirToPojectDirectory ()
   endwhile
 endfunction
 
-command! -bar CdProjectRoot call s:ChDirToPojectDirectory()
+command! -bar CdProjectRoot call s:ch_dir_to_poject_directory()
 
 " }}}
 
 " ヘルプ以外の空バッファウィンドウを閉じる {{{
 
-function! s:KillMeBaby ()
+function! s:kill_me_baby ()
   let l:blanks = 0
   let l:helps = 0
   for l:n in tabpagebuflist()
@@ -634,7 +365,7 @@ function! s:KillMeBaby ()
   endif
 endfunction
 
-command! -bar KillMeBaby call s:KillMeBaby()
+command! -bar KillMeBaby call s:kill_me_baby()
 
 " }}}
 
@@ -690,7 +421,7 @@ command! -bar -nargs=? LongCat call s:spawn_longcat(<q-args>)
 
 " cpo の設定を後付け {{{
 
-function! s:InsertCpo()
+function! s:insert_cpo()
   call append(0, ['let s:save_cpo = &cpo', 'set cpo&vim', '', ''])
   call append(line('$'), ['', '', 'let &cpo = s:save_cpo', 'unlet s:save_cpo'])
   normal! gg
@@ -699,17 +430,17 @@ function! s:InsertCpo()
   normal! G
 endfunction
 
-command! -bar InsertCpo call s:InsertCpo()
+command! -bar InsertCpo call s:insert_cpo()
 
 " }}}
 
 " バッファを grep {{{
 
-function! s:BufferGrep(query)
+function! s:buffer_grep(query)
   execute 'silent!' 'bufdo' 'vimgrepadd' printf('/%s/', escape(a:query, '/\')) '%'
 endfunction
 
-command! -bar -nargs=* BGrep call s:BufferGrep(<q-args>)
+command! -bar -nargs=* BGrep call s:buffer_grep(<q-args>)
 
 " }}}
 
@@ -735,6 +466,8 @@ function! s:panty_init (dir)
     call unite#custom_max_candidates('panty_file_mru', l:max_candidates)
     call unite#custom_max_candidates('panty_directory_mru', l:max_candidates)
 
+    " Unite -select=0 output:echo:"==:directory:mru:===":! file
+
     Unite
     \ output:echo:"===:directory:mru:===":!
     \ panty_directory_mru
@@ -750,5 +483,67 @@ function! s:panty_init (dir)
 endfunction
 
 command! -bar -nargs=* PantyInit call s:panty_init(<q-args>)
+
+" }}}
+
+" 文字ケース変換 {{{
+
+function! s:to_underscore_case ()
+  let l:words = substitute(substitute(expand('<cword>'), '^.', '\l\0', ''), '\C\([A-Z]\+\)', '_\l\1', 'g')
+  execute 'normal!' 'ciw' . l:words
+endfunction
+
+command! -bar CaseUnderScore call s:to_underscore_case()
+
+" }}}
+
+" 空バッファなどを削除  {{{
+
+function! s:burn_empty_buffers()
+  let l:killed = 0
+
+  for l:nr in range(1, bufnr('$'))
+    if buflisted(l:nr) == 1 && bufloaded(l:nr) == 1 && bufname(l:nr) ==# ''
+      let l:killed += 1
+      execute 'bdelete!' l:nr
+    endif
+  endfor
+
+  echomsg printf('%d buffers have been killed!', l:killed)
+endfunction
+
+command! -bar Burn call s:burn_empty_buffers()
+
+" }}}
+
+" MFC {{{
+
+function! s:mfc_calc(expr)
+  echo substitute(system('mfc ' . shellescape(a:expr) . ' println'), '^$', '', 'g')
+endfunction
+
+command! -nargs=* MFC :call s:mfc_calc(<q-args>)
+
+" }}}
+
+" Maximize もどき {{{
+
+function! s:maximize_modoki()
+  if exists('t:maximize_modoki__back_to')
+    let l:back_to = t:maximize_modoki__back_to
+    tabclose
+    execute 'tabnext' l:back_to
+  else
+    let l:back_to = tabpagenr()
+    let l:bufnr = winbufnr(0)
+    let l:linenr = line('.')
+    tabnew
+    execute 'buffer' l:bufnr
+    execute l:linenr
+    call settabvar(tabpagenr(), 'maximize_modoki__back_to', l:back_to)
+  endif
+endfunction
+
+command! -bar MaximizeModoki call s:maximize_modoki()
 
 " }}}

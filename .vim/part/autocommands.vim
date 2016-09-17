@@ -18,8 +18,6 @@ MeowtoCmd BufRead * if expand('%') != '' && &buftype !~ 'nofile' | silent loadvi
 " セッションロード後に、XMonad 的なリフレッシュ
 MeowtoCmd SessionLoadPost * XMonadRefreshWindow
 
-" md as markdown, instead of modula2
-MeowtoCmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
 MeowtoCmd BufNewFile,BufRead *.nox set filetype=nox
 
 " ファイルが他で更新されていないかチェックする
@@ -33,21 +31,23 @@ MeowtoCmd FileType c,cpp,rust,haskell,python nmap <buffer>K <Plug>(devdocs-under
 " ヘルプ以外の空バッファウィンドウを閉じる
 MeowtoCmd BufNewFile,WinEnter,BufEnter,BufWinEnter * KillMeBaby
 
-" FileType
-MeowtoCmd FileType html,xhtml,xml,xslt source ~/.vim/part/filetype/xml.vim
+" 縦タブバーはよこい
+if exists('&vtlc')
+  MeowtoCmd TabEnter * if 3 <= tabpagenr('$') | set vtlc=20 showtabline=0 | else | set vtlc=0 showtabline=2 | endif
+endif
 
 " 可愛いフォーマッタ殺害 {{{
 
 let s:formatoptions = substitute(&formatoptions, '[tcq]', '', 'g') . 'Mjr'
 
-function! s:KillTheFuckingFormatters()
+function! s:kill_the_fucking_formatters()
   setlocal textwidth=0
   let &formatoptions = s:formatoptions
 endfunction
 
-autocmd Meowrc FileType * call s:KillTheFuckingFormatters()
+autocmd Meowrc FileType * call s:kill_the_fucking_formatters()
 
-call s:KillTheFuckingFormatters()
+call s:kill_the_fucking_formatters()
 
 " }}}
 

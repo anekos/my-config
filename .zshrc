@@ -42,6 +42,87 @@ function is-unmapped () {
 
 # }}}
 
+# 猫走る {{{
+
+if [ -z "$__anekos_start_at" ]
+then
+  function () {
+    local pcmd="$(ps --no-header -o cmd --pid `ps --pid $$ -o ppid --no-header`)" # 親プロセス名
+    # script 内では走らせない
+    [[ "$pcmd" =~ '^script ?.*' ]] && return 0
+    local screen_rows=`tput lines`
+    local screen_cols=`tput cols`
+    if [ "$screen_rows" -gt 20 -a "$screen_cols" -gt 90 -a "$TERM" != "linux" ]
+    then
+      if has-command nyancat
+      then
+        nyancat -f 5 --no-count --no-title -e
+      #elif has-command  ~/script/shell/cat
+      #then
+      #  ~/script/shell/cat
+      else
+        echo -e '\e[H\e[2J
+          \e[1;36m.
+         \e[1;36m/#\
+        \e[1;36m/###\      \e[1;37m               #     \e[1;36m| *
+       \e[1;36m/p^###\     \e[1;37m a##e #%" a#"e 6##%  \e[1;36m| | |-^-. |   | \ /
+      \e[1;36m/##P^q##\    \e[1;37m.oOo# #   #    #  #  \e[1;36m| | |   | |   |  X
+     \e[1;36m/##(   )##\   \e[1;37m%OoO# #   %#e" #  #  \e[1;36m| | |   | ^._.| / \ \e[0;37mTM
+    \e[1;36m/###P   q#,^\
+   \e[1;36m/P^         ^q\ \e[0;37mTM
+'
+      fi
+    fi
+  }
+fi
+
+# }}}
+
+# 自動でログを保存する {{{
+
+if [ -z "$__anekos_start_at" ]
+then
+
+  # XMonad の cwd に cd する
+  function __echo_working_directory () {
+    has-command get-terminal-pid || return 0
+
+    local tpid="$(get-terminal-pid $$)"
+
+    if [ -e /tmp/terminal-cwd/$tpid.cwd ]
+    then
+      cat /tmp/terminal-cwd/$tpid.cwd
+    else
+      local pid="$(pgrep xmonad)"
+      readlink "/proc/$pid/cwd"
+    fi
+  }
+
+  function fix () {
+    mkdir -p /tmp/terminal-cwd/
+    local tpid="$(get-terminal-pid)"
+    echo "$PWD" > /tmp/terminal-cwd/$tpid.cwd
+  }
+
+  function __anekos_auto_script_clean () {
+    [ -e "$__anekos_scripted" ] && rm "$__anekos_scripted"
+  }
+
+  if [ -z "$__anekos_scripted" ]
+  then
+    export __anekos_scripted="/tmp/terminal-log/$$.log"
+    [ -d /tmp/terminal-log/ ] || mkdir /tmp/terminal-log/
+    trap __anekos_auto_script_clean EXIT
+    script --quiet --flush >(esclr | tee --append "$__anekos_scripted" /tmp/terminal-log/all.log > /dev/null)
+    exit
+  else
+    cd "$(__echo_working_directory)"
+  fi
+
+fi
+
+# }}}
+
 # AUTOLOAD {{{
 
 fpath=($fpath ~/.zsh_func)
@@ -285,11 +366,18 @@ function _anekos_prompt_precmd () {
   else
     _anekos_prompt_lrc=" ∴$ec∴ "
   fi
+
+  if [ -n "$MLTERM" ] || [ -n "$KONSOLE_PROFILE_NAME" ]
+  then
+    _anekos_prompt_clock=" $(char-clock)"
+  else
+    _anekos_prompt_clock=''
+  fi
 }
 
 precmd_functions=($precmd_functions _anekos_prompt_precmd)
 
-PROMPT="%F{red}┏%F{yellow}%B\${_anekos_prompt_lrc}%b%f${HOSTC}[${LOCAL_HOSTNAME}:%~] %F{green}%T${DEFAULTC}
+PROMPT="%F{red}┏%F{yellow}%B\${_anekos_prompt_lrc}%b%f${HOSTC}[${LOCAL_HOSTNAME}:%~] %F{green}%T${DEFAULTC}\${_anekos_prompt_clock}
 %F{red}┗%F{blue}▶%f "
 #〽【】
 
@@ -298,7 +386,7 @@ PROMPT="%F{red}┏%F{yellow}%B\${_anekos_prompt_lrc}%b%f${HOSTC}[${LOCAL_HOSTNAM
 # 右プロンプト {{{
 
 case "$HOST" in
-  ildjarn | napalmdeath | *.*)
+  ildjarn | napalmdeath | pc-*)
     # zsh の vcs_info に独自の処理を追加して stash 数とか push していない件数とか何でも表示する - Qiita
     # http://qiita.com/mollifier/items/8d5a627d773758dd8078
 
@@ -641,19 +729,6 @@ function colorname2number {
 
 # }}}
 
-# VimClojure {{{
-function ngserver () {
-  case "$1" in
-    start)
-      java -server -cp 'src:classes:lib/*' vimclojure.nailgun.NGServer 127.0.0.1 &
-      ;;
-    stop)
-      ng ng-stop
-  esac
-}
-
-# }}}
-
 # エイリアス {{{
 
 # Fail safe
@@ -689,8 +764,8 @@ has-command rlwrap && has-command sbcl && alias sbcl='rlwrap sbcl --noinform'
 alias grep="grep --color"
 
 # with args
-alias ll='ls -lah'
-alias lr='ls -ltrah'
+alias ll='ls -lah --time-style=long-iso'
+alias lr='ls -ltrah --time-style=long-iso'
 alias ,,=popd
 alias ,.=pushd
 alias sct='screen -t'
@@ -823,7 +898,6 @@ alias gitk='LC_ALL=C gitk'
 
 for plugin_name in ~/.zsh_plugin/*; source $plugin_name
 
-
 # }}}
 
 # 履歴 history-all {{{
@@ -858,46 +932,6 @@ function mkcd () {
   mkdir "$@"
   cd "${@: - 1}"
 }
-# }}}
-
-# dabbrev {{{
-
-# zsh + screen で端末に表示されてる文字列を補完する - coﾘ・ー・ﾝ＜2nd life
-# http://d.hatena.ne.jp/secondlife/20060108/1136650653
-
-case "$OSTYPE" in
-  *)
-    if [ "$TERM" = "screen" ]
-    then
-      HARDCOPYFILE="/tmp/$USER-screen-hardcopy"
-      touch "$HARDCOPYFILE"
-      chmod 600 "$HARDCOPYFILE"
-
-      if [ -n "$TMUX" ]
-      then
-        dabbrev-complete () {
-          local reply lines=80 # 80行分
-          tmux capture-pane
-          tmux save-buffer -b 0 "$HARDCOPYFILE"
-          tmux delete-buffer -b 0
-          reply=($(sed '/^$/d' $HARDCOPYFILE | sed '$ d' | tail -$lines))
-          compadd - "${reply[@]%[*/=@|]}"
-        }
-      else
-        dabbrev-complete () {
-          local reply lines=80 # 80行分
-          screen -X eval "hardcopy -h $HARDCOPYFILE"
-          reply=($(sed '/^$/d' $HARDCOPYFILE | sed '$ d' | tail -$lines))
-          compadd - "${reply[@]%[*/=@|]}"
-        }
-      fi
-
-      zle -C dabbrev-complete menu-complete dabbrev-complete
-      bindkey '^o' dabbrev-complete
-      bindkey '^o^_' reverse-menu-complete
-    fi
-esac
-
 # }}}
 
 # コマンドの成否を報告 {{{
@@ -1212,42 +1246,6 @@ precmd_functions=($precmd_functions _anekos_rehash_precmd)
 
 # }}}
 
-# 猫走る {{{
-
-if [ -z "$__anekos_start_at" ]
-then
-  function () {
-    local pcmd="$(ps --no-header -o cmd --pid `ps --pid $$ -o ppid --no-header`)" # 親プロセス名
-    # script 内では走らせない
-    [[ "$pcmd" =~ '^script ?.*' ]] && return 0
-    local screen_rows=`tput lines`
-    local screen_cols=`tput cols`
-    if [ "$screen_rows" -gt 20 -a "$screen_cols" -gt 90 -a "$TERM" != "linux" ]
-    then
-      if has-command nyancat
-      then
-        nyancat -f 5 --no-count --no-title -e
-      #elif has-command  ~/script/shell/cat
-      #then
-      #  ~/script/shell/cat
-      else
-        echo -e '\e[H\e[2J
-          \e[1;36m.
-         \e[1;36m/#\
-        \e[1;36m/###\      \e[1;37m               #     \e[1;36m| *
-       \e[1;36m/p^###\     \e[1;37m a##e #%" a#"e 6##%  \e[1;36m| | |-^-. |   | \ /
-      \e[1;36m/##P^q##\    \e[1;37m.oOo# #   #    #  #  \e[1;36m| | |   | |   |  X
-     \e[1;36m/##(   )##\   \e[1;37m%OoO# #   %#e" #  #  \e[1;36m| | |   | ^._.| / \ \e[0;37mTM
-    \e[1;36m/###P   q#,^\
-   \e[1;36m/P^         ^q\ \e[0;37mTM
-'
-      fi
-    fi
-  }
-fi
-
-# }}}
-
 # フォントサイズ変更 <Esc>- <Esc>+ {{{
 if has-command set-font
 then
@@ -1325,108 +1323,11 @@ compdef pacaur=pacman
 
 # }}}
 
-# 操作のログをとるコマンド {{{
-
-local _anekos_recorder_logfile=''
-
-function _anekos_recorder_preexec {
-  if [ -n "$_anekos_recorder_logfile" ]
-  then
-    echo "$3" >> "$_anekos_recorder_logfile"
-  fi
-}
-
-function recorder () {
-  local sub="$1"
-  local fn="$2"
-
-  case "$sub" in
-    start)
-      [ -z "$fn" ] && echo "No output file name: $1" && return 1
-      [ -e "$fn" ] && echo "Already exitsts: $1" && return 1
-      _anekos_recorder_logfile=$(cd $(dirname "$fn") && pwd)/$(basename "$fn")
-      printf "\e[${TEXT_FG_White};${TEXT_BG_Blue}m%s\e[0m\n" 'Recorder started!'
-      ;;
-    stop)
-      _anekos_recorder_logfile=''
-      printf "\e[${TEXT_FG_White};${TEXT_BG_Blue}m%s\e[0m\n" 'Recorder stopped'
-      ;;
-    *)
-      echo "Ooops"
-  esac
-}
-
-add-zsh-hook preexec _anekos_recorder_preexec
-
-# }}}
-
-# tt - todo.sh override {{{
-
-function tt {
-  local sub="$1"
-
-  case "$sub" in
-    a)
-      shift
-
-      local full_tags=''
-      while [ "${#1}" = 1 ]
-      do
-        case "$1" in
-          h) local full_tag='hledger' ;;
-          b) local full_tag='buy' ;;
-          w) local full_tag='wish' ;;
-          p) local full_tag='project' ;;
-          f) local full_tag='food' ;;
-          s) local full_tag='shipping' ;;
-        esac
-        local full_tags="$full_tags +$full_tag"
-        shift
-      done
-
-      if [ -n "$full_tags" ]
-      then
-        todo.sh "$sub" "$(date +'%Y-%m-%d') $@ ${full_tags/ /}"
-      else
-        todo.sh "$sub" "$(date +'%Y-%m-%d') $@"
-      fi
-      ;;
-    ls)
-      todo.sh "$@" | marker -c cyan '\d{4}(-\d{2}){2}|\+\S+'
-      ;;
-    *)
-      todo.sh "$@"
-  esac
-}
-
-# }}}
-
 # コマンドラインを編集 {{{
 
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey "^Xe" edit-command-line
-
-# }}}
-
-# flip {{{
-
-function flip () {
-   / 
-}
-
-
-# }}}
-
-# Vimperator {{{
-
-# for https://github.com/teramako/vimperator-plugin-httpdjs
-
-function _vimperator {
-  curl -X POST -d "q=$*" -d type=cmd -d ot=text http://localhost:8090/vimperator
-}
-
-alias vimp="noglob _vimperator"
 
 # }}}
 
@@ -1474,6 +1375,15 @@ function init-nvm {
 
 # }}}
 
+# Set $TERM {{{
+
+# if [ -n "$KONSOLE_PROFILE_NAME" ]
+# then
+#   export TERM=konsole-256color
+# fi
+
+# }}}
+
 # Misc {{{
 
 stty erase '^h'
@@ -1501,5 +1411,10 @@ then
   __anekos_start_time=$(( $(date +%s.%3N) - __anekos_start_at ))
   echo "$__anekos_start_time msec"
 fi
+
+# プロファイラ http://qiita.com/scalper/items/86da115e6c76a692d687
+# if (which zprof > /dev/null) ;then
+#   zprof | less
+# fi
 
 # }}}

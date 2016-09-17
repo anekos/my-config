@@ -38,45 +38,39 @@ if has('vim_starting') && has('reltime')
   \                  | echomsg 'startuptime: ' . reltimestr(g:startuptime)
 endif
 
+let g:plugins_installed = 0
 
-" Dark power {{{
+let g:my_rc_files = map([
+\   '~/.vim/part/env.vim',
+\   '~/.vim/part/plug.vim',
+\   '~/.vim/part/utils.vim',
+\   '~/.vim/part/options.vim',
+\   '~/.vim/part/mappings.vim',
+\   '~/.vim/part/commands.vim',
+\   '~/.vim/part/autocommands.vim',
+\   '~/.vim/part/term.vim',
+\   '~/.vim/part/plugins.vim',
+\   '~/.vim/part/plugin/unite.vim',
+\   '~/.vim/part/plugin/quickrun.vim',
+\   '~/.vim/part/after.vim',
+\ ], 'expand(v:val)')
 
-let s:dein_dir = expand('~/.cache/dein')
+let g:my_plugins = [
+\   {'name': 'nox',      'path': 'nox/res/vim'},
+\   {'name': 'hledger',  'path': 'hledger-vim'},
+\   {'name': 'fancy',    'path': 'vim-fancy'},
+\   {'name': 'colocolo', 'path': 'colocolo.vim'},
+\ ]
 
-let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 
-if &runtimepath !~# '/dein.vim'
-  if !isdirectory(s:dein_repo_dir)
-    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-  endif
-  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
+for s:file in g:my_rc_files
+  execute 'source' s:file
+endfor
+unlet s:file
+
+" source /usr/share/gtags/gtags.vim
+source /usr/share/vim/vimfiles/plugin/gtags.vim
+
+if $PWD == expand('~') && isdirectory('/tmp/xmosh')
+  cd /tmp/xmosh
 endif
-
-call dein#begin(s:dein_dir)
-
-let s:toml = '~/.vim/dein/main.toml'
-
-if dein#load_cache([expand('<sfile>'), s:toml])
-  call dein#load_toml(s:toml, {'lazy': 0})
-  call dein#save_cache()
-endif
-
-call dein#end()
-
-if dein#check_install()
-  call dein#install()
-endif
-
-" }}}
-
-
-" Parted
-runtime part/utils.vim
-runtime part/options.vim
-runtime part/mappings.vim
-runtime part/commands.vim
-runtime part/autocommands.vim
-runtime part/term.vim
-runtime part/plugins.vim
-runtime part/our.vim
-runtime part/after.vim

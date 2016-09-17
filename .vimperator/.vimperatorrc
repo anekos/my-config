@@ -35,24 +35,24 @@ let g:twittperator_use_ssl_connection_for_api_ep = 1
 let g:twittperator_lang = "ja"
 let g:twittperator_count = 50
 
-let g:twittperator_plugin_sstp = 0
-let g:twittperator_plugin_setuden = 0
-let g:twittperator_plugin_urusai_namakubi = 0
-let g:twittperator_plugin_echo_tweet = 0
-let g:twittperator_plugin_reply_popup_alert = 0
-let g:twittperator_plugin_twlist_win = 0
-let g:twittperator_plugin_eject_alert = 0
-let g:twittperator_plugin_eject_alert_device = '/dev/sr0'
-
-let g:twittperator_plugin_pong = 1
-let g:twittperator_plugin_colorful_log_writer = 0
-let g:twittperator_plugin_add_url_completer = 1
-let g:twittperator_plugin_anti_goji = 1
-let g:twittperator_plugin_twsidebar = 1
-let g:twittperator_plugin_ril = 0
-let g:twittperator_plugin_mstrans = 0
-let g:twittperator_plugin_copy = 1
-let g:twittperator_plugin_twsidebar_expand_url = 1
+" let g:twittperator_plugin_sstp = 0
+" let g:twittperator_plugin_setuden = 0
+" let g:twittperator_plugin_urusai_namakubi = 0
+" let g:twittperator_plugin_echo_tweet = 0
+" let g:twittperator_plugin_reply_popup_alert = 0
+" let g:twittperator_plugin_twlist_win = 0
+" let g:twittperator_plugin_eject_alert = 0
+" let g:twittperator_plugin_eject_alert_device = '/dev/sr0'
+" 
+" let g:twittperator_plugin_pong = 1
+" let g:twittperator_plugin_colorful_log_writer = 0
+" let g:twittperator_plugin_add_url_completer = 1
+" let g:twittperator_plugin_anti_goji = 1
+" let g:twittperator_plugin_twsidebar = 1
+" let g:twittperator_plugin_ril = 0
+" let g:twittperator_plugin_mstrans = 0
+" let g:twittperator_plugin_copy = 1
+" let g:twittperator_plugin_twsidebar_expand_url = 1
 
 " prefix of commanded bookmarkelts
 let g:command_bookmarklet_prefix = ""
@@ -139,6 +139,9 @@ let g:edit_vimperator_files_directory_names = 'plugin colors styles style script
 " nox
 let g:nox_base_url = 'http://localhost:9199/noodler'
 
+let g:spatial_navigation_mappings = '<C-h> <C-j> <C-k> <C-l>'
+
+
 " }}}
 
 " set {{{
@@ -150,6 +153,7 @@ set history=5000
 set newtab=all
 set hintchars=hjklasdfgyuiopqwertnmzxcvb
 set defsearch=google
+set noautocomplete
 
 " }}}
 
@@ -187,14 +191,8 @@ set! browser.tabs.autoHide=false
 " 閉じるボタンを表示
 set! browser.tabs.closeButtons=3
 
-" undo limit
-set! browser.sessionstore.max_tabs_undo=100
-
 " 新しいタブをフォアグラウンドで開く
 set! browser.tabs.loadInBackground=false
-
-" キャッシュサイズ
-set! browser.cache.memory.capacity=32768
 
 " ホームページ
 set! browser.startup.homepage="about:blank"
@@ -220,6 +218,36 @@ set! image.animation_mode="normal"
 
 " DIE!!
 set! javascript.options.xml.chrome=true
+
+" 中クリックでクリップボードの URL を開かないように
+set! middlemouse.contentLoadURL=false
+
+" }}}
+
+" Pref (firefox 高速化？)                                                                {{{
+
+" 阿呆ほど遅いFirefoxをどうにか軽くする - 俺の作業デスク - http://tenkuuizayoiduki.blog19.fc2.com/blog-entry-281.html
+" Firefox の設定メモ about:config 編 - 「ん」の失踪 - http://d.hatena.ne.jp/orzi/20130309/p1
+
+" Pipeling
+set! network.http.pipelining=true
+set! network.http.pipelining.ssl=true
+set! network.http.proxy.pipelining=true
+
+" タブの開閉編にアニメーション
+set! browser.tabs.animate=false
+
+" IPv6 非対応環境では無意味なので、無効を有効化!
+set! network.dns.disableIPv6=true
+
+" キャッシュの有効化
+set! browser.cache.memory.enable=true
+
+" キャッシュのサイズ (MB 単位で、-1 だとメインメモリの状況から自動調整)
+set! browser.cache.memory.capacity=-1
+
+" undo limit
+set! browser.sessionstore.max_tabs_undo=20
 
 " }}}
 
@@ -272,11 +300,18 @@ cnoremap <C-q> <Nop>
 nnoremap q <Nop>
 nnoremap @ <Nop>
 
+" あんまり怖くはない
+nnoremap <C-k> <Nop>
+
 " Readability の謎機能誤爆防止
 nnoremap <A-`> <nop>
 
 " Wishlist
 nnoremap A :<C-u>nox<Space>wishlist<Space>
+
+" No mute
+nnoremap <C-m> <Cr>
+inoremap <C-m> <Cr>
 
 " }}}
 
@@ -310,6 +345,9 @@ nnoremap -urls 'http://anond\.hatelabo\.jp/\d+' <Leader>o :js A(doc.querySelecto
 
 " ePub Reader
 nnoremap -urls '^chrome://epubreader/content/reader\.xul.*' i :epubreader<Space>jump<Space>
+
+" AWS でリロード
+nnoremap -urls '\.console\.aws\.amazon\.com' r :js content.document.querySelector('img[title="Refresh"]').click()<CR>
 
 " }}}
 
@@ -359,7 +397,7 @@ nnoremap <Leader>s :<C-u>viewSBMComments -type Thdl -format=id,comment<CR>
 nnoremap <Leader>g :<C-u>gmail<Space>
 nnoremap <Leader>G :<C-u>mstrans<Space>
 nnoremap <Leader>A :<C-u>applaunch<Space>
-nnoremap <Leader>p :<C-u>js AnkPixiv.downloadCurrentImage(0,0,0)<CR>
+" nnoremap <Leader>p :<C-u>js AnkPixiv.downloadCurrentImage(0,0,0)<CR>
 
 " AutoBookmark
 nnoremap <Leader>aa :<C-u>autobookmark<Space>
@@ -382,9 +420,10 @@ nnoremap <Leader>ms :mystyle set<Space>
 nnoremap <Leader>mu :mystyle unset<Space>
 nnoremap <Leader>mp :mystyle permanent<CR>
 
-" Cleary
-" *.js に移動した - nnoremap <Leader>c :js __readable_by_evernote.readable_by_evernote__menu__call(buffer.URL)<CR>
-nnoremap <Leader>C :js __readable_by_evernote.__readable_by_evernote__launch(true);<CR>
+" copy
+nnoremap <Leader>cc :copy nox-link<CR>
+nnoremap <Leader>cd :copy nox-definition<CR>
+nnoremap <Leader>cl :copy nox-list<CR>
 
 " Site Search
 nnoremap <Leader>/ :sitesearch<Space>

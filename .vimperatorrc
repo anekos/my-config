@@ -31,6 +31,7 @@ if (!liberator.globalVariables.anekos_rc_loaded) {
   liberator.modules.userContext = liberator.eval('userContext', modules);
   Command = liberator.eval('Command', modules);
   Editor = liberator.eval('Editor', modules);
+  Script = liberator.eval('Script', modules);
 
   ////////////////////////////////////////////////////////////////////////////////
   // USER SETTING

@@ -1,4 +1,6 @@
 
+scriptencoding utf8
+
 " GUI オプション {{{
 
 " スクロールバー削除
@@ -58,38 +60,9 @@ MeowtoCmd FileType J6uil call J6uilGUIInit()
 " 読書モード {{{
 
 command! Yomi call yomi#start()
-AlterCommand yomi Yomi
 
-" }}}
-
-" タブの表示 {{{
-
-function! GuiTabLabel()
-  let label = ''
-  let bufnrlist = tabpagebuflist(v:lnum)
-
-  " Add '+' if one of the buffers in the tab page is modified
-  for bufnr in bufnrlist
-    if getbufvar(bufnr, "&modified")
-      let label = '+'
-      break
-    endif
-  endfor
-
-  " Append the number of windows in the tab page if more than one
-  let wincount = tabpagewinnr(v:lnum, '$')
-  if wincount > 1
-    let label .= wincount
-  endif
-  if label != ''
-    let label = '-' . label
-  endif
-
-  " Append the buffer name
-  return label
-  ". bufname(bufnrlist[tabpagewinnr(v:lnum) - 1])
-endfunction
-
-set guitablabel=%N%{GuiTabLabel()}:\ %t
+if g:plugins_installed
+  AlterCommand yomi Yomi
+endif
 
 " }}}

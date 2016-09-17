@@ -83,9 +83,6 @@ set cmdheight=1
 " <C-x> <C-a> で使う基数
 set nrformats=
 
-" 背景色を教える
-set background=dark
-
 " スクロール余白
 set scrolloff=0
 
@@ -174,3 +171,9 @@ set selection=inclusive
 
 " for :grep
 set grepprg=grep\ -rnIH\ --exclude-dir=.svn\ --exclude-dir=.git\ --exclude='*.json'\ --exclude='*.log'\ --exclude='*min.js'\ --exclude='*min.css'
+
+" メッセージの省略
+set shortmess=T
+
+" 正規表現エンジン
+set regexpengine=0 " 0=自動選択, 1=old, 2=Neko Felis Association

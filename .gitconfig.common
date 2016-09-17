@@ -67,8 +67,8 @@
 	# filemode = false
 	# マルチバイトなファイル名が化ける問題
 	quotepath = false
-	editor = panty summon -w -r git
-	# editor = gvim --nofork --role git -geometry 50x50+1820x980 -c 'set lines=999 columns=237' -c 'winpos 0 0' -geometry は効いていない…
+	# editor = panty summon -w -r git -b ':cd '$PWD'<CR>'
+	editor = gvim --nofork --role git -c 'wincmd ='
 	excludesfile = ~/.gitignore
 	precomposeunicode = true # for Mac OS X - http://faithandbrave.hateblo.jp/entry/2016/02/08/144948
 

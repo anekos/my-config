@@ -89,15 +89,21 @@ let g:calendar_date_endian = 'big'
 
 " }}}
 
+" Capture {{{
+
+let g:capture_open_command = 'tabnew'
+
+" }}}
+
 " chdir_proj_root {{{
 
 let g:cpr_autochdir_to_proj = 0
 
 " }}}
 
-" ColorColumn {{{
+" colocolo {{{
 
-command! -bar -range=% ColorColumn call easy_colorcolumn#toggle((<line1> == 1 && <line2> == line('$')) ? 'n' : 'v')
+let g:i_am_not_pika_beast = 1
 
 " }}}
 
@@ -139,23 +145,6 @@ endfunction
 
 " }}}
 
-" CtrlP {{{
-
-let g:ctrlp_open_multiple_files = 't'
-let g:ctrlp_working_path_mode = 'a'
-let g:ctrlp_max_depth = 400
-let g:ctrlp_max_files = 0
-if executable('sfind')
-  let g:ctrlp_user_command = 'sfind %s -type f'
-endif
-
-let g:ctrlp_custom_ignore = {
-  \ 'dir': '\v[\/](\.git|node_modules|\.sass-cache|bower_components|build)$'
-  \ }
-  " \ 'func': 'CtrlPCustomIgnore'
-
-" }}}
-
 " essk.vim {{{
 
 let g:eskk#dictionary = {
@@ -170,16 +159,14 @@ let g:eskk#dictionary = {
 
 let s:rainbow_interval = 25
 
-function! s:InitRainbow ()
-  set updatetime=25
+function! s:init_rainbow ()
   let l:bufname = bufname('%')
   bufdo call fancy#enable_when_idle(s:rainbow_interval, "rainbow")
   execute 'buffer ' . l:bufname
   MeowtoCmd BufWinEnter call fancy#enable_when_idle(s:rainbow_interval, "rainbow")
 endfunction
 
-command! -bar Rainbow call s:InitRainbow()
-
+command! -bar Rainbow call s:init_rainbow()
 
 " }}}
 
@@ -245,7 +232,7 @@ let g:J6uil_no_default_keymappings = 1
 let g:J6uil_display_icon = 1
 let g:J6uil_empty_separator = 1
 
-function! s:J6uilInit()
+function! s:j6uil_init()
   nmap <silent> <buffer> a                  <Plug>(J6uil_open_say_buffer)
   nmap <silent> <buffer> <Leader><Leader>r  <Plug>(J6uil_reconnect)
   nmap <silent> <buffer> <Leader><Leader>d  <Plug>(J6uil_disconnect)
@@ -257,18 +244,20 @@ function! s:J6uilInit()
   nnoremap <buffer> <S-Tab>                 ?http<CR>:set<Space>nohlsearch<CR>
 endfunction
 
-autocmd Meowrc FileType J6uil call s:J6uilInit()
+autocmd Meowrc FileType J6uil call s:j6uil_init()
 
 " }}}
 
 " lightline {{{
 
+let g:myline = {}
+
 let g:lightline = {
 \   'mode_map': {'c': 'NORMAL'},
 \   'active': {
 \     'left': [
-\       ['fugitive'],
 \       ['readonly', 'filename', 'modified'],
+\       ['git_branch', 'git_traffic', 'git_status'],
 \       ['mode', 'paste'],
 \       ['syntaxcheck']
 \     ],
@@ -280,15 +269,19 @@ let g:lightline = {
 \     ]
 \   },
 \   'component_function': {
-\     'modified': 'LightLineModified',
-\     'readonly': 'LightLineReadonly',
-\     'fugitive': 'LightLineFugitive',
-\     'filename': 'LightLineFilename',
-\     'fileformat': 'LightLineFileformat',
-\     'filetype': 'LightLineFiletype',
-\     'fileencoding': 'LightLineFileencoding',
-\     'mode': 'LightLineMode',
-\     'charcode': 'LightLineCharCode'
+\     'modified': 'g:myline.modified',
+\     'readonly': 'g:myline.readonly',
+\     'fugitive': 'g:myline.fugitive',
+\     'filename': 'g:myline.filename',
+\     'fileformat': 'g:myline.fileformat',
+\     'filetype': 'g:myline.filetype',
+\     'fileencoding': 'g:myline.fileencoding',
+\     'mode': 'g:myline.mode',
+\     'charcode': 'g:myline.charCode',
+\     'git_branch': 'g:myline.git_branch',
+\     'git_traffic': 'g:myline.git_traffic',
+\     'git_status': 'g:myline.git_status',
+\     'pokemon': 'g:myline.pokemon',
 \   },
 \   'component_expand': {
 \     'syntaxcheck': 'qfstatusline#Update',
@@ -298,25 +291,35 @@ let g:lightline = {
 \   },
 \   'separator': {'left': '', 'right': ''},
 \   'subseparator': {'left': '', 'right': ''},
-\   'colorscheme': 'iceberg'
+\   'colorscheme': 'iceberg',
+\   'tabline': {
+\     'left': [
+\       ['tabs']
+\     ],
+\     'right': [
+\       ['close']
+\     ]
+\   }
 \ }
 
-function! LightLineModified()
+let g:lightline.inactive = g:lightline.active
+
+function! g:myline.modified()
   return &filetype =~# 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
 
-function! LightLineReadonly()
+function! g:myline.readonly()
   return &filetype !~? 'help\|vimfiler\|gundo' && &readonly ? 'x' : ''
 endfunction
 
-function! LightLineFilename()
+function! g:myline.filename()
   return (&filetype ==# 'vimfiler' ? vimfiler#get_status_string() :
         \  &filetype ==# 'unite' ? unite#get_status_string() :
         \  &filetype ==# 'vimshell' ? vimshell#get_status_string() :
         \ '' !=# expand('%:t') ? expand('%:t') : '[No Name]')
 endfunction
 
-function! LightLineFugitive()
+function! g:myline.fugitive()
   try
     if &filetype !~? 'vimfiler\|gundo' && exists('*fugitive#head')
       return fugitive#head()
@@ -326,25 +329,68 @@ function! LightLineFugitive()
   return ''
 endfunction
 
-function! LightLineFileformat()
+function! g:myline.fileformat()
   return winwidth(0) > 70 ? &fileformat : ''
 endfunction
 
-function! LightLineFiletype()
+function! g:myline.filetype()
   return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
 endfunction
 
-function! LightLineFileencoding()
+function! g:myline.fileencoding()
   return winwidth(0) > 70 ? (strlen(&fileencoding) ? &fileencoding : &encoding) : ''
 endfunction
 
-function! LightLineMode()
-  return winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-function! LightLineCharCode()
+function! g:myline.charCode()
   return winwidth(0) > 90 ? GetCharCode() : ''
 endfunction
+
+if g:plugins_installed
+  function! g:myline.git_branch()
+    return gita#statusline#preset('branch_fancy')
+  endfunction
+
+  function! g:myline.git_traffic()
+    return gita#statusline#preset('traffic_fancy')
+  endfunction
+
+  function! g:myline.git_status()
+    return gita#statusline#preset('status')
+  endfunction
+
+  function! g:myline.pokemon()
+    return pokemon#getdaze()
+  endfunction
+
+  function! g:myline.pokemode()
+    let l:mode = lightline#mode()
+    if l:mode ==# 'NORMAL'
+      return pokemon#getdaze()
+    else
+      return l:mode
+    endif
+  endfunction
+
+  function! g:myline.mode()
+    return winwidth(0) > 60 ? g:myline.pokemode() : ''
+  endfunction
+else
+  function! g:myline.git_branch()
+    return ''
+  endfunction
+
+  function! g:myline.git_traffic()
+    return ''
+  endfunction
+
+  function! g:myline.git_status()
+    return ''
+  endfunction
+
+  function! g:myline.mode()
+    return winwidth(0) > 60 ? lightline#mode() : ''
+  endfunction
+endif
 
 " }}}
 
@@ -411,13 +457,10 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
 " neoclojure {{{
 
-" augroup vimrc-neoclojure
-"   autocmd!
-"   " If you use neocomplete
-"   autocmd FileType clojure setlocal omnifunc=neoclojure#complete#omni_auto
-"   " Otherwise
-"   " autocmd FileType clojure setlocal omnifunc=neoclojure#complete#omni
-" augroup END
+augroup vimrc-neoclojure
+  autocmd!
+  " autocmd FileType clojure setlocal omnifunc=neoclojure#complete#omni_auto
+augroup END
 
 " }}}
 
@@ -438,34 +481,6 @@ endif
 
 " }}}
 
-" poslist {{{
-
-let g:poslist_histsize = 1000
-
-" }}}
-
-" Puyo {{{
-
-function! s:StartPuyo()
-  " 1000以上推奨。
-  set maxfuncdepth=1000
-  " フォント
-  if !has('gui_running')
-    call system(printf("set-font '' 4 '' %d 1", v:windowid))
-  endif
-  " ゲームを始める
-  call puyo#new()
-  XMonadRefreshWindow
-  nmap <buffer> <Space><Space> :
-  wincmd o
-  1
-endfunction
-
-let g:puyo#updatetime = 450
-command! -bar Puyo :call s:StartPuyo()
-
-" }}}
-
 " Quickhl {{{
 
 " 1 だと重いョ
@@ -473,168 +488,6 @@ let g:quickhl_tag_enable_at_startup = 0
 let g:quickhl_manual_keywords = [
 \ 'IMPLEMENTME',
 \ ]
-
-" }}}
-
-" Quickrun {{{
-
-"  ___________________
-" < ﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮ >
-"  --------------------
-"         \   ^__^
-"          \ (◕‿‿◕)\_______
-"            /(__)\       )\/\
-"              || ||----w |
-"                 ||     ||
-
-let g:quickrun_config = {
-\   '_' : {
-\     'runner' : 'vimproc',
-\     'runner/vimproc/sleep' : 10,
-\     'runner/vimproc/updatetime' : 300,
-\     'hook/nuko/enable' : 0,
-\     'hook/nuko/wait' : 2,
-\     'outputter': 'multi',
-\     'outputter/buffer/split': 'vertical rightbelow',
-\     'outputter/buffer/close_on_empty' : 1,
-\     'outputter/buffer/running_mark': " ___________________\n< ﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮ >\n --------------------\n        \\   ^__^\n         \\ (◕‿‿◕)\\_______\n           /(__)\\       )\\/\\\n             || ||----w |\n                ||     ||",
-\     'outputter/quickfix/open_cmd': '',
-\     'outputter/multi/targets': ['buffer', 'quickfix']
-\   },
-\   'make' : {
-\     'command': 'make',
-\     'exec': '%c %o',
-\     'outputter': 'buffer'
-\   },
-\   'javascript': {
-\     'command': 'eslint'
-\   },
-\   'scala': {
-\     'type': 'scala/sbt/test-compile'
-\   },
-\   'scala/sbt/compile': {
-\     'command': 'sbt',
-\     'cmdopt': '-Dsbt.log.noformat=true',
-\     'runner': 'concurrent_process',
-\     'runner/concurrent_process/load': 'compile',
-\     'runner/concurrent_process/prompt': '\[.*\] \$ '
-\   },
-\   'scala/sbt/test-compile': {
-\     'command': 'sbt',
-\     'cmdopt': '-Dsbt.log.noformat=true',
-\     'runner': 'concurrent_process',
-\     'runner/concurrent_process/load': 'test:compile',
-\     'runner/concurrent_process/prompt': '\[.*\] \$ '
-\   },
-\   'scala/sbt/test': {
-\     'command': 'sbt',
-\     'cmdopt': '-Dsbt.log.noformat=true',
-\     'runner': 'concurrent_process',
-\     'runner/concurrent_process/load': 'test',
-\     'runner/concurrent_process/prompt': '\[.*\] \$ '
-\   },
-\   'scala/sbt/sync/compile': {
-\     'command': 'sbt',
-\     'exec': '%c -Dsbt.log.noformat=true compile'
-\   },
-\   'scala/sbt/sync/test-compile': {
-\     'command': 'sbt',
-\     'exec': '%c -Dsbt.log.noformat=true test:compile',
-\     'outputter': 'quickfix'
-\   },
-\   'clojure': {
-\     'type': 'clojure/lein/load-file'
-\   },
-\   'clojure/clj': {'command': 'clj', 'exec': '%c %s %a'},
-\   'clojure/watchdogs_checker': {
-\     'type': 'clojure/lein/eastwood'
-\   },
-\   'clojure/lein/compile': {
-\     'command': 'lein',
-\     'exec': '%c compile %a'
-\   },
-\   'clojure/lein/run': {
-\     'command': 'lein',
-\     'exec': '%c run %a'
-\   },
-\   'clojure/lein/test': {
-\     'command': 'lein',
-\     'exec': '%c test %a'
-\   },
-\   'clojure/lein/load-file': {
-\     'command': 'lein',
-\     'cmdopt': 'repl',
-\     'runner': 'concurrent_process',
-\     'runner/concurrent_process/load': '(load-file "%S")',
-\     'runner/concurrent_process/prompt': '.*=> '
-\   },
-\   'clojure/lein/eastwood': {
-\     'type': 'watchdogs_checker/eastwood'
-\   },
-\   'clojure/lein/deps': {
-\     'command': 'lein',
-\     'exec': '%c deps %a'
-\   },
-\   'json': {
-\     'command': '$HOME/script/dev/elasticsearch/curl',
-\     'exec': '%c %s',
-\     'outputter': 'error',
-\     'outputter/buffer/filetype': 'json',
-\     'outputter/error/success': 'buffer',
-\     'outputter/error/error': 'message'
-\   },
-\   'haskell': {'type': 'haskell/runghc'},
-\   'haskell/cabal': {
-\     'command': 'cabal',
-\     'exec': '%c build %o',
-\     'cmdopt': ''
-\   },
-\   'nox': {'type': 'nox/pandoc/markdown/html'},
-\   'nox/pandoc/markdown/html': {
-\     'command': 'pandoc',
-\     'exec': '%c --from markdown --to html %s'
-\   },
-\   'nox/remark.js': {
-\     'command': '$HOME/script/markdown/remark.js',
-\     'exec': '%c %s'
-\   },
-\   'text': {
-\     'type': 'text/split-sentences-jp'
-\   },
-\   'text/split-sentences-jp': {
-\     'runner': 'vimscript',
-\     'outputter': 'message',
-\     'exec': '%%s/。/\r/g'
-\   },
-\   'vim/watchdogs_checker': {
-\     'type': executable('vint') ? 'watchdogs_checker/vint' : '',
-\   },
-\	  'watchdogs_checker/_' : {
-\     'outputter': 'quickfix',
-\	  	'outputter/quickfix/open_cmd': 'cwin | HierStart',
-\     'hook/echo/enable' : 1,
-\     'hook/echo/output_success': '> No Errors Found.',
-\     'hook/qfstatusline_update/enable_exit' : 1,
-\     'hook/qfstatusline_update/priority_exit' : 4,
-\	  },
-\   'watchdogs_checker/vint' : {
-\     'command': 'vint',
-\     'exec': '%c %o %s:p',
-\   },
-\   'watchdogs_checker/eastwood' : {
-\     'command': 'lein',
-\     'exec': '%c eastwood %a',
-\     'hook/nuko/enable' : 1,
-\   },
-\ }
-
-command! -bar -range QuicKill call quickrun#sweep_sessions()
-command! -bar InitQuickRun call quickrun#get_module('runner')
-
-call watchdogs#setup(g:quickrun_config)
-let g:Qfstatusline#UpdateCmd = function('lightline#update')
-
-" http://d.hatena.ne.jp/osyo-manga/20120919/1348054752 - shabadou.vim を使って quickrun.vim をカスタマイズしよう - C++でゲームプログラミング
 
 " }}}
 
@@ -686,48 +539,9 @@ endfunction
 
 "}}}
 
-" restart.vim {{{
-
-function! s:SetWindowRole(role)
-  call system(printf('xprop -id %s -f WM_WINDOW_ROLE 8s -set WM_WINDOW_ROLE %s', v:windowid, a:role))
-endfunction
-command! -bar -nargs=* SetWindowRole call s:SetWindowRole(<q-args>)
-
-function! s:OnRestart()
-  let l:res = [
-  \   printf("let &guifont = '%s'", &guifont),
-  \   printf("let &background = '%s'", &background),
-  \   'XMonadRefreshWindow',
-  \   printf('autocmd VimEnter * let v:this_session = %s', string(v:this_session))
-  \ ]
-
-  " 念の為、ROLE に使われる文字を制限
-  let l:window_role = substitute(system('xprop -id ' . v:windowid . ' WM_WINDOW_ROLE'), '^.*= "\([a-zA-Z_0-9-]\+\)".*', '\1', 'g')
-  if match(l:window_role, '^WM_WINDOW_ROLE:.*not found') < 0
-    call add(l:res, 'SetWindowRole ' . l:window_role)
-  endif
-
-  return join(l:res, ' | ')
-endfunction
-
-command! -bar SSS echo s:OnRestart()
-
-let g:restart_sessionoptions = 'blank,buffers,curdir,folds,help,localoptions,tabpages'
-let g:restart_save_fn = [function('s:OnRestart')]
-
-" }}}
-
-" rmine {{{
-
-let g:rmine_server_url = 'http://its.aoi/redmine'
-let g:rmine_access_key = 'd5c269b625f6e764b8435a472e2c00df82bcc43d'
-MeowtoCmd FileType rmine_issues setlocal nonumber
-
-" }}}
-
 " Rogue {{{
 
-function! s:Vogue()
+function! s:vogue()
   let g:rogue#message = 'mesg_E'
   let g:rogue#japanese = 0
 
@@ -743,7 +557,7 @@ function! s:Vogue()
   Rogue
 endfunction
 
-command! -bar Vogue :call s:Vogue()
+command! -bar Vogue :call s:vogue()
 
 " }}}
 
@@ -804,6 +618,17 @@ let g:runes_table = {
 " UI -> U
 " IA -> I
 " AE -> A
+
+" }}}
+
+" rust {{{
+
+let g:racer_cmd = expand('$HOME/.cargo/bin/racer')
+let $RUST_SRC_PATH = '/usr/src/rust/src'
+
+" 自動整形
+let g:rustfmt_autosave = 0
+let g:rustfmt_command = '$HOME/.cargo/bin/rustfmt'
 
 " }}}
 
@@ -909,13 +734,14 @@ function! s:vim_sexp_mappings()
   " nmap <silent><buffer> <M-S-l>         <Plug>(sexp_capture_next_element)
   " xmap <silent><buffer> <M-S-l>         <Plug>(sexp_capture_next_element)
   imap <silent><buffer> <BS>            <Plug>(sexp_insert_backspace)
+  imap <silent><buffer> <C-h>           <Plug>(sexp_insert_backspace)
   imap <silent><buffer> "               <Plug>(sexp_insert_double_quote)
-  " imap <silent><buffer> (               <Plug>(sexp_insert_opening_round)
-  " imap <silent><buffer> )               <Plug>(sexp_insert_closing_round)
-  " imap <silent><buffer> [               <Plug>(sexp_insert_opening_square)
-  " imap <silent><buffer> ]               <Plug>(sexp_insert_closing_square)
-  " imap <silent><buffer> {               <Plug>(sexp_insert_opening_curly)
-  " imap <silent><buffer> }               <Plug>(sexp_insert_closing_curly)
+  imap <silent><buffer> (               <Plug>(sexp_insert_opening_round)
+  imap <silent><buffer> )               <Plug>(sexp_insert_closing_round)
+  imap <silent><buffer> [               <Plug>(sexp_insert_opening_square)
+  imap <silent><buffer> ]               <Plug>(sexp_insert_closing_square)
+  imap <silent><buffer> {               <Plug>(sexp_insert_opening_curly)
+  imap <silent><buffer> }               <Plug>(sexp_insert_closing_curly)
 endfunction
 
 augroup vim_sexp_mapping
@@ -942,34 +768,48 @@ let g:sonictemplate_vim_template_dir = [
 
 " submode.vim {{{
 
-" from http://d.hatena.ne.jp/tyru/20100502/vim_mappings
+if 1 || dein#tap('vim-submode')
+  " from http://d.hatena.ne.jp/tyru/20100502/vim_mappings
 
-" マッピングさせないようにする
-let g:wm_move_down  = ''
-let g:wm_move_up    = ''
-let g:wm_move_left  = ''
-let g:wm_move_right = ''
+  " マッピングさせないようにする
+  let g:wm_move_down  = ''
+  let g:wm_move_up    = ''
+  let g:wm_move_left  = ''
+  let g:wm_move_right = ''
 
-" Change current window size.
-call submode#enter_with('winsize', 'n', '', ',sw', '<Nop>')
-call submode#leave_with('winsize', 'n', '', '<Esc>')
-call submode#map       ('winsize', 'n', '', 'j', '<C-w>-:redraw<CR>')
-call submode#map       ('winsize', 'n', '', 'k', '<C-w>+:redraw<CR>')
-call submode#map       ('winsize', 'n', '', 'h', '<C-w><:redraw<CR>')
-call submode#map       ('winsize', 'n', '', 'l', '<C-w>>:redraw<CR>')
-call submode#map       ('winsize', 'n', '', '=', '<C-w>=:redraw<CR>')
+  let g:submode_timeoutlen = 2000
 
-" Scroll by j and k.
-" TODO Stash &scroll value.
-" TODO Use <excmd>j, <excmd>k
-" TODO Make utility function to generate current shortest <SID> map.
-call submode#enter_with('s', 'n', '', ',ss', '<C-d>:redraw<CR>')
-call submode#enter_with('s', 'n', '', ',ss', '<C-u>:redraw<CR>')
-call submode#leave_with('s', 'n', '', '<Esc>')
-call submode#map       ('s', 'n', '', 'j', '<C-d>:redraw<CR>')
-call submode#map       ('s', 'n', '', 'k', '<C-u>:redraw<CR>')
-call submode#map       ('s', 'n', '', 'a', ':let &l:scroll -= 3<CR>')
-call submode#map       ('s', 'n', '', 's', ':let &l:scroll += 3<CR>')
+  " Change current window size.
+  call submode#enter_with('winsize', 'n', '', ',sw', '<Nop>')
+  call submode#leave_with('winsize', 'n', '', '<Esc>')
+  call submode#map       ('winsize', 'n', '', 'j', '<C-w>-:redraw<CR>')
+  call submode#map       ('winsize', 'n', '', 'k', '<C-w>+:redraw<CR>')
+  call submode#map       ('winsize', 'n', '', 'h', '<C-w><:redraw<CR>')
+  call submode#map       ('winsize', 'n', '', 'l', '<C-w>>:redraw<CR>')
+  call submode#map       ('winsize', 'n', '', '=', '<C-w>=:redraw<CR>')
+
+  " Scroll by j and k.
+  " TODO Stash &scroll value.
+  " TODO Use <excmd>j, <excmd>k
+  " TODO Make utility function to generate current shortest <SID> map.
+  call submode#enter_with('scroll', 'n', '', ',ss', '<C-d>:redraw<CR>')
+  call submode#leave_with('scroll', 'n', '', '<Esc>')
+  call submode#map       ('scroll', 'n', '', 'j', '<C-d>:redraw<CR>')
+  call submode#map       ('scroll', 'n', '', 'k', '<C-u>:redraw<CR>')
+  call submode#map       ('scroll', 'n', '', 'a', ':let &l:scroll -= 3<CR>')
+  call submode#map       ('scroll', 'n', '', 's', ':let &l:scroll += 3<CR>')
+
+  " Unite First/Previous/Next/Last
+  call submode#enter_with('unite', 'n', '', ',sq', ':<C-u>Unite -no-focus -no-start-insert -winheight=5 quickfix<CR>')
+  call submode#leave_with('unite', 'n', '', '<Esc>') " ':<C-u>:UniteClose<CR>'
+  call submode#map       ('unite', 'n', '', '0', ':UniteFirst<CR>')
+  call submode#map       ('unite', 'n', '', 'p', ':UnitePrevious<CR>')
+  call submode#map       ('unite', 'n', '', 'n', ':UniteNext<CR>')
+  call submode#map       ('unite', 'n', '', 'k', ':UnitePrevious<CR>')
+  call submode#map       ('unite', 'n', '', 'j', ':UniteNext<CR>')
+  call submode#map       ('unite', 'n', '', '$', ':UniteLast<CR>')
+
+endif
 
 " }}}
 
@@ -1034,162 +874,6 @@ let g:tweetvim_empty_separator = 1
 
 " }}}
 
-" Unite {{{
-
-let g:unite_enable_start_insert = 1
-let g:unite_enable_smart_case = 1
-
-" ファイルリストの生成コマンド
-if executable('sfind')
-  let g:unite_source_rec_async_command = ['sfind']
-endif
-
-" Initialize {{{
-
-function! s:InitUnite()
-  let l:runrun_register = {'is_selectable': 0}
-
-  function! l:runrun_register.func(candidate)
-    execute 'FixRunCommand' a:candidate.action__command
-  endfunction
-
-  call unite#custom_action('command', 'runrun-register', l:runrun_register)
-
-  " *unite-filter-sorter_default*
-  call unite#custom_source('buffer,file,file_rec,file_rec/async', 'sorters', 'sorter_word')
-endfunction
-
-function! s:InitUniteBuffer()
-  nmap <silent> <buffer> J      <Plug>(unite_toggle_mark_current_candidate)
-  nmap <silent> <buffer> K      <Plug>(unite_toggle_mark_current_candidate-up)
-  nmap <silent> <buffer> <C-a>  <Plug>(unite_toggle_mark_all_candidates)
-  nmap <silent> <buffer> P      <Plug>(unite_toggle_auto_preview)
-  imap <silent> <buffer> <C-j>  <Plug>(unite_do_default_action)
-  imap <silent> <buffer> <C-c>  <Plug>(unite_exit)
-  nmap <silent> <buffer> <C-c>  <Plug>(unite_exit)
-  inoremap <silent><buffer><expr> <C-e> unite#do_action('rec')
-endfunction
-
-call s:InitUnite()
-autocmd Meowrc FileType unite call s:InitUniteBuffer()
-
-" }}}
-
-" Like startify {{{
-
-let s:open_panty = {
-\   'is_selectable': 0,
-\ }
-
-function! s:open_panty.func(candidate)
-  let l:path = a:candidate.word
-       if isdirectory(l:path)
-         execute 'cd' l:path
-       else
-         execute 'edit' l:path
-       endif
-endfunction
-
-call unite#custom#action('file,directory', 'open_panty', s:open_panty)
-
-" }}}
-
-" alias {{{
-let g:unite_source_alias_aliases = {
-\   'panty_file_mru': {
-\     'source' : 'file_mru',
-\   },
-\   'panty_directory_mru': {
-\     'source' : 'directory_mru',
-\   },
-\   'zsh_history': {
-\     'source': 'output/shellcmd',
-\     'args': printf('%s | head -n 1000', fnamemodify('~/script/zsh/history-all', ':p'))
-\   },
-\ }
-" }}}
-
-" バッファだったら goto、それ以外は open {{{
-
-let s:anekos_unite_action_goto_or_open = { 'description' : 'goto or open' }
-function! s:anekos_unite_action_goto_or_open.func(candidate)
-  if a:candidate.kind ==? 'buffer'
-    execute 'buffer' a:candidate.action__buffer_nr
-  else
-    execute 'open' a:candidate.action__path
-  endif
-endfunction
-let s:anekos_unite_action_goto_or_tabopen = { 'description' : 'goto or tabopen' }
-function! s:anekos_unite_action_goto_or_tabopen.func(candidate)
-  if a:candidate.kind ==? 'buffer'
-    execute 'buffer' a:candidate.action__buffer_nr
-  else
-    execute 'tabedit' a:candidate.action__path
-  endif
-endfunction
-call unite#custom#action('file,buffer', 'goto-or-open', s:anekos_unite_action_goto_or_open)
-call unite#custom#action('file,buffer', 'goto-or-tabopen', s:anekos_unite_action_goto_or_tabopen)
-
-" }}}
-
-" /home/vimmerr/foo/bar → ~/foo/bar
-call unite#custom#source('file,directory,file_mru,directory_mru,panty_file_mru,panty_directory_mru', 'converters', ['converter_shorten_path'])
-
-" }}}
-
-" unite-font {{{
-
-let g:unite_font_list_command = 'font-names 1'
-call unite#custom#source('font', 'matchers', 'matcher_migemo')
-
-" }}}
-
-" unite-grep {{{
-
-let g:unite_source_grep_max_candidates = 200
-
-" http://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/
-" go get -u github.com/monochromegane/the_platinum_searcher/...
-if executable('pt')
-  let g:unite_source_grep_command = 'pt'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor'
-  let g:unite_source_grep_recursive_opt = ''
-else
-  let g:unite_source_grep_command = 'sgrep'
-  let g:unite_source_grep_default_opts = ''
-  let g:unite_source_grep_recursive_opt = ''
-endif
-
-function! s:GrepSelected()
-  let l:backup = @z
-  normal! vgv"zy
-  let l:str = @z
-  let @z = l:backup
-  call unite#start([['grep', '.', '', l:str]])
-endfunction
-
-xnoremap sua :call <SID>GrepSelected()<CR>
-
-" }}}
-
-" unite-haddock {{{
-
-let g:unite_source_haddock_browser = '/bin/urxvt -e w3m'
-
-" }}}
-
-" unite-hyperspec {{{
-
-let g:unite_hyperspec_base_dir='/usr/share/doc/HyperSpec/'
-
-" }}}
-
-" unite-nyancat_anim {{{
-
-call unite#custom#profile('source/nyancat_anim', 'context', {'winheight': 24})
-
-" }}}
-
 " vim2hs {{{
 
 let g:haskell_conceal_wide = 0
@@ -1218,7 +902,9 @@ let g:vimshell_split_command = 'rightbelow vsplit'
 let g:vimshell_no_default_keymappings = 1
 
 let g:vimshell_prompt_expr = 'fnamemodify(getcwd(), ":~:.") . "$ "'
-let g:vimshell_prompt_pattern = '^[^\$]\+\$ '
+let g:vimshell_prompt_pattern = '^[^\$]*\$ '
+
+let g:vimshell_interactive_update_time = 300
 
 " lein repl を起動
 command! -bar Lein execute ':VimShellInteractive lein repl'
@@ -1231,7 +917,7 @@ xnoremap <silent> <Leader>s :VimShellSendString<CR>
 
 command! -bar Ghci :VimShellInteractive ghci
 
-function! s:DefineVimshellMappings()
+function! s:define_vimshell_mappings()
   nmap <buffer>  <CR>       <NOP>
   nmap <buffer>  q          <Plug>(vimshell_hide)
   nmap <buffer>  Q          <Plug>(vimshell_exit)
@@ -1265,7 +951,7 @@ function! s:DefineVimshellMappings()
   imap <buffer>  <C-k>      <Plug>(vimshell_delete_forward_line)
 endfunction
 
-function! s:DefineVimshellIntMappings()
+function! s:define_vimshell_int_mappings()
   nmap <buffer>  <CR>   <Plug>(vimshell_int_execute_line)
   nmap <buffer>  <CR>   <Plug>(vimshell_int_execute_line)
   nmap <buffer>  <C-y>  <Plug>(vimshell_int_paste_prompt)
@@ -1294,15 +980,15 @@ function! s:DefineVimshellIntMappings()
   imap <buffer>  <C-v>  <Plug>(vimshell_int_send_input)
 endfunction
 
-autocmd Meowrc FileType vimshell call s:DefineVimshellMappings()
-autocmd Meowrc FileType int-* call s:DefineVimshellIntMappings()
+autocmd Meowrc FileType vimshell call s:define_vimshell_mappings()
+autocmd Meowrc FileType int-* call s:define_vimshell_int_mappings()
 
 "}}}
 
 " watchdogs {{{
 
 let g:watchdogs_check_BufWritePost_enable = 1
-let g:watchdogs_check_CursorHold_enable = 1
+let g:watchdogs_check_CursorHold_enable = 0
 
 " }}}
 

@@ -5,6 +5,8 @@
 " | /  |    |   |    |/  \|  |   |    |     |
 "=============================================
 
+echoerr 'hoge'
+
 scriptencoding utf8
 
 " NeoBundle {{{
@@ -46,7 +48,7 @@ NeoBundle 'cocopon/iceberg.vim'
 NeoBundle 'popkirby/lightline-iceberg'
 NeoBundle 'freeo/vim-kalisi'
 
-function! s:LoadColors ()
+function! s:load_colors ()
   NeoBundle '29decibel/codeschool-vim-theme'
   NeoBundle 'aereal/vim-magica-colors'
   NeoBundle 'ajh17/Spacegray.vim'
@@ -89,7 +91,9 @@ function! s:LoadColors ()
   NeoBundle 'Wombat'
   " NeoBundle 'git://gist.github.com/187578.git', { 'name' : 'h2u_colors' }
 endfunction
-command! -bar LoadColors call s:LoadColors()
+
+command! -bar LoadColors call s:load_colors()
+
 " }}}
 
 " Completion {{{
@@ -347,7 +351,7 @@ endif
 
 " Our plugins {{{
 
-function! s:LoadMyPlugin(name, ...)
+function! s:load_my_plugin(name, ...)
   for l:base in ['', '~/project/', '~/repos/', '~/project/vim-plugins/']
     let l:dir = expand(l:base . a:name)
     if isdirectory(l:dir)
@@ -362,15 +366,15 @@ function! s:LoadMyPlugin(name, ...)
 endfunction
 
 if has('vim_starting')
-  call s:LoadMyPlugin('runes-vim', 'anekos/runes-vim')
-  call s:LoadMyPlugin('manga-osort')
-  call s:LoadMyPlugin('liname/res/vim')
-  call s:LoadMyPlugin('unite-located-session')
-  call s:LoadMyPlugin('~/.xmonad/res/vim')
-  call s:LoadMyPlugin('unite-font')
-  call s:LoadMyPlugin('nox/res/vim')
-  call s:LoadMyPlugin('hledger-vim')
-  call s:LoadMyPlugin('commandlinefu.vim')
+  call s:load_my_plugin('runes-vim', 'anekos/runes-vim')
+  call s:load_my_plugin('manga-osort')
+  call s:load_my_plugin('liname/res/vim')
+  call s:load_my_plugin('unite-located-session')
+  call s:load_my_plugin('~/.xmonad/res/vim')
+  call s:load_my_plugin('unite-font')
+  call s:load_my_plugin('nox/res/vim')
+  call s:load_my_plugin('hledger-vim')
+  call s:load_my_plugin('commandlinefu.vim')
 endif
 
 " }}}
