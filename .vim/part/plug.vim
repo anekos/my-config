@@ -1,63 +1,76 @@
+"========================
+" |_/ |\  |\__    \    /
+" |_  | \ |   \     \/
+" | \ |   |    |   /  \
+"     |   |    | /     \
+"========================
+
+" %Alignta g/^Plug "
+
+scriptencoding utf-8
+
 call plug#begin('~/.vim-temp/plug')
 
 " Visual {{{
 
-Plug 'cohama/easy-colorcolumn'
-Plug 'itchyny/thumbnail.vim'
-Plug 'osyo-manga/vim-brightest'
-Plug 'rhysd/inazuma.vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 't9md/vim-quickhl'
-Plug 'thinca/vim-zenspace'
-Plug 'VOom'
-Plug 'Yggdroot/indentLine'
+Plug 'itchyny/thumbnail.vim'            " サムネ表示でバッファを選択
+Plug 'osyo-manga/vim-brightest'         " 現在のカーソル位置の単語を常にハイライトする
+Plug 't9md/vim-quickhl'                 " 複数の単語をカラフルにハイライト
+Plug 'thinca/vim-zenspace'              " 忌しき全角の空白を暴露する
+Plug 'VOom'                             " アウトライン表示する :Voom
+Plug 'Yggdroot/indentLine'              " 線でインデントレベルを表示する
 
 " }}}
 
 " Benri {{{
 
-Plug 'haya14busa/niconicomment.vim'
-Plug 'heavenshell/vim-pokemon'
-" Plug 'tyru/banban.vim'
-" if = 'has("gui_running")'
+Plug 'haya14busa/niconicomment.vim'     " コメントをニコニコ動画のように流す。レビューの時に便利
+Plug 'heavenshell/vim-pokemon'          " 伝説のチンポコモンを探そう
+Plug 'tyru/banban.vim'                  " Vim をバンバンする
+Plug 'pocke/sushibar.vim'               " https://www.youtube.com/watch?v=epfPe2U_2Xk
 
 " }}}
 
 " Corpse Blinder {{{
 
-Plug 'cocopon/iceberg.vim'
-Plug 'popkirby/lightline-iceberg'
-Plug 'freeo/vim-kalisi'
-Plug 'aereal/vim-colors-japanesque'
+Plug 'aereal/vim-colors-japanesque'     " カ
+Plug 'AlessandroYorba/Alduin'           " ラ
+Plug 'altercation/vim-colors-solarized' " フ
+Plug 'cocopon/iceberg.vim'              " ル
+Plug 'freeo/vim-kalisi'                 " ナ
+Plug 'jacoborus/tender'                 " ヴ
+Plug 'jonathanfilip/vim-lucius'         " ィ
+Plug 'lifepillar/vim-solarized8'        " ム
+Plug 'morhetz/gruvbox'                  " ゥ
+Plug 'popkirby/lightline-iceberg'       " ス
+Plug 'rhysd/vim-color-spring-night'     " キ
+
 
 " }}}
 
 " Completion {{{
 
-Plug 'mattn/googlesuggest-complete-vim'
-Plug 'mattn/sonictemplate-vim'
-Plug 'mattn/sonictemplate-vim'
-Plug 'Shougo/neocomplete'
-Plug 'Shougo/neosnippet'
-Plug 'Shougo/neosnippet-snippets'
-Plug 'ujihisa/neco-look'
-" Plug 'cohama/lexima.vim'
-" Plug 'Valloric/YouCompleteMe' ", {'build': {'unix' : './install.sh'}}
+Plug 'mattn/sonictemplate-vim'          " :Template
+Plug 'Konfekt/FastFold'                 " ネオコンがほしがる
+Plug 'Shougo/neocomplete'               " ネオコン
+Plug 'Shougo/neosnippet'                " すにぺ
+Plug 'Shougo/neosnippet-snippets'       " すにぺぺ
+Plug 'ujihisa/neco-look'                " look コマンドを使用して英単語の補完
+Plug 'cohama/lexima.vim'                " かっこよく括弧を入力する
 
 " }}}
 
 " Development {{{
 
-Plug 'AndrewRadev/linediff.vim'
-Plug 'cohama/vim-hier'
-Plug 'kannokanno/previm'
-Plug 'metakirby5/codi.vim'
-Plug 'osyo-manga/shabadou.vim'
-Plug 'osyo-manga/vim-watchdogs'
-Plug 'scrooloose/syntastic'
-Plug 'thinca/vim-qfreplace'
-Plug 'thinca/vim-quickrun'
-Plug 'tyru/caw.vim'
+Plug 'AndrewRadev/linediff.vim'         " 選択した行の diff を取る
+Plug 'cohama/vim-hier'                  " QuickFix の該当箇所をハイライトする
+Plug 'metakirby5/codi.vim'              " インタラクティブな scratch バッファを作成する :Codi ruby
+Plug 'osyo-manga/shabadou.vim'          " QuickRun Hooks
+Plug 'osyo-manga/vim-watchdogs'         " Syntax Checker
+" Plug 'scrooloose/syntastic'             " Syntax Checker
+Plug 'thinca/vim-qfreplace'             " quickfix 上で r を押して、元ファイルを置換する
+Plug 'thinca/vim-quickrun'              " くいっくるん
+Plug 'tyru/caw.vim'                     " コメントアウトするやつ
 
 " }}}
 
@@ -68,12 +81,10 @@ Plug 'chase/vim-ansible-yaml'
 Plug 'elzr/vim-json'
 Plug 'freitass/todo.txt-vim'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
-Plug 'toshi32tony3/vim-trailing-whitespace'
 Plug 'rcmdnk/vim-markdown'
 Plug 'sudar/vim-arduino-syntax'
 Plug 'mattn/emmet-vim'
 Plug 'cespare/vim-toml'
-Plug 'lfe-support/vim-lfe'
 
 " (Java|ECMA|Type)Script
 Plug 'salomvary/vim-eslint-compiler'
@@ -221,6 +232,7 @@ Plug 'osyo-manga/vim-textobj-multiblock'
 
 Plug 'tasuten/gcalc.vim'
 Plug 'Shougo/vinarise'
+Plug 'tpope/vim-speeddating'
 
 " }}}
 
@@ -241,6 +253,7 @@ Plug 'taka84u9/vim-ref-ri'
 Plug 'thinca/vim-ref'
 Plug 'ujihisa/ref-hoogle'
 Plug 'rhysd/devdocs.vim'
+Plug 'aiya000/aref-web.vim'
 
 " }}}
 
@@ -295,14 +308,13 @@ Plug 'vim-utils/vim-man'
 
 " Misc {{{
 
-" Plug 'tyru/eskk.vim'
 Plug 'anekos/runes-vim'
-Plug 'Konfekt/FastFold'
-Plug 'Shougo/junkfile.vim'
-Plug 'sjl/gundo.vim'
+Plug 'sjl/gundo.vim'                    " undo ツリーを表示して、履歴を移動したい
 Plug 'tyru/open-browser.vim'
-Plug 'yuratomo/gmail.vim'
-" Plug 'Shougo/vimfiler.vim'
+Plug 'skywind3000/asyncrun.vim'         " 非同期でシェルのコマンドを実行し、quickfix ににゅるっと出す
+Plug 'haya14busa/vim-gtrans'
+Plug 'yami-beta/vim-responsive-tabline' " れすぽんちぶのタブ表示
+Plug 'yuttie/comfortable-motion.vim'    " 慣性スクロール
 
 " }}}
 

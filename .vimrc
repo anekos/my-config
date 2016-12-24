@@ -16,6 +16,13 @@
 "======================================================================================
 
 
+" Safety
+if !has('unix') && has('macunix')
+  echo 'huh?'
+  silent! quitall!
+endif
+
+
 " Reloadablerrr
 augroup Meowrc
   autocmd!
@@ -44,15 +51,17 @@ let g:my_rc_files = map([
 \   '~/.vim/part/env.vim',
 \   '~/.vim/part/plug.vim',
 \   '~/.vim/part/utils.vim',
-\   '~/.vim/part/options.vim',
-\   '~/.vim/part/mappings.vim',
-\   '~/.vim/part/commands.vim',
-\   '~/.vim/part/autocommands.vim',
+\   '~/.vim/part/set.vim',
+\   '~/.vim/part/map.vim',
+\   '~/.vim/part/command.vim',
+\   '~/.vim/part/autocmd.vim',
 \   '~/.vim/part/term.vim',
-\   '~/.vim/part/plugins.vim',
+\   '~/.vim/part/let.vim',
+\   '~/.vim/part/plugin/lightline.vim',
 \   '~/.vim/part/plugin/unite.vim',
 \   '~/.vim/part/plugin/quickrun.vim',
-\   '~/.vim/part/after.vim',
+\   '~/.vim/part/gui.vim',
+\   '~/.vim/part/last.vim',
 \ ], 'expand(v:val)')
 
 let g:my_plugins = [
@@ -60,6 +69,7 @@ let g:my_plugins = [
 \   {'name': 'hledger',  'path': 'hledger-vim'},
 \   {'name': 'fancy',    'path': 'vim-fancy'},
 \   {'name': 'colocolo', 'path': 'colocolo.vim'},
+\   {'name': 'guruguru', 'path': 'guruguru.vim'},
 \ ]
 
 
@@ -69,7 +79,11 @@ endfor
 unlet s:file
 
 " source /usr/share/gtags/gtags.vim
-source /usr/share/vim/vimfiles/plugin/gtags.vim
+if filereadable('/usr/share/vim/vimfiles/plugin/gtags.vim')
+  source /usr/share/vim/vimfiles/plugin/gtags.vim
+endif
+
+MeowtoCmd VimEnter * source ~/.vim/part/after.vim
 
 if $PWD == expand('~') && isdirectory('/tmp/xmosh')
   cd /tmp/xmosh

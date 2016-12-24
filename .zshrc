@@ -80,43 +80,57 @@ fi
 
 # 自動でログを保存する {{{
 
+__anekos_enable_auto_logging=0
+
+function __anekos_auto_script_clean () {
+  [ -e "$__anekos_scripted" ] && rm "$__anekos_scripted"
+}
+
+function logall () {
+  if [ -n "$__anekos_scripted" ]
+  then
+    echo 'Already logging' 1>&2
+    return
+  fi
+  export __anekos_scripted="/tmp/terminal-log/$$.log"
+  [ -d /tmp/terminal-log/ ] || mkdir /tmp/terminal-log/
+  trap __anekos_auto_script_clean EXIT
+  script --quiet --flush >(esclr | tee --append "$__anekos_scripted" /tmp/terminal-log/all.log > /dev/null)
+  exit
+}
+
+function fix () {
+  mkdir -p /tmp/terminal-cwd/
+  local tpid="$(~/script/terminal/pid)"
+  if [ -z "$tpid" ]
+  then
+    echo 'Failed: ~/script/terminal/pid' 1>&2
+  else
+    echo "${1:-$PWD}" > "/tmp/terminal-cwd/$tpid.cwd"
+  fi
+}
+
 if [ -z "$__anekos_start_at" ]
 then
 
-  # XMonad の cwd に cd する
-  function __echo_working_directory () {
-    has-command get-terminal-pid || return 0
+  # fix が実行されていれば、そのディレクトリ
+  # そうでなければ、ターミナルの cwd
+  function __cd_working_directory () {
+    [ -x ~/script/terminal/pid ] || return 0
 
-    local tpid="$(get-terminal-pid $$)"
+    local tpid="$(~/script/terminal/pid $$)"
 
-    if [ -e /tmp/terminal-cwd/$tpid.cwd ]
+    if [ -n "$tpid" -a -e /tmp/terminal-cwd/$tpid.cwd ]
     then
-      cat /tmp/terminal-cwd/$tpid.cwd
-    else
-      local pid="$(pgrep xmonad)"
-      readlink "/proc/$pid/cwd"
+      cd "$(cat /tmp/terminal-cwd/$tpid.cwd)"
+    # else
+    #   cd "$(readlink "/proc/$tpid/cwd")"
     fi
   }
 
-  function fix () {
-    mkdir -p /tmp/terminal-cwd/
-    local tpid="$(get-terminal-pid)"
-    echo "$PWD" > /tmp/terminal-cwd/$tpid.cwd
-  }
-
-  function __anekos_auto_script_clean () {
-    [ -e "$__anekos_scripted" ] && rm "$__anekos_scripted"
-  }
-
-  if [ -z "$__anekos_scripted" ]
+  if [ "$__anekos_enable_auto_logging" = 1 -a -z "$__anekos_scripted" ]
   then
-    export __anekos_scripted="/tmp/terminal-log/$$.log"
-    [ -d /tmp/terminal-log/ ] || mkdir /tmp/terminal-log/
-    trap __anekos_auto_script_clean EXIT
-    script --quiet --flush >(esclr | tee --append "$__anekos_scripted" /tmp/terminal-log/all.log > /dev/null)
-    exit
-  else
-    cd "$(__echo_working_directory)"
+    logall
   fi
 
 fi
@@ -576,30 +590,15 @@ SAVEHIST=1000000 # 100万パワー
 
 # ENV {{{
 
-export EDITOR=vim
 export LINAME_EDITOR='gvim -f'
 
-export SVIM_FOCUS_COMMAND="xc focus"
-export SVIM_COMMAND_NORMAL="s"
-export SVIM_COMMAND_TAB="t"
-
 export DARCS_ALWAYS_COLOR=1
-
-# perl ENV
-export PERL_LOCAL_LIB_ROOT="$HOME/perl5"
-export PERL_MB_OPT="--install_base $HOME/perl5"
-export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
-export PERL5LIB="$HOME/perl5/lib/perl5/x86_64-linux-thread-multi:$HOME/perl5/lib/perl5"
 
 case "$OSTYPE" in
   linux*)
     export TERMCMD=urxvt
   ;;
 esac
-
-export EDITOR=vim
-
-export LESSOPEN='| /usr/bin/lesspipe.sh %s'
 
 export ANSIBLE_COW_SELECTION=random
 
@@ -872,7 +871,7 @@ case "$OSTYPE" in
     then
       alias -g PC="| tpipe 'xsel --input --clipboard' | tpipe 'xsel --input --primary' | tpipe 'xsel --input --secondary'"
     else
-      alias -g PC='| xclip -i'
+      alias -g PC="| tee >(xsel --input --clipboard) | tee >(xsel --input --primary) | tee >(xsel --input --secondary)"
     fi
   ;;
 esac
@@ -880,8 +879,7 @@ esac
 # TMUX
 [ -n "$TMUX" ] && alias copy=~/script/tmux/copy
 
-# the fuck
-# alias fuck='eval $(thefuck $(fc -ln -1))'
+has-command fuck && alias fuck='eval $(thefuck $(fc -ln -1))'
 
 # workaround
 alias gitk='LC_ALL=C gitk'
@@ -1328,6 +1326,19 @@ compdef pacaur=pacman
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey "^Xe" edit-command-line
+
+# }}}
+
+# IO 情報を出力するコンソールを表示しつつ fg する {{{
+
+function iofg {
+  local pid
+
+  pid="$(jobs -p | head -1 | awk '{print $3}')"
+
+  ~/bin/term -e "watch cat /proc/$pid/io \\| humanize" 2> /dev/null
+  fg
+}
 
 # }}}
 

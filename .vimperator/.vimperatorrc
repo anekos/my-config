@@ -237,8 +237,7 @@ set! network.http.proxy.pipelining=true
 " タブの開閉編にアニメーション
 set! browser.tabs.animate=false
 
-" IPv6 非対応環境では無意味なので、無効を有効化!
-set! network.dns.disableIPv6=true
+set! network.dns.disableIPv6=false
 
 " キャッシュの有効化
 set! browser.cache.memory.enable=true
