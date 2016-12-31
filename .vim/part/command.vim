@@ -82,8 +82,26 @@ function! s:copy_current_filepath (bang, modifier)
     let l:path = printf('L%d@%s', line('.'), l:path)
   endif
   let @* = l:path
+  let @+ = l:path
   echo printf('>> %s', l:path)
 endfunction
+
+" }}}
+
+" 選択した行番号をコピペ {{{
+
+function! s:ln(start, end)
+  if a:start == a:end
+    let l:ln = printf('L%d', a:start)
+  else
+    let l:ln = printf('L%d-%d', a:start, a:end)
+  endif
+  let @+ = l:ln
+  let @* = l:ln
+  echo l:ln
+endfunction
+
+command! -range Ln call s:ln(<line1>, <Line2>)
 
 " }}}
 
@@ -561,5 +579,45 @@ function! s:CleanupNotMicrosofts()
 endfunction
 
 command! -bar CleanupWindows call s:CleanupNotMicrosofts()
+
+" }}}
+
+" Swap ファイルいちいち聞いてくんなやなやなやー {{{
+
+augroup meowrc-swapfile
+  autocmd!
+  autocmd SwapExists * call s:on_SwapExists()
+augroup END
+
+function! s:on_SwapExists() abort
+  if !filereadable(expand('<afile>'))
+    let v:swapchoice = 'd'
+    return
+  endif
+  let v:swapchoice = get(b:, 'swapfile_choice', 'o')
+  unlet! b:swapfile_choice
+  if v:swapchoice !=# 'd'
+    let b:swapfile_exists = 1
+  endif
+endfunction
+
+command! SwapfileRecovery call s:swapfile_recovery()
+command! SwapfileDelete call s:swapfile_delete()
+
+function! s:swapfile_recovery() abort
+  if get(b:, 'swapfile_exists', 0)
+    let b:swapfile_choice = 'r'
+    unlet b:swapfile_exists
+    edit
+  endif
+endfunction
+
+function! s:swapfile_delete() abort
+  if get(b:, 'swapfile_exists', 0)
+    let b:swapfile_choice = 'd'
+    unlet b:swapfile_exists
+    edit
+  endif
+endfunction
 
 " }}}

@@ -160,7 +160,7 @@ let g:committia_open_only_vim_starting = 0
 
 let g:committia_hooks = {}
 function! g:committia_hooks.edit_open(info)
-  " Additional settings
+  " すぺちぇ
   setlocal spell
 
   " If no commit message, start with insert mode
@@ -174,8 +174,8 @@ function! g:committia_hooks.edit_open(info)
   imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
   imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
 
-  let l:windowid = system('2> /dev/null xdotool search --any --onlyvisible --pid $(ps -o ppid --pid $$ | tail -n 1) | head -n 1')
-  call system(printf('xc important %d', l:windowid))
+  sleep 100m
+  call system(printf('xc important %d', v:windowid))
 endfunction
 
 " }}}

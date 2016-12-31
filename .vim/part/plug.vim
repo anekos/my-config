@@ -301,7 +301,6 @@ Plug 'thinca/vim-scouter'
 Plug 'tyru/restart.vim'
 Plug 'vim-jp/vimdoc-ja'
 Plug 'todesking/vint-syntastic'
-Plug 'violetyk/gitquick.vim'
 Plug 'vim-utils/vim-man'
 
 " }}}

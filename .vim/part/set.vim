@@ -153,8 +153,11 @@ if !has('nvim')
   set clipboard=unnamedplus,autoselect,exclude:cons\|linux
 endif
 
-" iskeyword
-set iskeyword=@,48-57,_,192-255
+" iskeyword ← 説明になってない!
+set iskeyword=@,48-57,-,_,192-255
+
+" こいつらをファイル・メイとして認めてやらんこともない
+set isfname=@,48-57,/,.,-,_
 
 " キー入力のタイムアウト
 set timeoutlen=750

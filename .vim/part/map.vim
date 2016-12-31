@@ -150,6 +150,9 @@ if has('gui_running')
   map! <S-Insert> <MiddleMouse>
 endif
 
+" Repeat on visual mode
+vnoremap <silent> . :normal .<CR>
+
 " for lexima <BS>
 imap <C-h> <BS>
 

@@ -185,6 +185,10 @@ let g:quickrun_config = {
 \     'command': 'cargo',
 \     'exec': '%c script %s %a',
 \   },
+\   'rust/clippy': {
+\     'command': 'cargo',
+\     'exec': ['RUST_LOG=error %c clean --target=debug', 'RUST_LOG=error %c +nightly clippy'],
+\   },
 \   'sh/watchdogs_checker': {
 \     'type': 'watchdogs_checker/shellcheck',
 \   },

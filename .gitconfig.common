@@ -68,7 +68,7 @@
 	# マルチバイトなファイル名が化ける問題
 	quotepath = false
 	# editor = panty summon -w -r git -b ':cd '$PWD'<CR>'
-	editor = gvim --nofork --role git -c 'wincmd ='
+	editor = panty summon --nofork --role git
 	excludesfile = ~/.gitignore
 	precomposeunicode = true # for Mac OS X - http://faithandbrave.hateblo.jp/entry/2016/02/08/144948
 
