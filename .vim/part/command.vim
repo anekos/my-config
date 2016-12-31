@@ -584,6 +584,8 @@ command! -bar CleanupWindows call s:CleanupNotMicrosofts()
 
 " Swap ファイルいちいち聞いてくんなやなやなやー {{{
 
+" Pakuri from 翻車魚 https://github.com/thinca/config/blob/21a7d5f25bfa7d6c015870808a55a65183d01485/dotfiles/dot.vim/vimrc#L566
+
 augroup meowrc-swapfile
   autocmd!
   autocmd SwapExists * call s:on_SwapExists()
