@@ -122,7 +122,8 @@ set display=lastline
 set showtabline=2
 
 " for RecentFiles.vim
-set viminfo& viminfo+=!
+set viminfo& viminfo+=! viminfo+=n~/.vim-temp/info/
+
 
 " ウィンドウサイズの自動調整
 set noequalalways
