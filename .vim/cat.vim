@@ -1975,7 +1975,7 @@ let g:codi#rightsplit = 0
 
 " colocolo {{{
 
-let g:i_am_not_pika_beast = 0
+let g:i_am_not_pika_beast = 1
 
 " }}}
 
