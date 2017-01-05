@@ -79,8 +79,6 @@ let g:my_plugins = [
       \   {'name': 'nox',      'path': 'nox/res/vim'},
       \   {'name': 'hledger',  'path': 'hledger-vim'},
       \   {'name': 'fancy',    'path': 'vim-fancy'},
-      \   {'name': 'colocolo', 'path': 'colocolo.vim'},
-      \   {'name': 'guruguru', 'path': 'guruguru.vim'},
       \ ]
 
 "}}}
