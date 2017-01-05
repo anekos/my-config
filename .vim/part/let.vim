@@ -45,7 +45,9 @@ let g:aref_web_source = {
 
 " カーソル移動が重くなるので…
 let g:brightest#enable_on_CursorHold = 1
-let g:brightest#enable_filetypes = {'_': 0}
+let g:brightest#enable_filetypes = {'_': 1}
+let g:brightest#highlight = {'group': 'BrightestUnderline'}
+let g:brightest#enable_clear_highlight_on_CursorMoved = 1
 
 " }}}
 
