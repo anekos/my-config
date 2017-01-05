@@ -257,6 +257,12 @@ Plug 'aiya000/aref-web.vim'
 
 " }}}
 
+" Unicode {{{
+
+Plug 'mattn/emoji-vim'
+
+" }}}
+
 " Unite {{{
 
 Plug 'lambdalisue/unite-grep-vcs'
@@ -285,7 +291,6 @@ Plug 'hrsh7th/vim-unite-vcs'
 Plug 'kmnk/vim-unite-giti'
 Plug 'lambdalisue/vim-gista'
 Plug 'lambdalisue/vim-gita'
-Plug 'rhysd/committia.vim'
 Plug 'rhysd/git-messenger.vim'
 Plug 'tpope/vim-fugitive'
 
@@ -361,5 +366,3 @@ call s:add_my_plugins()
 " }}}
 
 call plug#end()
-
-let g:plugins_installed = 1

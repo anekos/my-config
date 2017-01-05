@@ -29,7 +29,7 @@ command! -bar SSF syntax sync fromstart
 
 " }}}
 
-" *.archive に選択範囲を移動 {{{
+" .*.archive に選択範囲を移動 {{{
 
 function! s:archive(comment) range
   let l:basefn = expand('%:p')
@@ -48,9 +48,7 @@ function! s:archive(comment) range
 
   let l:content = "\n\n\n[" . l:prefix . system('date | tr --delete "\n"') . "]\n\n" . @"
 
-  " call vimproc#write(l:basefn . '.archive', l:content, 'a')
-
-  let l:file = vimproc#fopen(l:basefn . '.archive', 'O_WRONLY | O_CREAT | O_APPEND')
+  let l:file = vimproc#fopen(printf('.%s.archive'), l:basefn), 'O_WRONLY | O_CREAT | O_APPEND')
   call l:file.write(l:content)
   call l:file.close()
 endfunction

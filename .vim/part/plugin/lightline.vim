@@ -113,49 +113,31 @@ function! MyLineTabFileName(n)
   return l:name !=# '' ? l:name : '[No Name]'
 endfunction
 
-if g:plugins_installed
-  function! g:myline.git_branch()
-    return gita#statusline#preset('branch_fancy')
-  endfunction
+function! g:myline.git_branch()
+  return gita#statusline#preset('branch_fancy')
+endfunction
 
-  function! g:myline.git_traffic()
-    return gita#statusline#preset('traffic_fancy')
-  endfunction
+function! g:myline.git_traffic()
+  return gita#statusline#preset('traffic_fancy')
+endfunction
 
-  function! g:myline.git_status()
-    return gita#statusline#preset('status')
-  endfunction
+function! g:myline.git_status()
+  return gita#statusline#preset('status')
+endfunction
 
-  function! g:myline.pokemon()
+function! g:myline.pokemon()
+  return pokemon#getdaze()
+endfunction
+
+function! g:myline.pokemode()
+  let l:mode = lightline#mode()
+  if l:mode ==# 'NORMAL'
     return pokemon#getdaze()
-  endfunction
+  else
+    return l:mode
+  endif
+endfunction
 
-  function! g:myline.pokemode()
-    let l:mode = lightline#mode()
-    if l:mode ==# 'NORMAL'
-      return pokemon#getdaze()
-    else
-      return l:mode
-    endif
-  endfunction
-
-  function! g:myline.mode()
-    return winwidth(0) > 60 ? g:myline.pokemode() : ''
-  endfunction
-else
-  function! g:myline.git_branch()
-    return ''
-  endfunction
-
-  function! g:myline.git_traffic()
-    return ''
-  endfunction
-
-  function! g:myline.git_status()
-    return ''
-  endfunction
-
-  function! g:myline.mode()
-    return winwidth(0) > 60 ? lightline#mode() : ''
-  endfunction
-endif
+function! g:myline.mode()
+  return winwidth(0) > 60 ? g:myline.pokemode() : ''
+endfunction

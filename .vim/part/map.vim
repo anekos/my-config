@@ -87,18 +87,17 @@ nnoremap ! :Switch<CR>
 nnoremap gh 1gt
 
 " error
-nnoremap [c :cprevious<CR>
-nnoremap ]c :cnext<CR>
-nnoremap [C :cfirst<CR>
-nnoremap ]C :clast<CR>
-nnoremap [l :lprevious<CR>
-nnoremap ]l :lnext<CR>
-nnoremap [L :lfirst<CR>
-nnoremap ]L :llast<CR>
+nnoremap ,cp :cprevious<CR>
+nnoremap ,cn :cnext<CR>
+nnoremap ,cf :cfirst<CR>
+nnoremap ,cl :clast<CR>
+nnoremap ,lp :lprevious<CR>
+nnoremap ,ln :lnext<CR>
+nnoremap ,lf :lfirst<CR>
+nnoremap ,ll :llast<CR>
 
 " 小窓を大きくする風
 nnoremap <C-w>o :MaximizeModoki<CR>
-
 
 " }}}
 
@@ -210,8 +209,8 @@ nnoremap <Leader>nl :<C-u>NoxLocationOpen<CR>
 nnoremap <Leader>N :<C-u>NeoCompleteToggle<CR>
 
 " caw - commentout
-nmap <Leader>c <plug>(caw:tildepos:toggle)
-vmap <Leader>c <plug>(caw:tildepos:toggle)
+nmap <Leader>cc <plug>(caw:tildepos:toggle)
+vmap <Leader>cc <plug>(caw:tildepos:toggle)
 
 " }}}
 
@@ -268,8 +267,6 @@ cmap <C-x> <Plug>(cmdline-toggle-bang)
 scriptencoding utf8
 
 inoremap 　 <Space>
-inoremap 「 [
-inoremap 」 ]
 inoremap （ (
 inoremap ） )
 inoremap ｛ {
@@ -350,3 +347,61 @@ endfunction
 call s:init_sticky_shift_by_semi_colon()
 
 " }}}
+
+" AlterCmd {{{
+
+call altercmd#load()
+
+AlterCommand a Aref
+AlterCommand ag Ag
+AlterCommand agit Agit
+AlterCommand align Alignta
+AlterCommand ar Aref
+AlterCommand bg BGrep
+AlterCommand burn Burn
+AlterCommand cap Capture
+AlterCommand cdp CdProjectRoot
+AlterCommand chmod Chmod
+AlterCommand co copen
+AlterCommand date Date
+AlterCommand execlip Execlip
+AlterCommand gita Gita
+AlterCommand jq %!jq .
+AlterCommand lein Lein
+AlterCommand ln Ln
+AlterCommand lo lopen
+AlterCommand man Man
+AlterCommand mfc MFC
+AlterCommand mkp MarkdownPreview
+AlterCommand mks MkSession
+AlterCommand noxa NoxAttach
+AlterCommand noxb NoxBrowserOpen
+AlterCommand noxc NoxCat
+AlterCommand noxd NoxDiary
+AlterCommand noxl NoxLocationOpen
+AlterCommand noxm NoxMlt
+AlterCommand noxn NoxNew
+AlterCommand noxo NoxOpen
+AlterCommand noxp NoxPreview
+AlterCommand noxs NoxSearch
+AlterCommand noxt NoxTagAdd
+AlterCommand noxtu NoxTagUpdate
+AlterCommand noxu NoxUnugly
+AlterCommand nyancat Unite -update-time=50 -winheight=25 nyancat_anim
+AlterCommand qk QuicKill
+AlterCommand qr QuickRun
+AlterCommand rc Rc
+AlterCommand ref Ref
+AlterCommand res Restart
+AlterCommand sorc Sorc
+AlterCommand ssf SSF
+AlterCommand tm tabmove
+AlterCommand vf VimFiler
+AlterCommand vfe VimFileExplorer
+AlterCommand vs VimShell
+AlterCommand w1 w!
+AlterCommand w2 w!
+AlterCommand w3 w!
+
+" }}}
+

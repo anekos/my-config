@@ -11,9 +11,9 @@ if !has('gui_running')
   finish
 endif
 
-" Linus made
-set guioptions=git
-set guioptions+=c     " Use console dialog
+" Options {{{
+
+set guioptions=gitc
 
 "  1 hoge.vim
 set guitablabel=%N:\ %f
@@ -21,6 +21,7 @@ set guitablabel=%N:\ %f
 " 一行やろ?
 set cmdheight=1
 
+" }}}
 
 " フォント {{{
 

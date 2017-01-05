@@ -6,4 +6,4 @@
 "=====================
 
 
-let $RUST_SRC_PATH='/usr/src/rust/src'
+let $PATH = $HOME . '/bin:' . $HOME . '/.cabal/bin:' . $PATH

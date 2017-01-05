@@ -7,10 +7,6 @@
 
 scriptencoding utf8
 
-if !g:plugins_installed
-  finish
-endif
-
 " Unite {{{
 
 let g:unite_enable_start_insert = 1
@@ -260,8 +256,8 @@ function! s:init_unite_something_menu()
   let g:unite_source_menu_menus['something'] = deepcopy(l:commands)
 
   " 呼び出しのキーマップ ("I"nstant command)
-  nnoremap <silent> <Leader>i :<C-u>Unite -immediately menu:something<CR>
-  vnoremap <silent> <Leader>i :<C-u>Unite -immediately menu:something<CR>
+  nnoremap <silent> <Leader>i :<C-u>Unite menu:something<CR>
+  vnoremap <silent> <Leader>i :<C-u>Unite menu:something<CR>
 endfunction
 
 call s:init_unite_something_menu()

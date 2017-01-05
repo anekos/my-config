@@ -28,61 +28,6 @@ let g:loaded_logipat            = 1
 
 " }}}
 
-" AlterCmd {{{
-
-call altercmd#load()
-AlterCommand a Aref
-AlterCommand ag Ag
-AlterCommand agit Agit
-AlterCommand align Alignta
-AlterCommand ar Aref
-AlterCommand bg BGrep
-AlterCommand burn Burn
-AlterCommand cap Capture
-AlterCommand co copen
-AlterCommand lo lopen
-AlterCommand cdp CdProjectRoot
-AlterCommand chmod Chmod
-AlterCommand date Date
-AlterCommand jq %!jq .
-AlterCommand execlip Execlip
-AlterCommand gita Gita
-AlterCommand lein Lein
-AlterCommand man Man
-AlterCommand mfc MFC
-AlterCommand mks MkSession
-AlterCommand mkp MarkdownPreview
-AlterCommand noxa NoxAttach
-AlterCommand noxb NoxBrowserOpen
-AlterCommand noxc NoxCat
-AlterCommand noxd NoxDiary
-AlterCommand noxl NoxLocationOpen
-AlterCommand noxm NoxMlt
-AlterCommand noxn NoxNew
-AlterCommand noxo NoxOpen
-AlterCommand noxp NoxPreview
-AlterCommand noxs NoxSearch
-AlterCommand noxt NoxTagAdd
-AlterCommand noxtu NoxTagUpdate
-AlterCommand noxu NoxUnugly
-AlterCommand nyancat Unite -update-time=50 -winheight=25 nyancat_anim
-AlterCommand qr QuickRun
-AlterCommand qk QuicKill
-AlterCommand rc Rc
-AlterCommand ref Ref
-AlterCommand res Restart
-AlterCommand sorc Sorc
-AlterCommand ssf SSF
-AlterCommand tm tabmove
-AlterCommand w1 w!
-AlterCommand w2 w!
-AlterCommand w3 w!
-AlterCommand vs VimShell
-AlterCommand vf VimFiler
-AlterCommand vfe VimFileExplorer
-
-" }}}
-
 " Aref {{{
 
 let g:aref_web_source = {
@@ -139,44 +84,6 @@ let g:i_am_not_pika_beast = 0
 " comfortable-motion.vim {{{
 
 let g:comfortable_motion_no_default_key_mappings = 0
-
-" }}}
-
-" committia {{{
-
-" " You can get the information about the windows with first argument as a dictionary.
-"
-"   KEY              VALUE                      AVAILABILITY
-"-----------------------------------------------------------------------------------
-"   vcs            : vcs type (e.g. 'git')   -> all hooks
-"   edit_winnr     : winnr of edit window    -> ditto
-"   edit_bufnr     : bufnr of edit window    -> ditto
-"   diff_winnr     : winnr of diff window    -> ditto
-"   diff_bufnr     : bufnr of diff window    -> ditto
-"   status_winnr   : winnr of status window  -> all hooks except for 'diff_open' hook
-"   status_bufnr   : bufnr of status window  -> ditto
-
-let g:committia_open_only_vim_starting = 0
-
-let g:committia_hooks = {}
-function! g:committia_hooks.edit_open(info)
-  " すぺちぇ
-  setlocal spell
-
-  " If no commit message, start with insert mode
-  if a:info.vcs ==# 'git' && (getline(1) ==# '' || getline(1) =~# '-\s*')
-    normal! $
-    startinsert!
-  end
-
-  " Scroll the diff window from insert mode
-  " Map <C-n> and <C-p>
-  imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
-  imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
-
-  sleep 100m
-  call system(printf('xc important %d', v:windowid))
-endfunction
 
 " }}}
 

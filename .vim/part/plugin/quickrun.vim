@@ -1,4 +1,4 @@
-"  ___________________
+"  ____________________
 " < ﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮ >
 "  --------------------
 "         \   ^__^
@@ -21,7 +21,7 @@ let g:quickrun_config = {
 \     'outputter': 'multi',
 \     'outputter/buffer/split': 'vertical rightbelow',
 \     'outputter/buffer/close_on_empty' : 1,
-\     'outputter/buffer/running_mark': " ___________________\n< ﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮ >\n --------------------\n        \\   ^__^\n         \\ (◕‿‿◕)\\_______\n           /(__)\\       )\\/\\\n             || ||----w |\n                ||     ||",
+\     'outputter/buffer/running_mark': " ____________________\n< ﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮ >\n --------------------\n        \\   ^__^\n         \\ (◕‿‿◕)\\_______\n           /(__)\\       )\\/\\\n             || ||----w |\n                ||     ||",
 \     'outputter/quickfix/open_cmd': '',
 \     'outputter/multi/targets': ['buffer', 'quickfix']
 \   },

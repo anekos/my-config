@@ -7,7 +7,6 @@
 
 scriptencoding utf-8
 
-let $PATH = $HOME . '/bin:' . $HOME . '/.cabal/bin:' . $PATH
 
 if filereadable(expand('~/.vimrc.local')) | source ~/.vimrc.local | endif
 

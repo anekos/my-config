@@ -124,12 +124,11 @@ set showtabline=2
 " for RecentFiles.vim
 set viminfo& viminfo+=! viminfo+=n~/.vim-temp/info/
 
-
 " ウィンドウサイズの自動調整
 set noequalalways
 
 " ヘルプの検索順
-set helplang=ja,en
+set helplang=ja
 
 " セッションで保存する要素
 set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages
