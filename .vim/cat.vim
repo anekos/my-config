@@ -87,6 +87,7 @@ let g:my_plugins = [
 
 
 
+" from ~/.vim/part/let.vim
 "================
 " |\  |\  /| /|\
 " | \ | \/ |  |
@@ -877,6 +878,7 @@ let g:user_emmet_settings = {
 " }}}
 
 
+" from ~/.vim/part/plug.vim
 "========================
 " |_/ |\  |\__    \    /
 " |_  | \ |   \     \/
@@ -1247,6 +1249,7 @@ call s:add_my_plugins()
 call plug#end()
 
 
+" from ~/.vim/part/env.vim
 "=====================
 " |\  /|   |   |\__
 " | \/ |  _|_| |   \
@@ -1258,6 +1261,7 @@ call plug#end()
 let $PATH = $HOME . '/bin:' . $HOME . '/.cabal/bin:' . $PATH
 
 
+" from ~/.vim/part/utils.vim
 "========================
 " |\__   /|\ |  |\  |
 " |   \   |  |  | \ | /|
@@ -1305,6 +1309,7 @@ function! GetCharCode()
 endfunction
 
 
+" from ~/.vim/part/set.vim
 "=================
 " |    |\  /| /|\
 " | /| | \/ |  |
@@ -1518,6 +1523,7 @@ endif
 set background=dark
 
 
+" from ~/.vim/part/map.vim
 "=================
 " |\  /| |\   |_/
 " | /\ | |\ \ |_
@@ -1964,6 +1970,7 @@ call submode#map       ('unite', 'n', '', '$', ':UniteLast<CR>')
 " }}}
 
 
+" from ~/.vim/part/command.vim
 "===============================================
 "   /
 "   |     |\    |\  /| |\  /| |\     |   |\  /|
@@ -2604,6 +2611,7 @@ endfunction
 " }}}
 
 
+" from ~/.vim/part/autocmd.vim
 "=============================================
 "                         /
 " |\   |\__   /|\ |\      |     |\  /| |\  /|
@@ -2684,6 +2692,7 @@ endfunction
 " }}}
 
 
+" from ~/.vim/part/term.vim
 "=========================
 "            |\
 " /|\ |\  /| |  \  |\  /|
@@ -2725,6 +2734,7 @@ if has('vim_starting') && !has('gui_running') && has('vertsplit')
 endif
 
 
+" from ~/.vim/part/plugin/lightline.vim
 "===========================================
 "               |\
 " |\  |  \    / |  \ /|\ |\  |   |   |\  /|
@@ -2870,6 +2880,7 @@ function! g:myline.mode()
 endfunction
 
 
+" from ~/.vim/part/plugin/unite.vim
 "===========================
 " |\__     |   | /|\ |\  /|
 " |   \   _|_| |  |  | \/ |
@@ -3136,6 +3147,7 @@ call s:init_unite_something_menu()
 " }}}
 
 
+" from ~/.vim/part/plugin/quickrun.vim
 "  ____________________
 " < ﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮ >
 "  --------------------
@@ -3365,6 +3377,7 @@ let g:watchdogs_check_CursorHold_enable = 0
 call watchdogs#setup(g:quickrun_config)
 
 
+" from ~/.vim/part/plugin/lexima.vim
 "================================
 " |\  |\  /|   |   | |\  /| |\
 " | \ | \/ |   |   | | /\ | |\ \
@@ -3430,6 +3443,7 @@ for s:rule in s:sixima
 endfor
 
 
+" from ~/.vim/part/gui.vim
 "==================
 "  \    / |\__   |
 "    \/   |   \  |
@@ -3493,6 +3507,7 @@ Font nerd
 " }}}
 
 
+" from ~/.vim/part/last.vim
 "===================
 " |\  |\   |    /|\
 " | \ |\ \ | /|  |
