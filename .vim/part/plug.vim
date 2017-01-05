@@ -319,6 +319,7 @@ Plug 'skywind3000/asyncrun.vim'         " 非同期でシェルのコマンド�
 Plug 'haya14busa/vim-gtrans'
 Plug 'yami-beta/vim-responsive-tabline' " れすぽんちぶのタブ表示
 Plug 'yuttie/comfortable-motion.vim'    " 慣性スクロール
+Plug 'rhysd/inazuma.vim'                " 目をギョロギョロ(Inazumize)させながら、コードを読む
 
 " }}}
 

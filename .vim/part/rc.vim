@@ -89,6 +89,7 @@ let g:my_plugins = [
 
 let g:my_rc_files = map([
 \   '~/.vim/part/plug.vim',
+\   '~/.vim/part/env.vim',
 \   '~/.vim/part/utils.vim',
 \   '~/.vim/part/set.vim',
 \   '~/.vim/part/map.vim',
@@ -99,6 +100,7 @@ let g:my_rc_files = map([
 \   '~/.vim/part/plugin/lightline.vim',
 \   '~/.vim/part/plugin/unite.vim',
 \   '~/.vim/part/plugin/quickrun.vim',
+\   '~/.vim/part/plugin/lexima.vim',
 \   '~/.vim/part/gui.vim',
 \   '~/.vim/part/last.vim',
 \ ], 'expand(v:val)')

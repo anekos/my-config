@@ -621,3 +621,19 @@ function! s:swapfile_delete() abort
 endfunction
 
 " }}}
+
+" which して開く {{{
+
+" FUXME Wonderful dependencism
+command! -nargs=* -complete=customlist,vimshell#helpers#vimshell_execute_complete Which call s:which(<q-args>)
+
+function! s:which(command_name)
+  let l:path = systemlist(printf('which %s', shellescape(a:command_name)))
+  if v:shell_error == 0
+    execute 'edit' path[0]
+  else
+    echoerr printf('Command not found: %s', a:command_name)
+  endif
+endfunction
+
+" }}}

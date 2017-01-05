@@ -438,7 +438,6 @@ let g:runes_table = {
 " rust {{{
 
 let g:racer_cmd = expand('$HOME/.cargo/bin/racer')
-let $RUST_SRC_PATH = '/usr/src/rust/src'
 
 " 自動整形
 let g:rustfmt_autosave = 0
