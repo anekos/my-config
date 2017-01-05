@@ -113,14 +113,4 @@ endfunction
 
 call s:sources(g:my_rc_files)
 
-MeowtoCmd VimEnter * source ~/.vim/part/after.vim
-
-" }}}
-
-" カレーを零しても大丈夫 {{{
-
-if $PWD == expand('~') && isdirectory('/tmp/xmosh')
-  cd /tmp/xmosh
-endif
-
-" }}}
+" }}} aa
