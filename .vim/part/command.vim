@@ -32,8 +32,8 @@ command! -bar SSF syntax sync fromstart
 " .*.archive に選択範囲を移動 {{{
 
 function! s:archive(comment) range
-  let l:basefn = expand('%:p')
-  if l:basefn ==# ''
+  let l:path = expand('%:p')
+  if l:path ==# ''
     echoerr 'No filename'
     return
   endif
@@ -48,7 +48,10 @@ function! s:archive(comment) range
 
   let l:content = "\n\n\n[" . l:prefix . system('date | tr --delete "\n"') . "]\n\n" . @"
 
-  let l:file = vimproc#fopen(printf('.%s.archive'), l:basefn), 'O_WRONLY | O_CREAT | O_APPEND')
+  let l:basename = printf('.%s.archive', fnamemodify(l:path, ':t'))
+  let l:dir = fnamemodify(l:path, ':h')
+
+  let l:file = vimproc#fopen(l:dir . '/' . l:basename, 'O_WRONLY | O_CREAT | O_APPEND')
   call l:file.write(l:content)
   call l:file.close()
 endfunction

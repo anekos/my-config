@@ -2004,8 +2004,8 @@ command! -bar SSF syntax sync fromstart
 " .*.archive に選択範囲を移動 {{{
 
 function! s:archive(comment) range
-  let l:basefn = expand('%:p')
-  if l:basefn ==# ''
+  let l:path = expand('%:p')
+  if l:path ==# ''
     echoerr 'No filename'
     return
   endif
@@ -2020,7 +2020,10 @@ function! s:archive(comment) range
 
   let l:content = "\n\n\n[" . l:prefix . system('date | tr --delete "\n"') . "]\n\n" . @"
 
-  let l:file = vimproc#fopen(printf('.%s.archive'), l:basefn), 'O_WRONLY | O_CREAT | O_APPEND')
+  let l:basename = printf('.%s.archive', fnamemodify(l:path, ':t'))
+  let l:dir = fnamemodify(l:path, ':h')
+
+  let l:file = vimproc#fopen(l:dir . '/' . l:basename, 'O_WRONLY | O_CREAT | O_APPEND')
   call l:file.write(l:content)
   call l:file.close()
 endfunction
@@ -2704,11 +2707,6 @@ endfunction
 
 if has('gui_running')
   finish
-endif
-
-if $TERM !=# 'linux'
-  command! -bar ReloadColors set t_Co=256 t_SI=[3\ q t_EI=[1\ q
-  MeowtoCmd VimEnter * ReloadColors
 endif
 
 " 20行でできる、端末版vimの縦分割スクロール高速化設定 - http://qiita.com/kefir_/items/c725731d33de4d8fb096

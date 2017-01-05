@@ -12,11 +12,6 @@ if has('gui_running')
   finish
 endif
 
-if $TERM !=# 'linux'
-  command! -bar ReloadColors set t_Co=256 t_SI=[3\ q t_EI=[1\ q
-  MeowtoCmd VimEnter * ReloadColors
-endif
-
 " 20行でできる、端末版vimの縦分割スクロール高速化設定 - http://qiita.com/kefir_/items/c725731d33de4d8fb096
 if has('vim_starting') && !has('gui_running') && has('vertsplit')
   function! s:enable_vsplit_mode()
