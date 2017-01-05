@@ -77,7 +77,7 @@ let g:codi#rightsplit = 0
 
 " colocolo {{{
 
-let g:i_am_not_pika_beast = 1
+let g:i_am_not_pika_beast = 0
 
 " }}}
 
@@ -576,52 +576,6 @@ augroup END
 let g:sonictemplate_vim_template_dir = [
 \ '$HOME/.vim/template'
 \]
-
-" }}}
-
-" submode.vim {{{
-
-" from http://d.hatena.ne.jp/tyru/20100502/vim_mappings
-
-" マッピングさせないようにする
-let g:wm_move_down  = ''
-let g:wm_move_up    = ''
-let g:wm_move_left  = ''
-let g:wm_move_right = ''
-
-let g:submode_timeoutlen = 2000
-
-" Change current window size.
-call submode#enter_with('winsize', 'n', '', ',sw', '<Nop>')
-call submode#leave_with('winsize', 'n', '', '<Esc>')
-call submode#map       ('winsize', 'n', '', 'j', '<C-w>-:redraw<CR>')
-call submode#map       ('winsize', 'n', '', 'k', '<C-w>+:redraw<CR>')
-call submode#map       ('winsize', 'n', '', 'h', '<C-w><:redraw<CR>')
-call submode#map       ('winsize', 'n', '', 'l', '<C-w>>:redraw<CR>')
-call submode#map       ('winsize', 'n', '', '=', '<C-w>=:redraw<CR>')
-
-" Scroll by j and k.
-" TODO Stash &scroll value.
-" TODO Use <excmd>j, <excmd>k
-" TODO Make utility function to generate current shortest <SID> map.
-call submode#enter_with('scroll', 'n', '', ',ss', '<C-d>:redraw<CR>')
-call submode#leave_with('scroll', 'n', '', '<Esc>')
-" call submode#map       ('scroll', 'n', '', 'j', '<C-d>:redraw<CR>')
-" call submode#map       ('scroll', 'n', '', 'k', '<C-u>:redraw<CR>')
-call submode#map       ('scroll', 'n', '', 'j', ':call comfortable_motion#flick(100)<CR>:redraw<CR>')
-call submode#map       ('scroll', 'n', '', 'k', ':call comfortable_motion#flick(-100)<CR>:redraw<CR>')
-call submode#map       ('scroll', 'n', '', 'a', ':let &l:scroll -= 3<CR>')
-call submode#map       ('scroll', 'n', '', 's', ':let &l:scroll += 3<CR>')
-
-" Unite First/Previous/Next/Last
-call submode#enter_with('unite', 'n', '', ',sq', ':<C-u>Unite -no-focus -no-start-insert -winheight=5 quickfix<CR>')
-call submode#leave_with('unite', 'n', '', '<Esc>') " ':<C-u>:UniteClose<CR>'
-call submode#map       ('unite', 'n', '', '0', ':UniteFirst<CR>')
-call submode#map       ('unite', 'n', '', 'p', ':UnitePrevious<CR>')
-call submode#map       ('unite', 'n', '', 'n', ':UniteNext<CR>')
-call submode#map       ('unite', 'n', '', 'k', ':UnitePrevious<CR>')
-call submode#map       ('unite', 'n', '', 'j', ':UniteNext<CR>')
-call submode#map       ('unite', 'n', '', '$', ':UniteLast<CR>')
 
 " }}}
 

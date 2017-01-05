@@ -88,6 +88,7 @@ let g:my_plugins = [
 " 分割 rc {{{
 
 let g:my_rc_files = map([
+\   '~/.vim/part/let.vim',
 \   '~/.vim/part/plug.vim',
 \   '~/.vim/part/env.vim',
 \   '~/.vim/part/utils.vim',
@@ -96,7 +97,6 @@ let g:my_rc_files = map([
 \   '~/.vim/part/command.vim',
 \   '~/.vim/part/autocmd.vim',
 \   '~/.vim/part/term.vim',
-\   '~/.vim/part/let.vim',
 \   '~/.vim/part/plugin/lightline.vim',
 \   '~/.vim/part/plugin/unite.vim',
 \   '~/.vim/part/plugin/quickrun.vim',
