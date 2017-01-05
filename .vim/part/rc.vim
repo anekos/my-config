@@ -113,4 +113,4 @@ endfunction
 
 call s:sources(g:my_rc_files)
 
-" }}} aa
+" }}}
