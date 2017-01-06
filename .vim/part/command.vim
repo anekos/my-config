@@ -91,18 +91,27 @@ endfunction
 
 " 選択した行番号をコピペ {{{
 
-function! s:ln(start, end)
+function! s:ln(start, end, filename_modifier)
   if a:start == a:end
     let l:ln = printf('L%d', a:start)
   else
     let l:ln = printf('L%d-%d', a:start, a:end)
   endif
+
+  if len(a:filename_modifier) > 0
+    let l:ln .= '@' . expand('%' . a:filename_modifier)
+  endif
+
   let @+ = l:ln
   let @* = l:ln
   echo l:ln
 endfunction
 
-command! -range Ln call s:ln(<line1>, <Line2>)
+" e.g)
+"   :'<,'>Ln
+"   :Ln
+"   :Ln :t
+command! -bar -range -nargs=1 Ln call s:ln(<line1>, <Line2>, <q-args>)
 
 " }}}
 
@@ -261,11 +270,14 @@ function! s:url_on_cursor ()
   return l:url
 endfunction
 
+" Amazon の URL を引数に、価格の履歴を抜きだす
 command! -bar -nargs=* PriceLog call s:show_price_log(<q-args>)
 
 " }}}
 
 " ファイル名っぽいのをカーソル周辺から探してジャンプするんだね {{{
+
+let s:jump_code_range = 10
 
 function! s:remove_esc_seq (line)
   return substitute(a:line, '\e\[[^m]*m', '', 'g')
@@ -312,7 +324,7 @@ endfunction
 function! s:jump_code ()
   let l:line = line('.')
 
-  for l:i in range(0, 5)
+  for l:i in range(0, s:jump_code_range)
 
     let l:target_ln = l:line - l:i
     let [l:found, l:filepath, l:ln, l:col] = s:extract_code_path(getline(l:target_ln))
@@ -465,6 +477,7 @@ command! -bar -nargs=* BGrep call s:buffer_grep(<q-args>)
 " figlet {{{
 
 " rc ファイルヘッダ用
+" http://ultimacodex.com/archive/runic/ 内の http://ultimacodex.com/archive/ftp/misc/fonts/runeflf.zip
 command! -nargs=* Figlet .! figlet -d ~/.figlet -f rune -w 1000 <q-args>
 
 " }}}
@@ -637,6 +650,19 @@ function! s:which(command_name)
   else
     echoerr printf('Command not found: %s', a:command_name)
   endif
+endfunction
+
+" }}}
+
+" re-panty {{{
+
+command! -nargs=0 Repanty :call s:repanty()
+
+function! s:repanty() abort
+  silent mksession! /tmp/repanty.vim
+  bwipeout
+  echo system('panty summon --send ":so /tmp/repanty.vim<CR>"')
+  quitall
 endfunction
 
 " }}}

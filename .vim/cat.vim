@@ -178,29 +178,16 @@ let g:comfortable_motion_no_default_key_mappings = 0
 
 " }}}
 
-" essk.vim {{{
-
-let g:eskk#dictionary = {
-\ 'path': $HOME . '/.eskk/dic/SKK-JISYO.L',
-\ 'sorted': 0,
-\ 'encoding': 'eucjp-ms',
-\}
-
-" }}}
-
 " ft-clojure {{{
 
 let g:clojure#indent#definiens = '\%(letfn\|proxy\|reify\)$\|.\+/def.*'
 let g:clojure#indent#special = '\%(^\|/\)def'
+
 " }}}
 
 " fontzoom {{{
 "
 let g:fontzoom_no_default_key_mappings=1
-nnoremap <silent> +
-\  :<C-u>Fontzoom +<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
-nnoremap <silent> -
-\  :<C-u>Fontzoom -<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
 
 " }}}
 
@@ -251,15 +238,15 @@ let g:J6uil_display_icon = 1
 let g:J6uil_empty_separator = 1
 
 function! s:j6uil_init()
-  nmap <silent> <buffer> a                  <Plug>(J6uil_open_say_buffer)
-  nmap <silent> <buffer> <Leader><Leader>r  <Plug>(J6uil_reconnect)
-  nmap <silent> <buffer> <Leader><Leader>d  <Plug>(J6uil_disconnect)
-  nmap <silent> <buffer> r                  <Plug>(J6uil_unite_rooms)
-  nmap <silent> <buffer> u                  <Plug>(J6uil_unite_members)
-  nmap <silent> <buffer> <CR>               <Plug>(J6uil_action_enter)
-  nmap <silent> <buffer> o                  <Plug>(J6uil_action_open_links)
-  nnoremap <buffer> <Tab>                   /http<CR>:set<Space>nohlsearch<CR>
-  nnoremap <buffer> <S-Tab>                 ?http<CR>:set<Space>nohlsearch<CR>
+  nmap      <silent><buffer>    a                   <Plug>(J6uil_open_say_buffer)
+  nmap      <silent><buffer>    <Leader><Leader>r   <Plug>(J6uil_reconnect)
+  nmap      <silent><buffer>    <Leader><Leader>d   <Plug>(J6uil_disconnect)
+  nmap      <silent><buffer>    r                   <Plug>(J6uil_unite_rooms)
+  nmap      <silent><buffer>    u                   <Plug>(J6uil_unite_members)
+  nmap      <silent><buffer>    <CR>                <Plug>(J6uil_action_enter)
+  nmap      <silent><buffer>    o                   <Plug>(J6uil_action_open_links)
+  nnoremap  <buffer>            <Tab>               /http<CR>:set<Space>nohlsearch<CR>
+  nnoremap  <buffer>            <S-Tab>             ?http<CR>:set<Space>nohlsearch<CR>
 endfunction
 
 autocmd Meowrc FileType J6uil call s:j6uil_init()
@@ -274,7 +261,7 @@ let g:lexima_enable_basic_rules = 1
 
 " lisp {{{
 
-let g:lisp_instring = 1
+let g:lisp_instring = 0
 let g:lisp_rainbow = 1
 
 " }}}
@@ -333,7 +320,6 @@ let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 0
 let g:neocomplete#enable_ignore_case = 0
 let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 if !exists('g:neocomplete#sources#omni#functions')
   let g:neocomplete#sources#omni#functions = {}
@@ -344,7 +330,7 @@ if !exists('g:neocomplete#force_omni_input_patterns')
 endif
 
 let g:neocomplete#sources#omni#functions.hledger = 'hledger#complete#omnifunc'
-let g:neocomplete#force_omni_input_patterns.hledger     = '\w*'
+let g:neocomplete#force_omni_input_patterns.hledger = '\w*'
 
 " Define keyword.
 if !exists('g:g:neocomplete#keyword_patterns')
@@ -384,9 +370,7 @@ endif
 
 " 1 だと重いョ
 let g:quickhl_tag_enable_at_startup = 0
-let g:quickhl_manual_keywords = [
-\ 'IMPLEMENTME',
-\ ]
+let g:quickhl_manual_keywords = ['IMPLEMENTME']
 
 " }}}
 
@@ -425,15 +409,15 @@ let g:ref_source_webdict_sites.default = 'ej'
 
 " wiktionary 出力に対するフィルタ。最初の数行を削除している。
 function! g:ref_source_webdict_sites.wiktionary.filter(output)
-return join(split(a:output, "\n")[18 :], "\n")
+  return join(split(a:output, "\n")[18 :], "\n")
 endfunction
 
 autocmd Meowrc FileType ref call s:initialize_ref_viewer()
 function! s:initialize_ref_viewer()
-" nmap <buffer> b <Plug>(ref-back)
-" nmap <buffer> f <Plug>(ref-forward)
-nnoremap <buffer> q <C-w>c
-setlocal nonumber
+  " nmap <buffer> b <Plug>(ref-back)
+  " nmap <buffer> f <Plug>(ref-forward)
+  nnoremap <buffer> q <C-w>c
+  setlocal nonumber
 endfunction
 
 "}}}
@@ -664,9 +648,7 @@ augroup END
 
 " sonictemplate {{{
 
-let g:sonictemplate_vim_template_dir = [
-\ '$HOME/.vim/template'
-\]
+let g:sonictemplate_vim_template_dir = ['$HOME/.vim/template']
 
 " }}}
 
@@ -695,19 +677,19 @@ let g:table_mode_sort_map = ''
 let g:tagbar_left = 1
 
 let g:tagbar_type_scala = {
-    \ 'ctagstype' : 'Scala',
-    \ 'kinds'     : [
-        \ 'p:packages:1',
-        \ 'V:values',
-        \ 'v:variables',
-        \ 'T:types',
-        \ 't:traits',
-        \ 'o:objects',
-        \ 'a:aclasses',
-        \ 'c:classes',
-        \ 'r:cclasses',
-        \ 'm:methods'
-    \ ]
+\   'ctagstype': 'Scala',
+\   'kinds': [
+\     'p:packages:1',
+\     'V:values',
+\     'v:variables',
+\     'T:types',
+\     't:traits',
+\     'o:objects',
+\     'a:aclasses',
+\     'c:classes',
+\     'r:cclasses',
+\     'm:methods'
+\   ]
 \ }
 
 " }}}
@@ -734,7 +716,7 @@ let g:tweetvim_empty_separator = 1
 " vim2hs {{{
 
 let g:haskell_conceal_wide = 0
-let g:haskell_conceal      = 0
+let g:haskell_conceal = 0
 
 " }}}
 
@@ -860,22 +842,22 @@ let g:user_emmet_mode = 'inv'
 let g:user_emmet_leader_key = '<C-y>'
 
 let g:user_emmet_settings = {
-\  'indentation' : '  ',
-\  'ruby' : {
-\    'aliases' : {
-\      'req' : 'require '
-\    },
-\  },
-\  'perl' : {
-\    'aliases' : {
-\      'req' : 'require '
-\    },
-\    'snippets' : {
-\      'use' : "use strict\nuse warnings\n\n",
-\      'warn' : "warn \"|\";",
-\    }
-\  }
-\}
+\   'indentation' : '  ',
+\   'ruby' : {
+\     'aliases' : {
+\       'req' : 'require '
+\     },
+\   },
+\   'perl' : {
+\     'aliases' : {
+\       'req' : 'require '
+\     },
+\     'snippets' : {
+\       'use' : "use strict\nuse warnings\n\n",
+\       'warn' : "warn \"|\";",
+\     }
+\   }
+\ }
 
 " }}}
 
@@ -888,8 +870,10 @@ let g:user_emmet_settings = {
 "     |   |    | /     \
 "========================
 
-" %Alignta g/^Plug "
 
+if 0-0
+  %Alignta g/^Plug "
+endif
 
 call plug#begin('~/.vim-temp/plug')
 
@@ -1002,8 +986,8 @@ Plug 'rust-lang/rust.vim'
 
 " Formatter {{{
 
-Plug 'dhruvasagar/vim-table-mode'
-Plug 'h1mesuke/vim-alignta'
+Plug 'dhruvasagar/vim-table-mode'       " markdown の table を綺麗に書く
+Plug 'h1mesuke/vim-alignta'             " align
 
 " }}}
 
@@ -1015,7 +999,7 @@ Plug 'mattn/habatobi-vim'
 Plug 'mattn/invader-vim'
 Plug 'thinca/vim-threes'
 Plug 'progressbar-widget'
-" Plug 'mattn/die-vim'
+Plug 'mattn/die-vim'
 
 " }}}
 
@@ -1055,9 +1039,9 @@ Plug 'heavenshell/vim-slack'
 
 " Operator {{{
 
-Plug 'kana/vim-operator-replace'
-Plug 'wellle/targets.vim'
-Plug 'tommcdo/vim-exchange'
+Plug 'kana/vim-operator-replace'        " yank しないで置換する: _{motion}
+Plug 'wellle/targets.vim'               " :help targets
+Plug 'tommcdo/vim-exchange'             " テキスト交換: n_cx{motion} n_cxx v_X n_cxc
 
 " }}}
 
@@ -1088,8 +1072,8 @@ Plug 'gcmt/wildfire.vim'
 Plug 'kana/vim-niceblock'
 Plug 'kana/vim-submode'
 Plug 'tpope/vim-surround'
-Plug 'thinca/vim-portal'
-Plug 't9md/vim-textmanip'
+Plug 'thinca/vim-portal' " n_<Leader>pb n_<Leader>po
+Plug 't9md/vim-textmanip' " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
 Plug 'tyru/vim-altercmd'
 
 " }}}
@@ -1112,15 +1096,14 @@ Plug 'osyo-manga/vim-textobj-multiblock'
 
 " Tool {{{
 
-Plug 'tasuten/gcalc.vim'
-Plug 'Shougo/vinarise'
+Plug 'tasuten/gcalc.vim' " Google 電卓
+Plug 'Shougo/vinarise' " バイナリエディア
 Plug 'tpope/vim-speeddating'
 
 " }}}
 
 " Unplugged {{{
 
-Plug 'LeafCage/nebula.vim'
 Plug 'thinca/vim-editvar'
 Plug 'thinca/vim-prettyprint'
 Plug 'tyru/capture.vim'
@@ -1134,7 +1117,6 @@ Plug 'phongvcao/vim-stardict'
 Plug 'taka84u9/vim-ref-ri'
 Plug 'thinca/vim-ref'
 Plug 'ujihisa/ref-hoogle'
-Plug 'rhysd/devdocs.vim'
 Plug 'aiya000/aref-web.vim'
 
 " }}}
@@ -1194,11 +1176,10 @@ Plug 'vim-utils/vim-man'
 
 " Misc {{{
 
-Plug 'anekos/runes-vim'
 Plug 'sjl/gundo.vim'                    " undo ツリーを表示して、履歴を移動したい
-Plug 'tyru/open-browser.vim'
+Plug 'tyru/open-browser.vim'            " カーソル下の URL をブラウザで開いたり
 Plug 'skywind3000/asyncrun.vim'         " 非同期でシェルのコマンドを実行し、quickfix ににゅるっと出す
-Plug 'haya14busa/vim-gtrans'
+Plug 'haya14busa/vim-gtrans'            " Goooogle 翻訳
 Plug 'yami-beta/vim-responsive-tabline' " れすぽんちぶのタブ表示
 Plug 'yuttie/comfortable-motion.vim'    " 慣性スクロール
 Plug 'rhysd/inazuma.vim'                " 目をギョロギョロ(Inazumize)させながら、コードを読む
@@ -1207,7 +1188,7 @@ Plug 'rhysd/inazuma.vim'                " 目をギョロギョロ(Inazumize)さ
 
 " White Zombie {{{
 
-Plug 'LeafCage/alti.vim'
+Plug 'LeafCage/alti.vim'                " ctrlp インスパイア
 
 " }}}
 
@@ -1570,7 +1551,7 @@ map g/ <Plug>(incsearch-stay)
 " nnoremap ?  /\v
 
 " 検索のハイライト
-noremap <silent> <Plug>(vimrc-searchafter) Nzz:set hlsearch<CR>
+noremap <Silent> <Plug>(vimrc-searchafter) Nzz:set hlsearch<CR>
 map *   <Plug>(asterisk-*)
 map #   <Plug>(asterisk-#)
 map g*  <Plug>(asterisk-g*)
@@ -1579,7 +1560,7 @@ map z*  <Plug>(asterisk-z*)
 map gz* <Plug>(asterisk-gz*)
 map z#  <Plug>(asterisk-z#)
 map gz# <Plug>(asterisk-gz#)
-nnoremap <silent> <ESC><ESC> :<C-u>set hlsearch!<CR>
+nnoremap <silent> <Esc><Esc> :<C-u>set hlsearch!<CR>
 
 " for US KBD
 nnoremap ; :
@@ -1631,8 +1612,8 @@ nnoremap <C-w>o :MaximizeModoki<CR>
 " map {{{
 
 " Save like Emacs
-inoremap <C-x><C-s> <ESC>:<C-u>w<CR>a
-inoremap <C-x>s <ESC>:<C-u>w<CR>a
+inoremap <C-x><C-s> <Esc>:<C-u>w<CR>a
+inoremap <C-x>s <Esc>:<C-u>w<CR>a
 
 " 挿入モードでの移動
 inoremap <C-a> <Home>
@@ -1661,7 +1642,7 @@ cnoremap <C-g> <C-c>
 nnoremap <expr> cd ":\<C-u>cd\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.')
 
 " 改行
-nnoremap <CR> A<CR><ESC>
+nnoremap <CR> A<CR><Esc>
 
 " tag jump
 nnoremap <C-k> :<C-u>execute 'vertical' 'botright' 'stjump' expand('<cword>')<CR>
@@ -1769,19 +1750,23 @@ xmap <Leader>k <Plug>(textmanip-duplicate-up)
 " vimshell
 vnoremap <Leader>> :VimShellJoinedSendString<CR>
 
+" Fontzoom
+nnoremap <silent> + :<C-u>Fontzoom +<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
+nnoremap <silent> - :<C-u>Fontzoom -<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
+
 " }}}
 
 " Toggle bang {{{
 
 " http://twitter.com/tyru/status/13474491734
 function! s:toggle_bang(cmdline)
-    " :substituteみたいに引数とコマンドの間に
-    " 空白がなくても呼ばれたりするものもあるので完璧ではない。
-    " そもそも:substituteはbangとらないけど。
-    let l:m = matchlist(a:cmdline, '^\(\s*\)\(\S\+\)\(.*\)')
-    if empty(l:m) | return a:cmdline | endif
-    let [l:ws, l:cmd, l:rest] = l:m[1:3]
-    return l:ws . (l:cmd[strlen(l:cmd) - 1] ==# '!' ? l:cmd[:-2] : l:cmd . '!') . l:rest
+  " :substituteみたいに引数とコマンドの間に
+  " 空白がなくても呼ばれたりするものもあるので完璧ではない。
+  " そもそも:substituteはbangとらないけど。
+  let l:m = matchlist(a:cmdline, '^\(\s*\)\(\S\+\)\(.*\)')
+  if empty(l:m) | return a:cmdline | endif
+  let [l:ws, l:cmd, l:rest] = l:m[1:3]
+  return l:ws . (l:cmd[strlen(l:cmd) - 1] ==# '!' ? l:cmd[:-2] : l:cmd . '!') . l:rest
 endfunction
 
 cnoremap <Plug>(cmdline-toggle-bang) <C-\>e <SID>toggle_bang(getcmdline())<CR>
@@ -1799,7 +1784,7 @@ inoremap ｛ {
 inoremap ｝ }
 inoremap ； ;
 inoremap ： :
-inoremap ｜ \|
+inoremap ｜ <Bar>
 inoremap ＜ <
 inoremap ＞ >
 inoremap ＊ *
@@ -1918,6 +1903,7 @@ AlterCommand qk QuicKill
 AlterCommand qr QuickRun
 AlterCommand rc Rc
 AlterCommand ref Ref
+AlterCommand rep Repanty
 AlterCommand res Restart
 AlterCommand sorc Sorc
 AlterCommand ssf SSF
@@ -2065,18 +2051,27 @@ endfunction
 
 " 選択した行番号をコピペ {{{
 
-function! s:ln(start, end)
+function! s:ln(start, end, filename_modifier)
   if a:start == a:end
     let l:ln = printf('L%d', a:start)
   else
     let l:ln = printf('L%d-%d', a:start, a:end)
   endif
+
+  if len(a:filename_modifier) > 0
+    let l:ln .= '@' . expand('%' . a:filename_modifier)
+  endif
+
   let @+ = l:ln
   let @* = l:ln
   echo l:ln
 endfunction
 
-command! -range Ln call s:ln(<line1>, <Line2>)
+" e.g)
+"   :'<,'>Ln
+"   :Ln
+"   :Ln :t
+command! -bar -range -nargs=1 Ln call s:ln(<line1>, <Line2>, <q-args>)
 
 " }}}
 
@@ -2235,11 +2230,14 @@ function! s:url_on_cursor ()
   return l:url
 endfunction
 
+" Amazon の URL を引数に、価格の履歴を抜きだす
 command! -bar -nargs=* PriceLog call s:show_price_log(<q-args>)
 
 " }}}
 
 " ファイル名っぽいのをカーソル周辺から探してジャンプするんだね {{{
+
+let s:jump_code_range = 10
 
 function! s:remove_esc_seq (line)
   return substitute(a:line, '\e\[[^m]*m', '', 'g')
@@ -2286,7 +2284,7 @@ endfunction
 function! s:jump_code ()
   let l:line = line('.')
 
-  for l:i in range(0, 5)
+  for l:i in range(0, s:jump_code_range)
 
     let l:target_ln = l:line - l:i
     let [l:found, l:filepath, l:ln, l:col] = s:extract_code_path(getline(l:target_ln))
@@ -2439,6 +2437,7 @@ command! -bar -nargs=* BGrep call s:buffer_grep(<q-args>)
 " figlet {{{
 
 " rc ファイルヘッダ用
+" http://ultimacodex.com/archive/runic/ 内の http://ultimacodex.com/archive/ftp/misc/fonts/runeflf.zip
 command! -nargs=* Figlet .! figlet -d ~/.figlet -f rune -w 1000 <q-args>
 
 " }}}
@@ -2611,6 +2610,19 @@ function! s:which(command_name)
   else
     echoerr printf('Command not found: %s', a:command_name)
   endif
+endfunction
+
+" }}}
+
+" re-panty {{{
+
+command! -nargs=0 Repanty :call s:repanty()
+
+function! s:repanty() abort
+  silent mksession! /tmp/repanty.vim
+  bwipeout
+  echo system('panty summon --send ":so /tmp/repanty.vim<CR>"')
+  quitall
 endfunction
 
 " }}}
@@ -3492,7 +3504,7 @@ let s:fonts = {
 
 function! s:set_font (setting)
   let &guifont = a:setting.font
-  let &guifontwide = has_key(a:setting, 'wide') ? a:setting.wide : ''
+  let &guifontwide = get(a:setting, 'wide', '')
 endfunction
 
 function! s:complete_font (...)

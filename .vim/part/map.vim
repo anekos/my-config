@@ -43,7 +43,7 @@ map g/ <Plug>(incsearch-stay)
 " nnoremap ?  /\v
 
 " 検索のハイライト
-noremap <silent> <Plug>(vimrc-searchafter) Nzz:set hlsearch<CR>
+noremap <Silent> <Plug>(vimrc-searchafter) Nzz:set hlsearch<CR>
 map *   <Plug>(asterisk-*)
 map #   <Plug>(asterisk-#)
 map g*  <Plug>(asterisk-g*)
@@ -52,7 +52,7 @@ map z*  <Plug>(asterisk-z*)
 map gz* <Plug>(asterisk-gz*)
 map z#  <Plug>(asterisk-z#)
 map gz# <Plug>(asterisk-gz#)
-nnoremap <silent> <ESC><ESC> :<C-u>set hlsearch!<CR>
+nnoremap <silent> <Esc><Esc> :<C-u>set hlsearch!<CR>
 
 " for US KBD
 nnoremap ; :
@@ -104,8 +104,8 @@ nnoremap <C-w>o :MaximizeModoki<CR>
 " map {{{
 
 " Save like Emacs
-inoremap <C-x><C-s> <ESC>:<C-u>w<CR>a
-inoremap <C-x>s <ESC>:<C-u>w<CR>a
+inoremap <C-x><C-s> <Esc>:<C-u>w<CR>a
+inoremap <C-x>s <Esc>:<C-u>w<CR>a
 
 " 挿入モードでの移動
 inoremap <C-a> <Home>
@@ -134,7 +134,7 @@ cnoremap <C-g> <C-c>
 nnoremap <expr> cd ":\<C-u>cd\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.')
 
 " 改行
-nnoremap <CR> A<CR><ESC>
+nnoremap <CR> A<CR><Esc>
 
 " tag jump
 nnoremap <C-k> :<C-u>execute 'vertical' 'botright' 'stjump' expand('<cword>')<CR>
@@ -242,19 +242,23 @@ xmap <Leader>k <Plug>(textmanip-duplicate-up)
 " vimshell
 vnoremap <Leader>> :VimShellJoinedSendString<CR>
 
+" Fontzoom
+nnoremap <silent> + :<C-u>Fontzoom +<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
+nnoremap <silent> - :<C-u>Fontzoom -<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
+
 " }}}
 
 " Toggle bang {{{
 
 " http://twitter.com/tyru/status/13474491734
 function! s:toggle_bang(cmdline)
-    " :substituteみたいに引数とコマンドの間に
-    " 空白がなくても呼ばれたりするものもあるので完璧ではない。
-    " そもそも:substituteはbangとらないけど。
-    let l:m = matchlist(a:cmdline, '^\(\s*\)\(\S\+\)\(.*\)')
-    if empty(l:m) | return a:cmdline | endif
-    let [l:ws, l:cmd, l:rest] = l:m[1:3]
-    return l:ws . (l:cmd[strlen(l:cmd) - 1] ==# '!' ? l:cmd[:-2] : l:cmd . '!') . l:rest
+  " :substituteみたいに引数とコマンドの間に
+  " 空白がなくても呼ばれたりするものもあるので完璧ではない。
+  " そもそも:substituteはbangとらないけど。
+  let l:m = matchlist(a:cmdline, '^\(\s*\)\(\S\+\)\(.*\)')
+  if empty(l:m) | return a:cmdline | endif
+  let [l:ws, l:cmd, l:rest] = l:m[1:3]
+  return l:ws . (l:cmd[strlen(l:cmd) - 1] ==# '!' ? l:cmd[:-2] : l:cmd . '!') . l:rest
 endfunction
 
 cnoremap <Plug>(cmdline-toggle-bang) <C-\>e <SID>toggle_bang(getcmdline())<CR>
@@ -273,7 +277,7 @@ inoremap ｛ {
 inoremap ｝ }
 inoremap ； ;
 inoremap ： :
-inoremap ｜ \|
+inoremap ｜ <Bar>
 inoremap ＜ <
 inoremap ＞ >
 inoremap ＊ *
@@ -392,6 +396,7 @@ AlterCommand qk QuicKill
 AlterCommand qr QuickRun
 AlterCommand rc Rc
 AlterCommand ref Ref
+AlterCommand rep Repanty
 AlterCommand res Restart
 AlterCommand sorc Sorc
 AlterCommand ssf SSF

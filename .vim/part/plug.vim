@@ -5,9 +5,11 @@
 "     |   |    | /     \
 "========================
 
-" %Alignta g/^Plug "
-
 scriptencoding utf-8
+
+if 0-0
+  %Alignta g/^Plug "
+endif
 
 call plug#begin('~/.vim-temp/plug')
 
@@ -120,8 +122,8 @@ Plug 'rust-lang/rust.vim'
 
 " Formatter {{{
 
-Plug 'dhruvasagar/vim-table-mode'
-Plug 'h1mesuke/vim-alignta'
+Plug 'dhruvasagar/vim-table-mode'       " markdown の table を綺麗に書く
+Plug 'h1mesuke/vim-alignta'             " align
 
 " }}}
 
@@ -173,9 +175,9 @@ Plug 'heavenshell/vim-slack'
 
 " Operator {{{
 
-Plug 'kana/vim-operator-replace'
-Plug 'wellle/targets.vim'
-Plug 'tommcdo/vim-exchange'
+Plug 'kana/vim-operator-replace'        " yank しないで置換する: _{motion}
+Plug 'wellle/targets.vim'               " :help targets
+Plug 'tommcdo/vim-exchange'             " テキスト交換: n_cx{motion} n_cxx v_X n_cxc
 
 " }}}
 
@@ -206,8 +208,8 @@ Plug 'gcmt/wildfire.vim'
 Plug 'kana/vim-niceblock'
 Plug 'kana/vim-submode'
 Plug 'tpope/vim-surround'
-Plug 'thinca/vim-portal'
-Plug 't9md/vim-textmanip'
+Plug 'thinca/vim-portal' " n_<Leader>pb n_<Leader>po
+Plug 't9md/vim-textmanip' " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
 Plug 'tyru/vim-altercmd'
 
 " }}}
@@ -230,15 +232,14 @@ Plug 'osyo-manga/vim-textobj-multiblock'
 
 " Tool {{{
 
-Plug 'tasuten/gcalc.vim'
-Plug 'Shougo/vinarise'
+Plug 'tasuten/gcalc.vim' " Google 電卓
+Plug 'Shougo/vinarise' " バイナリエディア
 Plug 'tpope/vim-speeddating'
 
 " }}}
 
 " Unplugged {{{
 
-Plug 'LeafCage/nebula.vim'
 Plug 'thinca/vim-editvar'
 Plug 'thinca/vim-prettyprint'
 Plug 'tyru/capture.vim'
@@ -252,7 +253,6 @@ Plug 'phongvcao/vim-stardict'
 Plug 'taka84u9/vim-ref-ri'
 Plug 'thinca/vim-ref'
 Plug 'ujihisa/ref-hoogle'
-Plug 'rhysd/devdocs.vim'
 Plug 'aiya000/aref-web.vim'
 
 " }}}
@@ -312,11 +312,10 @@ Plug 'vim-utils/vim-man'
 
 " Misc {{{
 
-Plug 'anekos/runes-vim'
 Plug 'sjl/gundo.vim'                    " undo ツリーを表示して、履歴を移動したい
-Plug 'tyru/open-browser.vim'
+Plug 'tyru/open-browser.vim'            " カーソル下の URL をブラウザで開いたり
 Plug 'skywind3000/asyncrun.vim'         " 非同期でシェルのコマンドを実行し、quickfix ににゅるっと出す
-Plug 'haya14busa/vim-gtrans'
+Plug 'haya14busa/vim-gtrans'            " Goooogle 翻訳
 Plug 'yami-beta/vim-responsive-tabline' " れすぽんちぶのタブ表示
 Plug 'yuttie/comfortable-motion.vim'    " 慣性スクロール
 Plug 'rhysd/inazuma.vim'                " 目をギョロギョロ(Inazumize)させながら、コードを読む
@@ -325,7 +324,7 @@ Plug 'rhysd/inazuma.vim'                " 目をギョロギョロ(Inazumize)さ
 
 " White Zombie {{{
 
-Plug 'LeafCage/alti.vim'
+Plug 'LeafCage/alti.vim'                " ctrlp インスパイア
 
 " }}}
 

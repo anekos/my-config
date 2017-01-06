@@ -47,7 +47,7 @@ let s:fonts = {
 
 function! s:set_font (setting)
   let &guifont = a:setting.font
-  let &guifontwide = has_key(a:setting, 'wide') ? a:setting.wide : ''
+  let &guifontwide = get(a:setting, 'wide', '')
 endfunction
 
 function! s:complete_font (...)

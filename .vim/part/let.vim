@@ -89,29 +89,16 @@ let g:comfortable_motion_no_default_key_mappings = 0
 
 " }}}
 
-" essk.vim {{{
-
-let g:eskk#dictionary = {
-\ 'path': $HOME . '/.eskk/dic/SKK-JISYO.L',
-\ 'sorted': 0,
-\ 'encoding': 'eucjp-ms',
-\}
-
-" }}}
-
 " ft-clojure {{{
 
 let g:clojure#indent#definiens = '\%(letfn\|proxy\|reify\)$\|.\+/def.*'
 let g:clojure#indent#special = '\%(^\|/\)def'
+
 " }}}
 
 " fontzoom {{{
 "
 let g:fontzoom_no_default_key_mappings=1
-nnoremap <silent> +
-\  :<C-u>Fontzoom +<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
-nnoremap <silent> -
-\  :<C-u>Fontzoom -<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
 
 " }}}
 
@@ -162,15 +149,15 @@ let g:J6uil_display_icon = 1
 let g:J6uil_empty_separator = 1
 
 function! s:j6uil_init()
-  nmap <silent> <buffer> a                  <Plug>(J6uil_open_say_buffer)
-  nmap <silent> <buffer> <Leader><Leader>r  <Plug>(J6uil_reconnect)
-  nmap <silent> <buffer> <Leader><Leader>d  <Plug>(J6uil_disconnect)
-  nmap <silent> <buffer> r                  <Plug>(J6uil_unite_rooms)
-  nmap <silent> <buffer> u                  <Plug>(J6uil_unite_members)
-  nmap <silent> <buffer> <CR>               <Plug>(J6uil_action_enter)
-  nmap <silent> <buffer> o                  <Plug>(J6uil_action_open_links)
-  nnoremap <buffer> <Tab>                   /http<CR>:set<Space>nohlsearch<CR>
-  nnoremap <buffer> <S-Tab>                 ?http<CR>:set<Space>nohlsearch<CR>
+  nmap      <silent><buffer>    a                   <Plug>(J6uil_open_say_buffer)
+  nmap      <silent><buffer>    <Leader><Leader>r   <Plug>(J6uil_reconnect)
+  nmap      <silent><buffer>    <Leader><Leader>d   <Plug>(J6uil_disconnect)
+  nmap      <silent><buffer>    r                   <Plug>(J6uil_unite_rooms)
+  nmap      <silent><buffer>    u                   <Plug>(J6uil_unite_members)
+  nmap      <silent><buffer>    <CR>                <Plug>(J6uil_action_enter)
+  nmap      <silent><buffer>    o                   <Plug>(J6uil_action_open_links)
+  nnoremap  <buffer>            <Tab>               /http<CR>:set<Space>nohlsearch<CR>
+  nnoremap  <buffer>            <S-Tab>             ?http<CR>:set<Space>nohlsearch<CR>
 endfunction
 
 autocmd Meowrc FileType J6uil call s:j6uil_init()
@@ -185,7 +172,7 @@ let g:lexima_enable_basic_rules = 1
 
 " lisp {{{
 
-let g:lisp_instring = 1
+let g:lisp_instring = 0
 let g:lisp_rainbow = 1
 
 " }}}
@@ -244,7 +231,6 @@ let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 0
 let g:neocomplete#enable_ignore_case = 0
 let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 if !exists('g:neocomplete#sources#omni#functions')
   let g:neocomplete#sources#omni#functions = {}
@@ -255,7 +241,7 @@ if !exists('g:neocomplete#force_omni_input_patterns')
 endif
 
 let g:neocomplete#sources#omni#functions.hledger = 'hledger#complete#omnifunc'
-let g:neocomplete#force_omni_input_patterns.hledger     = '\w*'
+let g:neocomplete#force_omni_input_patterns.hledger = '\w*'
 
 " Define keyword.
 if !exists('g:g:neocomplete#keyword_patterns')
@@ -295,9 +281,7 @@ endif
 
 " 1 だと重いョ
 let g:quickhl_tag_enable_at_startup = 0
-let g:quickhl_manual_keywords = [
-\ 'IMPLEMENTME',
-\ ]
+let g:quickhl_manual_keywords = ['IMPLEMENTME']
 
 " }}}
 
@@ -336,15 +320,15 @@ let g:ref_source_webdict_sites.default = 'ej'
 
 " wiktionary 出力に対するフィルタ。最初の数行を削除している。
 function! g:ref_source_webdict_sites.wiktionary.filter(output)
-return join(split(a:output, "\n")[18 :], "\n")
+  return join(split(a:output, "\n")[18 :], "\n")
 endfunction
 
 autocmd Meowrc FileType ref call s:initialize_ref_viewer()
 function! s:initialize_ref_viewer()
-" nmap <buffer> b <Plug>(ref-back)
-" nmap <buffer> f <Plug>(ref-forward)
-nnoremap <buffer> q <C-w>c
-setlocal nonumber
+  " nmap <buffer> b <Plug>(ref-back)
+  " nmap <buffer> f <Plug>(ref-forward)
+  nnoremap <buffer> q <C-w>c
+  setlocal nonumber
 endfunction
 
 "}}}
@@ -575,9 +559,7 @@ augroup END
 
 " sonictemplate {{{
 
-let g:sonictemplate_vim_template_dir = [
-\ '$HOME/.vim/template'
-\]
+let g:sonictemplate_vim_template_dir = ['$HOME/.vim/template']
 
 " }}}
 
@@ -606,19 +588,19 @@ let g:table_mode_sort_map = ''
 let g:tagbar_left = 1
 
 let g:tagbar_type_scala = {
-    \ 'ctagstype' : 'Scala',
-    \ 'kinds'     : [
-        \ 'p:packages:1',
-        \ 'V:values',
-        \ 'v:variables',
-        \ 'T:types',
-        \ 't:traits',
-        \ 'o:objects',
-        \ 'a:aclasses',
-        \ 'c:classes',
-        \ 'r:cclasses',
-        \ 'm:methods'
-    \ ]
+\   'ctagstype': 'Scala',
+\   'kinds': [
+\     'p:packages:1',
+\     'V:values',
+\     'v:variables',
+\     'T:types',
+\     't:traits',
+\     'o:objects',
+\     'a:aclasses',
+\     'c:classes',
+\     'r:cclasses',
+\     'm:methods'
+\   ]
 \ }
 
 " }}}
@@ -645,7 +627,7 @@ let g:tweetvim_empty_separator = 1
 " vim2hs {{{
 
 let g:haskell_conceal_wide = 0
-let g:haskell_conceal      = 0
+let g:haskell_conceal = 0
 
 " }}}
 
@@ -771,21 +753,21 @@ let g:user_emmet_mode = 'inv'
 let g:user_emmet_leader_key = '<C-y>'
 
 let g:user_emmet_settings = {
-\  'indentation' : '  ',
-\  'ruby' : {
-\    'aliases' : {
-\      'req' : 'require '
-\    },
-\  },
-\  'perl' : {
-\    'aliases' : {
-\      'req' : 'require '
-\    },
-\    'snippets' : {
-\      'use' : "use strict\nuse warnings\n\n",
-\      'warn' : "warn \"|\";",
-\    }
-\  }
-\}
+\   'indentation' : '  ',
+\   'ruby' : {
+\     'aliases' : {
+\       'req' : 'require '
+\     },
+\   },
+\   'perl' : {
+\     'aliases' : {
+\       'req' : 'require '
+\     },
+\     'snippets' : {
+\       'use' : "use strict\nuse warnings\n\n",
+\       'warn' : "warn \"|\";",
+\     }
+\   }
+\ }
 
 " }}}
