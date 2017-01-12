@@ -44,7 +44,9 @@ let s:fonts = {
 
 function! s:set_font (setting)
   let &guifont = a:setting.font
-  let &guifontwide = get(a:setting, 'wide', '')
+  if has('gui_gtk')
+    let &guifontwide = get(a:setting, 'wide', '')
+  endif
 endfunction
 
 function! s:complete_font (...)

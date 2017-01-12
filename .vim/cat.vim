@@ -2724,6 +2724,24 @@ endif
 
 
 if !(has('cryptv') && v:version >= 800)
+  let g:lightline = {
+  \   'enable': {'tabline': 0},
+  \   'mode_map': {'c': 'NORMAL'},
+  \   'active': {
+  \     'left': [
+  \       ['readonly', 'filename', 'modified'],
+  \       ['mode', 'paste'],
+  \     ],
+  \     'right': [
+  \       ['lineinfo'],
+  \       ['percent'],
+  \       ['fileformat', 'fileencoding', 'filetype'],
+  \     ]
+  \   },
+  \   'separator': {'left': '', 'right': ''},
+  \   'subseparator': {'left': '', 'right': ''}
+  \ }
+
   finish
 endif
 
@@ -3483,7 +3501,9 @@ let s:fonts = {
 
 function! s:set_font (setting)
   let &guifont = a:setting.font
-  let &guifontwide = get(a:setting, 'wide', '')
+  if has('gui_gtk')
+    let &guifontwide = get(a:setting, 'wide', '')
+  endif
 endfunction
 
 function! s:complete_font (...)
