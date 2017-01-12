@@ -920,12 +920,14 @@ Plug 'rhysd/vim-color-spring-night'     " キ
 " Completion {{{
 
 Plug 'mattn/sonictemplate-vim'          " :Template
-Plug 'Konfekt/FastFold'                 " ネオコンがほしがる
-Plug 'Shougo/neocomplete'               " ネオコン
-Plug 'Shougo/neosnippet'                " すにぺ
-Plug 'Shougo/neosnippet-snippets'       " すにぺぺ
-Plug 'ujihisa/neco-look'                " look コマンドを使用して英単語の補完
 Plug 'cohama/lexima.vim'                " かっこよく括弧を入力する
+if has('lua')
+  Plug 'Konfekt/FastFold'                 " ネオコンがほしがる
+  Plug 'Shougo/neocomplete'               " ネオコン
+  Plug 'Shougo/neosnippet'                " すにぺ
+  Plug 'Shougo/neosnippet-snippets'       " すにぺぺ
+  Plug 'ujihisa/neco-look'                " look コマンドを使用して英単語の補完
+endif
 
 " }}}
 
@@ -1158,10 +1160,12 @@ Plug 'cohama/agit.vim'
 Plug 'hrsh7th/vim-unite-vcs'
 Plug 'kmnk/vim-unite-giti'
 Plug 'lambdalisue/vim-gista'
-Plug 'lambdalisue/vim-gita'
 Plug 'rhysd/git-messenger.vim'
 Plug 'rhysd/committia.vim'
 Plug 'tpope/vim-fugitive'
+if v:version >= 740
+  Plug 'lambdalisue/vim-gita'
+endif
 
 " }}}
 
@@ -2751,7 +2755,6 @@ let g:lightline = {
 \     'git_branch': 'g:myline.git_branch',
 \     'git_traffic': 'g:myline.git_traffic',
 \     'git_status': 'g:myline.git_status',
-\     'pokemon': 'g:myline.pokemon'
 \   },
 \   'component_expand': {
 \     'syntaxcheck': 'qfstatusline#Update',
@@ -2837,13 +2840,9 @@ function! g:myline.git_status()
   return gita#statusline#preset('status')
 endfunction
 
-function! g:myline.pokemon()
-  return pokemon#getdaze()
-endfunction
-
 function! g:myline.pokemode()
   let l:mode = lightline#mode()
-  if l:mode ==# 'NORMAL'
+  if has('cryptv') && l:mode ==# 'NORMAL'
     return pokemon#getdaze()
   else
     return l:mode

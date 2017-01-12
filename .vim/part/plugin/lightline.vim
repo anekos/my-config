@@ -39,7 +39,6 @@ let g:lightline = {
 \     'git_branch': 'g:myline.git_branch',
 \     'git_traffic': 'g:myline.git_traffic',
 \     'git_status': 'g:myline.git_status',
-\     'pokemon': 'g:myline.pokemon'
 \   },
 \   'component_expand': {
 \     'syntaxcheck': 'qfstatusline#Update',
@@ -125,13 +124,9 @@ function! g:myline.git_status()
   return gita#statusline#preset('status')
 endfunction
 
-function! g:myline.pokemon()
-  return pokemon#getdaze()
-endfunction
-
 function! g:myline.pokemode()
   let l:mode = lightline#mode()
-  if l:mode ==# 'NORMAL'
+  if has('cryptv') && l:mode ==# 'NORMAL'
     return pokemon#getdaze()
   else
     return l:mode

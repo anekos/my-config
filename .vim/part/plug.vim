@@ -53,12 +53,14 @@ Plug 'rhysd/vim-color-spring-night'     " キ
 " Completion {{{
 
 Plug 'mattn/sonictemplate-vim'          " :Template
-Plug 'Konfekt/FastFold'                 " ネオコンがほしがる
-Plug 'Shougo/neocomplete'               " ネオコン
-Plug 'Shougo/neosnippet'                " すにぺ
-Plug 'Shougo/neosnippet-snippets'       " すにぺぺ
-Plug 'ujihisa/neco-look'                " look コマンドを使用して英単語の補完
 Plug 'cohama/lexima.vim'                " かっこよく括弧を入力する
+if has('lua')
+  Plug 'Konfekt/FastFold'                 " ネオコンがほしがる
+  Plug 'Shougo/neocomplete'               " ネオコン
+  Plug 'Shougo/neosnippet'                " すにぺ
+  Plug 'Shougo/neosnippet-snippets'       " すにぺぺ
+  Plug 'ujihisa/neco-look'                " look コマンドを使用して英単語の補完
+endif
 
 " }}}
 
@@ -291,10 +293,12 @@ Plug 'cohama/agit.vim'
 Plug 'hrsh7th/vim-unite-vcs'
 Plug 'kmnk/vim-unite-giti'
 Plug 'lambdalisue/vim-gista'
-Plug 'lambdalisue/vim-gita'
 Plug 'rhysd/git-messenger.vim'
 Plug 'rhysd/committia.vim'
 Plug 'tpope/vim-fugitive'
+if v:version >= 740
+  Plug 'lambdalisue/vim-gita'
+endif
 
 " }}}
 
