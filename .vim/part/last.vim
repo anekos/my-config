@@ -16,7 +16,9 @@ if filereadable(expand('~/.vimrc.local')) | source ~/.vimrc.local | endif
 
  " iceberg anekos japanesque tender solarized8_light_low gruvbox lucius sprint-night
 colorscheme spring-night
-let g:lightline.colorscheme = 'solarized'
+if exists('g:lightline')
+  let g:lightline.colorscheme = 'solarized'
+endif
 
 " あぱ
 filetype plugin indent on

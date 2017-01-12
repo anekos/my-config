@@ -894,9 +894,11 @@ Plug 'Yggdroot/indentLine'              " 線でインデントレベルを表�
 " Benri {{{
 
 Plug 'haya14busa/niconicomment.vim'     " コメントをニコニコ動画のように流す。レビューの時に便利
-Plug 'heavenshell/vim-pokemon'          " 伝説のチンポコモンを探そう
 Plug 'tyru/banban.vim'                  " Vim をバンバンする
 Plug 'pocke/sushibar.vim'               " https://www.youtube.com/watch?v=epfPe2U_2Xk
+if has('cryptv')
+  Plug 'heavenshell/vim-pokemon'          " 伝説のチンポコモンを探そう
+endif
 
 " }}}
 
@@ -1053,10 +1055,12 @@ Plug 'tommcdo/vim-exchange'             " テキスト交換: n_cx{motion} n_cxx
 
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/vim-asterisk'
-Plug 'osyo-manga/vim-over'
 Plug 'rking/ag.vim'
 Plug 'tyru/chdir-proj-root.vim'
 Plug 'vim-scripts/gtags.vim'
+if v:version >= 800
+  Plug 'osyo-manga/vim-over'
+endif
 
 " }}}
 
@@ -3536,7 +3540,9 @@ if filereadable(expand('~/.vimrc.local')) | source ~/.vimrc.local | endif
 
  " iceberg anekos japanesque tender solarized8_light_low gruvbox lucius sprint-night
 colorscheme spring-night
-let g:lightline.colorscheme = 'solarized'
+if exists('g:lightline')
+  let g:lightline.colorscheme = 'solarized'
+endif
 
 " あぱ
 filetype plugin indent on
