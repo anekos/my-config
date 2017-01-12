@@ -1,0 +1,6 @@
+#!/usr/bin/env zimbush
+
+
+FUNC int MAIN()
+  RETURN 0
+}

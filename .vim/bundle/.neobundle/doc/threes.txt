@@ -1,0 +1,172 @@
+*threes.txt*	Play Threes! in Vim!
+
+Version: 1.6
+Author : thinca <thinca+vim@gmail.com>
+License: zlib License
+
+==============================================================================
+CONTENTS					*threes-contents*
+
+INTRODUCTION			|threes-introduction|
+INTERFACE			|threes-interface|
+  COMMANDS			  |threes-commands|
+  FUNCTIONS			  |threes-functions|
+  KEY MAPPINGS			  |threes-key-mappings|
+CUSTOMIZING			|threes-customizing|
+CHANGELOG			|threes-changelog|
+
+
+
+==============================================================================
+INTRODUCTION					*threes-introduction*
+
+*threes.vim* is a Vim plugin to play Threes! game.
+
+http://threesgame.com/
+
+Threes! is a game for iOS and Android.
+Thanks for the very amusing game!
+
+I referred to the following web site for implements of this plugin.  Thanks.
+It was mainly useful for implementation of NEXT.
+http://threesjs.com/
+
+In publishing this game, I have not got permission from the original authors.
+When cautions are received from them, this plugin stops public presentation
+immediately.
+
+
+Requirements:
+- Vim 7.4 or later
+
+Latest version:
+https://github.com/thinca/vim-threes
+
+
+
+==============================================================================
+INTERFACE					*threes-interface*
+
+------------------------------------------------------------------------------
+COMMANDS					*threes-commands*
+
+:ThreesStart					*:ThreesStart*
+	Start a new Threes! game.
+	If there is a playing data, resume it.
+
+:ThreesShowRecord				*:ThreesShowRecord*
+	Show your records.
+
+------------------------------------------------------------------------------
+FUNCTIONS					*threes-functions*
+
+threes#start()					*threes#start()*
+	A function version of |:ThreesStart|.
+
+
+------------------------------------------------------------------------------
+KEY MAPPINGS					*threes-key-mappings*
+
+All keymappings can use only at threes buffer.
+
+<Plug>(threes-move-left)			*<Plug>(threes-move-left)*
+	Move tiles to left.
+
+<Plug>(threes-move-down)			*<Plug>(threes-move-down)*
+	Move tiles to down.
+
+<Plug>(threes-move-up)				*<Plug>(threes-move-up)*
+	Move tiles to up.
+
+<Plug>(threes-move-right)			*<Plug>(threes-move-right)*
+	Move tiles to right.
+
+<Plug>(threes-restart)				*<Plug>(threes-restart)*
+	Exit the current game, and then start a new game.
+	This will confirm if the current game is not over.
+
+<Plug>(threes-quit)				*<Plug>(threes-quit)*
+	Exit the game and close the game buffer.
+
+<Plug>(threes-tweet)				*<Plug>(threes-tweet)*
+	Tweets the result to Twitter.
+
+	Either of following is required to use this feature.
+	- tweetvim (https://github.com/basyura/TweetVim)
+	- OpenBrowser (https://github.com/tyru/open-browser.vim)
+
+	This only works on game over.
+
+<Plug>(threes-redraw)				*<Plug>(threes-redraw)*
+	Redraws the screen.
+
+
+{lhs}			{rhs}
+--------		-----------------------------
+h			<Plug>(threes-move-left)
+j			<Plug>(threes-move-down)
+k			<Plug>(threes-move-up)
+l			<Plug>(threes-move-right)
+r			<Plug>(threes-restart)
+q			<Plug>(threes-quit)
+t			<Plug>(threes-tweet)
+<C-l>			<Plug>(threes-redraw)
+
+
+==============================================================================
+CUSTOMIZING					*threes-customizing*
+
+g:threes#data_directory			*g:threes#data_directory*
+	A directory to store your records.
+
+	Default: "~/.threesvim"
+
+g:threes#start_with_higher_tile		*g:threes#start_with_higher_tile*
+	When this is not zero, you can start new games with higher tile.
+
+	Default: 0
+
+
+
+==============================================================================
+TODO						*threes-todo*
+
+- Save records.
+- More customized games.
+
+
+==============================================================================
+CHANGELOG					*threes-changelog*
+
+1.6	2014-11-26
+	- Modifications to the "+" preview.
+	  - Show 3 tiles of next large number.
+	- Start new games with higher tiles.
+	  - |g:threes#start_with_higher_tile|.
+
+1.5	2014-08-10
+	- Score recording feature.
+	  - Add |:ThreesShowRecord| command.
+
+1.4	2014-04-12
+	- Add resume feature.
+	- Add restart feature.
+	- Add quit feature.
+
+1.3	2014-03-23
+	- Add animation.
+	- Show gameover message.
+
+1.2	2014-03-19
+	- Add tweet feature.
+	- Improve coloring.
+
+1.1	2014-03-18
+	- Add coloring support.
+
+1.0	2014-03-17
+	- Initial version.
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl

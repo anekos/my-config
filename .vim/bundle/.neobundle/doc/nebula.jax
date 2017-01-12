@@ -1,0 +1,163 @@
+*nebula.txt*	neobundle.vim の NeoBundleLazy autoload 設定を生成
+
+Author  : LeafCage <leafcage+vim @ gmail.com>
+License : MIT license  {{{
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+}}}
+
+==============================================================================
+目次						*nebula-contents*
+
+概要				|nebula-introduction|
+インターフェイス		|nebula-interface|
+  コマンド			  |nebula-commands|
+  関数				  |nebula-functions|
+設定例				|nebula-examples|
+問題点				|nebula-issues|
+
+
+==============================================================================
+概要						*nebula-introduction*
+
+*nebula* は|neobundle.vim|の|:NeoBundleLazy|の設定を簡単に行うためのプラグイン
+です。vimrcなどの、"NeoBundle 'tyru/open-browser.vim'" などと書かれた行の上で
+呼び出すと、以下のような、NeoBundleLazyの設定された行を現在行の下に追記します。 >
+ NeoBundleLazy 'tyru/open-browser.vim',
+ \ {'autoload': {'mappings': [['sxn', '<Plug>(openbrowser-']], 'commands':
+ \ [{'complete': 'customlist,openbrowser#_cmd_complete',
+ \ 'name': 'OpenBrowserSearch'},
+ \ {'complete': 'customlist,openbrowser#_cmd_complete',
+ \ 'name': 'OpenBrowserSmartSearch'},
+ \ 'OpenBrowser']}}
+※見やすいように整形しています。
+このような設定は、従来はヘルプドキュメントやソースを見に行かないと不可能でした
+。|nebula.vim|はこれを自動で設定することで|:NeoBundleLazy|利用者の負担を減らし
+ます。
+出力は完璧ではないので、参考程度とお考えください。
+
+最新版:
+https://github.com/LeafCage/nebula.vim
+
+
+==============================================================================
+インターフェイス				*nebula-interface*
+
+------------------------------------------------------------------------------
+コマンド					*nebula-commands* 
+:NebulaPutLazy					*:NebulaPutLazy*
+	vimrcなどの NeoBundle {repository} のコマンドが書かれた行で実行すると
+	そのプラグインの NeoBundleLazy 設定がされたコマンドが次の行に出力され
+	ます。元の行は残っているので不要なら削除するのを忘れないこと。
+	例: >
+		NeoBundle 'kana/vim-smartword'
+<			↓ >
+		NeoBundleLazy 'kana/vim-smartword',
+		\ {'autoload': {'mappings': [['sxno', '<Plug>(smartword-']]}}
+<	コマンドの整形は各自で行ってください。
+
+
+:NebulaPutConfig[!]				*:NebulaPutConfig*
+	vimrcなどの NeoBundle {repository} のコマンドが書かれた行で実行すると
+	そのプラグインを|neobundle#config()|でlazy autoload設定するコマンドが
+	次の行に出力されます。
+	例: >
+		NeoBundle 'kana/vim-smartword'
+<			↓ >
+		call neobundle#config('vim-smartword',
+		\ {'lazy': 1, 'autoload':
+		\ {'mappings': [['sxno', '<Plug>(smartword-']]}})
+<	コマンドの整形は各自で行ってください。
+	! 付きだと挿入されるオプションに{"lazy": 1}が加わります。
+
+
+:NebulaYankConfig[!]				*:NebulaYankConfig*
+	|:NebulaPutConfig|と同じ内容をputする代わりにレジスタにセットします。
+
+
+:NebulaYankOptions[!]				*:NebulaYankOptions*
+	vimrcなどの NeoBundle {repository} のコマンドが書かれた行で実行すると
+	そのプラグインをlazy autoloadするときのオプションがレジスタに入ります
+	。
+	例: >
+		NeoBundle 'kana/vim-smartword'
+<			↓ >
+	{'lazy': 1, 'autoload': {'mappings': [['sxno', '<Plug>(smartword-']]}}
+<	がレジスタにセットされます。
+	! 付きだとYankされるオプションに{"lazy": 1}が加わります。
+
+
+:NebulaPutFromClipboard				*:NebulaPutFromClipboard*
+	現在のOSのクリップボードに保存されているテキスト(|@+|レジスタ)の内容を
+	NeoBundle {clipboard-text}	という形に整形して次の行に出力します。
+	新しいプラグインのインストール時にご利用ください。
+
+
+:NebulaYankTap[!] [{name}]			*:NebulaYankTap*
+	{name}が与えられたときにはその名前の|neobundle#tap()|を、
+	そうでないときにはカーソル行の NeoBundle コマンドの解析の結果から得た
+	名前の|neobundle#tap()|を生成し、レジスタにセットします。
+	例: >
+		NeoBundle 'kana/vim-smartword'
+<			↓ >
+		if neobundle#tap('vim-smartword')
+		endif
+<	! 付きだとfoldingmarkerも付与されます。
+
+
+------------------------------------------------------------------------------
+関数						*nebula-functions*
+
+nebula#_get_bundle()				*nebula#_get_bundle()*
+	カーソル行の|:NeoBundle|コマンドに対する|neobundle#get()|の結果を返す。
+
+
+nebula#_fetch_options([{bundle}])		*nebula#_fetch_options()*
+	引数に|neobundle#get()|の結果である{bundle}が与えられているときにはそ
+	の{bundle}の、与えられていないときにはカーソル行の|:NeoBundle|コマンド
+	に対する|neobundle#get()|の結果であるbundleの、指し示すプラグインを解
+	析する。
+	|:NeoBundle|コマンドに渡す{options}と、解析結果の辞書を返す。
+
+
+==============================================================================
+設定例						*nebula-examples*
+>
+	nnoremap <silent>,bl    :<C-u>NebulaPutLazy<CR>
+	nnoremap <silent>,bc    :<C-u>NebulaPutConfig<CR>
+	nnoremap <silent>,bo    :<C-u>NebulaYankOptions<CR>
+	nnoremap <silent>,bp    :<C-u>NebulaPutFromClipboard<CR>
+	nnoremap <silent>,bt    :<C-u>NebulaYankTap<CR>
+
+
+==============================================================================
+問題点						*nebula-issues*
+
+- 動的に生成されるコマンドやマッピングには対応していません。
+	例えば "bkad/CamelCaseMotion" は "<Plug>CamelCaseMotion_" で始まるマッ
+	ピングを提供しますが、これは|nebula.vim|では捕捉できません。以下の
+	ように、手動で設定してください。 >
+		NeoBundleLazy 'bkad/CamelCaseMotion',
+		\ {'autoload': {'mappings': ['<Plug>CamelCaseMotion_']}}
+<	"kana/vim-operator-user" や "kana/vim-textobj-user" で作られたプラグイ
+	ンのプラグインマッピングの取得には対応させました。しかし、textobjは、
+	lazy化させると、自動で設定される筈のマッピングが無効になります。
+
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

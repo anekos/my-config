@@ -1,0 +1,315 @@
+*caw.txt* *caw*
+
+Author:
+  tyru <tyru.exe@gmail.com>
+Version: 1.x.x
+License:
+NEW BSD LICENSE {{{
+  Copyright (c) 2009, tyru
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+      * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+      * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+      * Neither the name of the tyru nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+}}}
+
+==============================================================================
+CONTENTS								*caw-contents*
+
+Introduction			|caw-introduction|
+Supported filetypes		|caw-supported-filetypes|
+Interface				|caw-interface|
+  Keymappings			|caw-keymappings|
+  Variables				|caw-variables|
+FAQ						|caw-faq|
+Changelog				|caw-changelog|
+
+
+==============================================================================
+INTRODUCTION							*caw-introduction* {{{
+
+gcI
+  before:
+      "   testtesttest"
+  after:
+      "#    testtesttest"
+
+gci
+  before:
+      "   <- inserted here"
+  after:
+      "   # <- inserted here"
+
+gca
+  before:
+      "aaaaaaa"
+  after:
+      "aaaaaaa    # "
+
+gcw
+  before:
+      "aaaaaaa"
+  after:
+      "/* aaaaaaa */"
+
+gcv
+  before:
+      "   some code here"
+  after:
+      Type "gcvi", and '// XXX:<CR>'
+      "   // XXX: some code here"
+
+gco
+  before:
+      "   func1();"
+  after:
+      Type "gco", and "func2();"
+      "   func1()"
+      "   // func2();"
+
+gcO
+  before:
+      "   func1();"
+  after:
+      you type 'gcO', and 'call func1()'
+      "   // call func1()"
+      "   func1();"
+
+The comment behaviour only depends on 'filetype', but if you have
+context_filetype.vim installed, caw.vim also depends on the filetype of the
+context of the current cursor location.
+
+}}}
+==============================================================================
+SUPPORTED FILETYPES						*caw-supported-filetypes* {{{
+
+Same as NERD Commenter (http://www.vim.org/scripts/script.php?script_id=1218).
+Because almost comment strings are from NERD Commenter's code.
+(I think it would be nice to be able to separate
+comment strings into indivisual data.
+Other comment plugins also use it.)
+
+abaqus abc acedb ada ahdl amiga aml ampl ant apache apachestyle asm68k asm asn
+aspvbs atlas autohotkey autoit automake ave awk basic b bc bdf bib bindzone
+bst btm caos catalog c cfg cg ch changelog cl clean clipper cmake conf config
+context cpp crontab cs csc csp css cterm cupl csv cvs dcl debchangelog
+debcontrol debsources def diff django docbk dns dosbatch dosini dot dracula
+dsl dtd dtml dylan ecd eiffel elf elm elmfilt erlang eruby eterm expect exports
+fetchmail fgl focexec form fortran foxpro fstab fvwm fx gdb gdmo geek
+gentoo-package-keywords' gentoo-package-mask' gentoo-package-use' gnuplot
+gtkrc haskell hb h help hercules hog html htmldjango htmlos ia64 icon idlang
+idl indent inform inittab ishd iss ist jam java javascript jess jgraph
+jproperties jproperties jsp julia kconfig kix kscript lace lex lftp lifelines
+lilo lisp lite lotos lout lprolog lscript lss lua lynx m4 mail make maple masm
+master matlab mel mf mib mma model moduala.  modula2 modula3 monk mush muttrc
+named nasm nastran natural ncf netdict netrw nqc nroff nsis objc ocaml occam
+omlet omnimark openroad opl ora otl ox pascal passwd pcap pccts perl pfmain
+php phtml pic pike pilrc pine plaintex plm plsql po postscr pov povini ppd
+ppwiz procmail progress prolog psf ptcap python python qf radiance ratpoison r
+rc readline rebol registry remind rexx robots rpl rtf ruby sa samba sas sass
+sather scheme scilab screen scsh sdl sed selectbuf sgml sgmldecl sgmllnx sh
+sicad simula sinda skill slang sl slim slrnrc sm smarty smil smith sml snnsnet
+snnspat snnsres snobol4 spec specman spice sql sqlforms sqlj sqr squid st stp
+strace svn systemverilog tads taglist tags tak tasm tcl terminfo tex text
+plaintex texinfo texmf tf tidy tli trasys tsalt tsscl tssgm uc uil vb verilog
+verilog_systemverilog vgrindefs vhdl vim viminfo virata vo_base vrml vsejcl
+webmacro wget winbatch wml wvdial xdefaults xf86conf xhtml xkb xmath xml
+xmodmap xpm2 xpm xslt yacc yaml z8a
+
+}}}
+==============================================================================
+INTERFACE								*caw-interface* {{{
+------------------------------------------------------------------------------
+KEYMAPPINGS								*caw-keymappings* {{{
+
+
+(nx) <Plug>(caw:prefix)					*<Plug>(caw:prefix)*
+
+Default mapping		rhs ~
+gc					<Plug>(caw:prefix)
+
+NOTE: You can change keymapping prefix by
+writing the following settings in your .vimrc: >
+	nmap <Leader>c <Plug>(caw:prefix)
+	xmap <Leader>c <Plug>(caw:prefix)
+
+
+(nx) <Plug>(caw:i:comment)				*<Plug>(caw:i:comment)*
+(nx) <Plug>(caw:a:comment)				*<Plug>(caw:a:comment)*
+(nx) <Plug>(caw:i:toggle)				*<Plug>(caw:i:toggle)*
+(nx) <Plug>(caw:a:toggle)				*<Plug>(caw:a:toggle)*
+
+Default mapping		rhs ~
+gci					<Plug>(caw:i:comment)
+gca					<Plug>(caw:a:comment)
+
+
+(nx) <Plug>(caw:wrap:comment)			*<Plug>(caw:wrap:comment)*
+(nx) <Plug>(caw:wrap:toggle)			*<Plug>(caw:wrap:toggle)*
+
+Default mapping		rhs ~
+gcw					<Plug>(caw:wrap:comment)
+
+
+(n) <Plug>(caw:jump:comment-next)		*<Plug>(caw:jump:comment-next)*
+(n) <Plug>(caw:jump:comment-prev)		*<Plug>(caw:jump:comment-prev)*
+
+Default mapping		rhs ~
+gco					<Plug>(caw:jump:comment-next)
+gcO					<Plug>(caw:jump:comment-prev)
+
+
+(nx) <Plug>(caw:input:comment)			*<Plug>(caw:input:comment)*
+
+Default mapping		rhs ~
+gcv					<Plug>(caw:input:comment)
+
+
+(nx) <Plug>(caw:uncomment)				*<Plug>(caw:uncomment)*
+
+Default mapping		rhs ~
+gcuu				<Plug>(caw:uncomment)
+
+
+(nx) <Plug>(caw:i:uncomment)			*<Plug>(caw:i:uncomment)*
+(nx) <Plug>(caw:a:uncomment)			*<Plug>(caw:a:uncomment)*
+
+Default mapping		rhs ~
+gcui				<Plug>(caw:i:uncomment)
+gcua				<Plug>(caw:a:uncomment)
+
+
+(nx) <Plug>(caw:wrap:uncomment)			*<Plug>(caw:wrap:uncomment)*
+
+Default mapping		rhs ~
+gcuw				<Plug>(caw:wrap:uncomment)
+
+
+(nx) <Plug>(caw:input:uncomment)		*<Plug>(caw:input:uncomment)*
+
+Default mapping		rhs ~
+gcuv				<Plug>(caw:input:uncomment)
+
+
+}}}
+------------------------------------------------------------------------------
+VARIABLES								*caw-variables* {{{
+
+g:caw_no_default_keymappings			*g:caw_no_default_keymappings*
+									(Default: 0)
+	If this variable is true,
+	caw does not map default keymappings.
+	See |caw-keymappings| for default keymappings.
+
+g:caw_i_sp								*g:caw_i_sp*
+									(Default: " ")
+	Inserted string after comment with <Plug>(caw:i:comment).
+
+g:caw_i_sp_blank								*g:caw_i_sp_blank*
+									(Default: "")
+	Inserted string after comment with <Plug>(caw:i:comment).
+	but applied only if a current line is blank line.
+
+g:caw_i_startinsert_at_blank_line		*g:caw_i_startinsert_at_blank_line*
+									(Default: 1)
+	If this variable is true,
+	if current line is blank line,
+	enter |Insert-mode| after <Plug>(caw:i:comment).
+
+g:caw_i_skip_blank_line					*g:caw_i_skip_blank_line*
+									(Default: 0)
+
+g:caw_i_align							*g:caw_i_align*
+									(Default: 1)
+	If this variable is true,
+	Align all <Plug>(caw:i:comment) comments' cols.
+
+	TODO: example
+
+g:caw_I_startinsert_at_blank_line		*g:caw_I_startinsert_at_blank_line*
+									(Default: 1)
+	If this variable is true,
+	if current line is blank line,
+	enter |Insert-mode| after <Plug>(caw:I:comment).
+
+g:caw_I_sp								*g:caw_I_sp*
+									(Default: " ")
+	Inserted string after comment with <Plug>(caw:I:comment).
+
+g:caw_I_sp_blank								*g:caw_I_sp_blank*
+									(Default: "")
+	Inserted string after comment with <Plug>(caw:I:comment).
+	but applied only if a current line is blank line.
+
+g:caw_a_sp_left							*g:caw_a_sp_left*
+									(Default: "    ")
+	Inserted string before comment with <Plug>(caw:a:comment).
+
+g:caw_a_sp_right						*g:caw_a_sp_right*
+									(Default: " ")
+	Inserted string after comment with <Plug>(caw:a:comment).
+
+g:caw_a_startinsert						*g:caw_a_startinsert*
+									(Default: 1)
+	If this variable is true,
+	enter |Insert-mode| after <Plug>(caw:a:comment).
+
+g:caw_wrap_sp_left						*g:caw_wrap_sp_left*
+									(Default: " ")
+	Inserted string before comment with <Plug>(caw:wrap:comment).
+
+g:caw_wrap_sp_right						*g:caw_wrap_sp_right*
+									(Default: " ")
+	Inserted string after comment with <Plug>(caw:wrap:comment).
+
+g:caw_wrap_skip_blank_line						*g:caw_wrap_skip_blank_line*
+									(Default: 1)
+
+g:caw_wrap_align						*g:caw_wrap_align*
+									(Default: 1)
+
+g:caw_jump_sp							*g:caw_jump_sp*
+									(Default: " ")
+	Inserted string after comment with <Plug>(caw:jump:comment-next)
+	and <Plug>(caw:jump:comment-prev).
+
+g:caw_box_sp_left						*g:caw_box_sp_left*
+									(Default: " ")
+g:caw_box_sp_right						*g:caw_box_sp_right*
+									(Default: " ")
+
+g:caw_find_another_action				*g:caw_find_another_action*
+									(Default: 1)
+
+
+
+TODO
+---------
+
+caw_default_oneline_comment				*caw_default_oneline_comment*
+
+
+}}}
+}}}
+==============================================================================
+FAQ								*caw-faq* {{{
+
+Q. How can I change the mapping prefix?
+A. See |<Plug>(caw:prefix)|.
+
+}}}
+==============================================================================
+CHANGELOG								*caw-changelog* {{{
+
+1.0.0:
+- Initial upload.
+1.0.1:
+- Fix bug that CommentAnyWay.Base.GetIndent() can't get proper indent
+
+}}}
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=4:ft=help:norl:noet:fdm=marker:fen

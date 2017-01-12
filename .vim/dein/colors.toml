@@ -1,0 +1,119 @@
+[[plugins]]
+repo = '29decibel/codeschool-vim-theme'
+
+[[plugins]]
+repo = 'aereal/vim-magica-colors'
+
+[[plugins]]
+repo = 'ajh17/Spacegray.vim'
+
+[[plugins]]
+repo = 'altercation/vim-colors-solarized'
+
+[[plugins]]
+repo = 'atelierbram/vim-colors_atelier-schemes'
+
+[[plugins]]
+repo = 'bluecloud'
+
+[[plugins]]
+repo = 'bluntpeak/bluntpeak-vim-colors'
+
+[[plugins]]
+repo = 'chriskempson/vim-tomorrow-theme'
+
+[[plugins]]
+repo = 'ciaranm/inkpot'
+
+[[plugins]]
+repo = 'Colour-Sampler-Pack'
+
+[[plugins]]
+repo = 'djjcast/mirodark'
+
+[[plugins]]
+repo = 'Donearm/Ubaryd'
+
+[[plugins]]
+repo = 'fisadev/fisa-vim-colorscheme'
+
+[[plugins]]
+repo = 'itchyny/landscape.vim'
+
+[[plugins]]
+repo = 'jonathanfilip/vim-lucius'
+
+[[plugins]]
+repo = 'jpo/vim-railscasts-theme'
+
+[[plugins]]
+repo = 'junegunn/seoul256.vim'
+
+[[plugins]]
+repo = 'machakann/vim-colorscheme-imas'
+
+[[plugins]]
+repo = 'Marslo/marslo.vim'
+
+[[plugins]]
+repo = 'morhetz/gruvbox'
+
+[[plugins]]
+repo = 'nanotech/jellybeans.vim'
+
+[[plugins]]
+repo = 'NLKNguyen/papercolor-theme'
+
+[[plugins]]
+repo = 'noahfrederick/vim-noctu'
+
+[[plugins]]
+repo = 'Pychimp/vim-sol'
+
+[[plugins]]
+repo = 'rdark'
+
+[[plugins]]
+today = 'rhysd/vim-color-splatoon'
+
+[[plugins]]
+repo = 'Risto-Color-Scheme'
+
+[[plugins]]
+repo = 'sickill/vim-monokai'
+
+[[plugins]]
+repo = 'sjl/badwolf'
+
+[[plugins]]
+repo = 'tomasr/molokai'
+
+[[plugins]]
+repo = 'trapd00r/neverland-vim-theme'
+
+[[plugins]]
+repo = 'twilight'
+
+[[plugins]]
+repo = 'uu59/vim-herokudoc-theme'
+
+[[plugins]]
+repo = 'vim-scripts/BusyBee'
+
+[[plugins]]
+repo = 'vim-scripts/darktango.vim'
+
+[[plugins]]
+repo = 'vim-scripts/phd'
+
+[[plugins]]
+repo = 'vol2223/vim-colorblind-colorscheme'
+
+[[plugins]]
+repo = 'w0ng/vim-hybrid'
+
+[[plugins]]
+repo = 'wabisabi'
+
+[[plugins]]
+repo = 'Wombat'

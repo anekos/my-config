@@ -1,0 +1,89 @@
+*easy-colorcolumn.txt*  easy to use a |colorcolumn| feature
+
+Author : cohama <cohama@live.jp>
+License: The MIT License {{{
+  Copyright (c) 2013 cohama
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+}}}
+
+CONTENTS  *easy-colorcolumn-contents*
+
+Introduction    |easy-colorcolumn-introduction|
+Mappings        |easy-colorcolumn-mappings|
+Configuration   |easy-colorcolumn-configuration|
+License         |easy-colorcolumn-license|
+
+==============================================================================
+INTRODUCTION                                   *easy-colorcolumn-introduction*
+
+*easy-colorcolumn* is a Vim plug-in to easily use the |colorcolumn| feature.
+You can immediately highlight a column of the cursor or visual-selected
+columns.
+Of course, you can also immediately clear these highlighting.
+
+This plug-in is performed similarly to the following expression.
+>
+    let &l:colorcolumn = col('.')
+
+==============================================================================
+MAPPINGS                                           *easy-colorcolumn-mappings*
+
+n <Plug>(easy-colorcolumn-add)
+    Highlight a column of current cursor.
+
+v <Plug>(easy-colorcolumn-add)
+    Highlight columns in visual-selected range.
+
+n <Plug>(easy-colorcolumn-toggle)
+    Toggle colorcolumn highlighting at a current cursor column.
+
+v <Plug>(easy-colorcolumn-toggle)
+    Toggle colorcolumn highlighting at visual-selected columns.
+
+  <Plug>(easy-colorcolumn-clear) 
+    Clear all colorcolumn highlighting.
+
+==============================================================================
+CONFIGURATION                                 *easy-colorcolumn-configuration*
+
+This plug-in does NOT provide any default key mappings.
+To enable easy-colorcolumn, you should set your own key mappings at .vimrc.
+
+Mapping examples:
+>
+    nmap <Space>ca <Plug>(easy-colorcolumn-add)
+    xmap <Space>ca <Plug>(easy-colorcolumn-add)
+
+    nmap <Space>ct <Plug>(easy-colorcolumn-toggle)
+    xmap <Space>ct <Plug>(easy-colorcolumn-toggle)
+
+    nmap <Space>cc <Plug>(easy-colorcolumn-clear)
+    xmap <Space>cc <Plug>(easy-colorcolumn-clear)
+
+If you want to change the color of colorcolumn, add this setting in your
+.vimrc.
+>
+    augroup easy_colorcolumn
+        autocmd!
+        autocmd ColorScheme * highlight ColorColumn ctermfg=red ctermbg=blue
+    augroup END
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

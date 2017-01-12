@@ -1,0 +1,32 @@
+*unite-hyperspec.txt*	A Unite plugin for lookup hyperspec contents.
+
+Author: Pocket7878
+
+==============================================================================
+INTRODUCTION					*unite-hyperspec-introduction*
+
+*unite-hyperspec* is a Unite.vim plugin for lookup hyperspec contents.
+
+Requirement:
+- unite.vim
+- vimproc
+
+Latest version:
+http://github.com/pocket7878/unite-hyperspec
+
+
+
+==============================================================================
+CUSTOMIZING					*unite-hyperspec-customizing*
+
+g:unite_hyperspec_base_dir			*g:unite_hyperspec_base_dir*
+	Specifies an alternative directory of root of local hyperspec.
+
+	The default value is '/usr/share/doc/hyperspec/'.
+        **Please include last slash to this value.**
+
+
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl

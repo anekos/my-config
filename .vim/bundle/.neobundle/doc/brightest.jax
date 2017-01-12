@@ -1,0 +1,284 @@
+*brightest.txt*	カーソル下の単語を常にハイライトするプラグイン
+
+
+==============================================================================
+概要						*brightest-introduction*
+
+*brightest* はカーソル下の単語をカーソルが移動する度にハイライトするプラグインで
+す。
+
+
+==============================================================================
+インターフェース				*brightest-interface*
+------------------------------------------------------------------------------
+コマンド					*brightest-commands*
+
+:BrightestEnable				*:BrightestEnable*
+	カーソル移動による自動ハイライトを有効にします。
+	この状態が既定値になります。
+
+:BrightestDisable				*:BrightestDisable*
+	カーソル移動による自動ハイライトを無効にします。
+
+:BrightestHighlight				*:BrightestHighlight*
+	ハイライトを行います。
+	|:BrightestDisable| で無効になっている場合はハイライトされません
+
+:BrightestClear					*:BrightestClear*
+	ハイライトを削除します。
+
+:BrightestLock					*:BrightestLock*
+	現在でのバッファで brightest を無効にします。
+
+:BrightestUnlock				*:BrightestUnlock*
+	|:BrightestLock| で無効にしたのを戻します。
+
+BrightestToggle					*BrightestToggle*
+	|:BrightestEnable| と |:BrightestDisable| を切り替えます。
+
+==============================================================================
+設定						*brightest-setting*
+
+------------------------------------------------------------------------------
+変数						*brightest-variables*
+
+g:brightest#enable_filetypes			*g:brightest#enable_filetypes*
+	有効にする 'filetype' を設定します。
+	設定されていない 'filetype' は "_" の値を使用します。
+	デフォルトではすべての 'filetype' が有効です。
+Example: >
+	" filetype=cpp を無効にする
+	let g:brightest#enable_filetypes = {
+	\	"cpp" : 0
+	\}
+
+	" filetype=vim のみを有効にする
+	let g:brightest#enable_filetypes = {
+	\	"_"   : 0,
+	\	"vim" : 1,
+	\}
+<
+
+g:brightest#pattern				*g:brightest#pattern*
+	ハイライトするカーソル位置の単語のパターンを設定します。
+	任意の範囲をハイライトしたい場合はこの変数を変更してください。
+	また、空の文字列が設定されている場合は |<cword>|
+	の値がハイライトする単語として使用されます。
+	デフォルトでは空の文字列が設定されているため |<cword>| の単語がハイラ
+	イトされます。
+Default: >
+	let g:brightest#pattern = ""
+<
+Example: >
+	" 英数字 + _ の範囲をハイライトする単語として扱う
+	let g:brightest#pattern = '\w\+'
+<
+
+b:brightest_pattern				*b:brightest_pattern*
+	|g:brightest#pattern| のバッファローカル版です。
+	|g:brightest#pattern| よりも優先して使用されます。
+
+
+g:brightest#highlight				*g:brightest#highlight*
+	カーソル下の単語をハイライトする |brightest-highlight| の設定です。
+	この設定でバッファ内にあるカーソル下の単語をハイライトします。
+Default: >
+	let g:brightest#highlight = {
+	\	"group" : "WarningMsg",
+	\	"priority" : -1,
+	\	"format" : '\<%s\>',
+	\}
+<
+Example: >
+	" 単語をアンダーラインでハイライトする
+	let g:brightest#highlight = {
+	\	"group"    : "BrightestUnderline",
+	\}
+<
+
+b:brightest_highlight				*b:brightest_highlight*
+	|g:brightest#highlight| のバッファローカル版です。
+	|g:brightest#highlight| よりも優先して使用されます。
+
+
+g:brightest#highlight_in_cursorline	*g:brightest#highlight_in_cursorline*
+	|g:brightest#highlight| と同等の設定ですが、カーソル行の単語のみに反映
+	されるハイライトの設定です。
+	'cursorline' と併用して使用する場合はこの設定を使用してください。
+
+	NOTE:これの |brightest-highlight-group| に |BrightestCursorLineBg|
+	を設定すると 'cursorline' がオンの場合にハイライトの背景が 'cursorline'
+	と同じになります。
+	また、この時に 'cursorline' を無効にすると
+	|g:brightest#highlight_in_cursorline| のハイライトは反映されなくなりま
+	す。
+Example: >
+	" カーソル行のハイライトを 'cursorline' のハイライトの背景と同じにする
+	let g:brightest#highlight_in_cursorline = {
+	\	"group" : "BrightestCursorLineBg"
+	\}
+<
+
+b:brightest_highlight_in_cursorline	*b:brightest_highlight_in_cursorline*
+	|g:brightest#highlight_in_cursorline| のバッファローカル版です。
+	|g:brightest#highlight_in_cursorline| よりも優先して使用されます。
+
+
+g:brightest#ignore_syntax_list		*g:brightest#ignore_syntax_list*
+	ハイライトを行わないシンタックス名のリストです。
+	ここで設定したシンタックス上にカーソルがある場合はハイライトしません。
+	NOTE:|g:brightest#pattern|を設定していない場合、カーソル上以外の単語がハイライトされるのでこの機能が正しく動作しない可能性があります。
+Default: >
+	let g:brightest#ignore_syntax_list = []
+<
+Example: >
+	" カーソル下のシンタックスが "Statement" の場合はハイライトしない
+	" カーソル下のシンタックスは
+	" :echo synIDattr(synIDtrans(synID(line("."), col("."), 1)), "name")
+	" で調べることができる
+	let g:brightest#ignore_syntax_list = [ "Statement" ]
+<
+
+b:brightest_ignore_syntax_list		*b:brightest_ignore_syntax_list*
+	|g:brightest#ignore_syntax_list| のバッファローカル版です。
+	|g:brightest#ignore_syntax_list| よりも優先して使用されます。
+
+
+g:brightest#ignore_word_pattern		*g:brightest#ignore_word_pattern*
+	ハイライトしない単語のパターンを設定します。
+Default: >
+	let g:brightest#ignore_word_pattern = ''
+<
+b:brightest_ignore_word_pattern		*b:brightest_ignore_word_pattern*
+	g:brightest#ignore_word_pattern のバッファローカル版です。
+	g:brightest#ignore_word_pattern よりも優先して使用されます。
+
+g:brightest#enable_on_CursorHold	*g:brightest#enable_on_CursorHold*
+	1 が設定されている場合 |CursorMoved| ではなくて |CursorHold|
+	時にハイライトを行うようになります。
+	カーソル移動が遅く感じる場合はこの変数に 1 を設定してください。
+Default: >
+	let g:brightest#enable_on_CursorHold = 0
+<
+
+			*g:brightest#enable_clear_highlight_on_CursorMoved*
+g:brightest#enable_clear_highlight_on_CursorMoved
+	1 が設定されている場合、|CursorMoved| 時にハイライトが消えるようになり
+	ます。
+	|CursorHold| 時にハイライトしている時にカーソルが移動してもハイライト
+	を残したい場合には 0 を設定してください。
+Default: >
+	let g:brightest#enable_clear_highlight_on_CursorMoved = 1
+<
+
+g:brightest#enable_insert_mode		*g:brightest#enable_insert_mode*
+	0 以外が設定されている場合に |Insert-mode| でも単語がハイライトされる
+	ようになります。
+Default: >
+	let g:brightest#enable_insert_mode = 0
+<
+				*g:brightest#enable_highlight_all_window*
+g:brightest#enable_highlight_all_window
+	0 以外が設定されている場合に表示されているすべてのウィンドウをハイライ
+	トします。
+Default: >
+	let g:brightest#enable_highlight_all_window = 0
+<
+	NOTE:この設定を有効にする場合は処理が重くなります
+	気になる場合は |g:brightest#enable_on_CursorHold| と組み合わせて
+	使用してください
+
+
+==============================================================================
+ハイライトグループ				*brightest-highlight_group*
+
+BrightestUnderline				*BrightestUnderline*
+	アンダーラインでハイライトします。
+
+BrightestUndercurl				*BrightestUndercurl*
+	波線でハイライトします。
+
+BrightestReverse				*BrightestReverse*
+	反転色でハイライトします。
+
+BrightestCursorLineBg				*BrightestCursorLineBg*
+	このハイライトグループを |g:brightest#highlight_in_cursorline|
+	に設定すると 'cursorline' がオンの場合にハイライトの背景が
+	'cursorline' と同じになります。
+	'cursorline' をオンにしている場合にはこれを利用すると見やすくなりま
+	す。
+
+
+==============================================================================
+ハイライト					*brightest-highlight*
+
+ハイライトの設定を行う辞書です。
+ハイライトの設定には以下のキーの値が設定できます。
+
+- "group"					*brightest-highlight-group*
+  ハイライトグループを設定します。
+  空の文字列が設定されているとハイライトはされません。
+
+- "priority"					*brightest-highlight-priority*
+  |matchadd()| の {priority} に設定される数値です。
+
+- "format"					*brightest-highlight-format*
+  単語をハイライトする際のフォーマットを設定します。
+
+Example: >
+	" 単語をアンダーラインでハイライトして、
+	" matchadd() の優先順位を 1000 にする
+	let g:brightest#highlight = {
+	\	"group"    : "BrightestUnderline",
+	\	"priority" : 1000
+	\}
+<
+==============================================================================
+FAQ						*brightest-faq*
+
+Q. ハイライトを変更したい
+
+A. |g:brightest#highlight| の "group" に変更したいハイライトグループ名を設定
+します。
+
+>
+	" ハイライトを "Search" にする
+	let g:brightest#highlight = {
+	\	"group"    : "Search",
+	\}
+<
+
+Q. アンダーライン、もしくは波線でハイライトしたい
+
+A.  |g:brightest#highlight| の "group" に |BrightestUnderline|、もしくは
+|BrightestUndercurl|を設定します。
+
+>
+	" ハイライトをアンダーラインにする
+	let g:brightest#highlight = {
+	\	"group"    : "BrightestUnderline",
+	\}
+<
+
+Q. ハイライトの背景を 'cursorline' と同じにしたい
+
+A. g:brightest#highlight_in_cursorline| の "group" に 
+|BrightestCursorLineBg| を設定することでカーソル行のハイライトの背景が
+'cursorline' と同じになります。
+>
+	" カーソル行のハイライトの背景を 'cursorline' と同じにする
+	let g:brightest#highlight_in_cursorline = {
+	\	"group"    : "BrightestCursorLineBg",
+	\}
+<
+
+Q. カーソル移動が重いので CursorHold 時にハイライトしたい
+
+A. g:brightest#enable_on_CursorHold に 1 を設定します。
+>
+	let g:brightest#enable_on_CursorHold = 1
+<
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
