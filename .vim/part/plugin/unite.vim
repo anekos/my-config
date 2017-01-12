@@ -106,47 +106,47 @@ let g:unite_source_alias_aliases = {
 
 nnoremap <Space>          :<C-u>Unite -buffer-name=files -default-action=switch buffer file_rec/async file/new<CR>
 nnoremap <Leader><Space>  :<C-u>Unite -buffer-name=files -default-action=tabswitch buffer file_rec/async file/new<CR>
-nnoremap <Leader>uu :<C-u>Unite<Space>
-nnoremap <Leader>U :<C-u>UniteResume<CR>
-nnoremap <Leader>b :<C-u>Unite -buffer-name=files buffer<CR>
-nnoremap <Leader>B :<C-u>Unite tab:no-current<CR>
-nnoremap <Leader>ua :<C-u>Unite grep:.<CR>
-nnoremap <Leader>uA :<C-U>Unite -auto-preview grep:.<CR>
-nnoremap <Leader>ub :<C-u>Unite bookmark<CR>
-nnoremap <Leader>uC :<C-u>Unite colorscheme -auto-preview<CR>
-nnoremap <Leader>uc :<C-u>Unite -default-action=edit command<CR>
-nnoremap <Leader>ud :<C-u>Unite -unique -buffer-name=files -default-action=cd<Space>directory_mru<CR>
-nnoremap <Leader>uF :<C-u>Unite -unique -buffer-name=files file<CR>
-nnoremap <Leader>uf :<C-u>Unite -unique -buffer-name=files file_rec/async<CR>
-nnoremap <Leader>ug :<C-u>Unite file_rec/git<CR>
-nnoremap <Leader>uh :<C-u>Unite history/command -default-action=edit<CR>
-nnoremap <Leader>u: :<C-u>Unite history/command -default-action=edit<CR>
-nnoremap <Leader>uj :<C-u>Unite -auto-preview jump<CR>
-nnoremap <Leader>uJ :<C-u>Unite junkfile<CR>
-nnoremap <Leader>ul :<C-u>Unite -no-quit -auto-preview location_list<CR>
-nnoremap <Leader>uL :<C-u>Unite line<CR>
-nnoremap <Leader>um :<C-u>Unite -unique -buffer-name=files file_mru<CR>
-nnoremap <Leader>uM :<C-u>Unite mapping<CR>
-nnoremap <Leader>uo :<C-u>Unite outline<CR>
-nnoremap <Leader>uq :<C-u>Unite -auto-preview quickfix<CR>
-nnoremap <Leader>ur :<C-u>Unite quickrun_config -default-action=set_global_quickrun_config<CR>
-nnoremap <Leader>uR :<C-u>Unite quickrun_config -default-action=execute<CR>
-nnoremap <Leader>us :<C-u>Unite file_rec:~/.vim/part<CR>
-nnoremap <Leader>uS :<C-u>Unite located_session<CR>
-nnoremap <Leader>uT :<C-u>Unite tab:no-current<CR>
-nnoremap <Leader>ut :<C-u>Unite tag<CR>
-nnoremap <Leader>uv :<C-u>Unite variable<CR>
-nnoremap <Leader>uw :<C-u>Unite window:no-current<CR>
-nnoremap <Leader>uy :<C-u>Unite history/yank<CR>
-nnoremap <Leader>u/ :<C-u>Unite -buffer-name=search line:forward<CR>
-nnoremap <Leader>u? :<C-u>Unite -buffer-name=search line:backward<CR>
-nnoremap <Leader>uz :<C-u>Unite -default-action=append zsh_history<CR>
-nnoremap <Leader>uZ :<C-u>Unite -default-action=append output/shellcmd:tail\ -n100\ /tmp/terminal-log/all.log<CR>
+nnoremap <Leader>uuu      :<C-u>Unite<Space><C-f>
+nnoremap <Leader>U        :<C-u>UniteResume<CR>
+nnoremap <Leader>b        :<C-u>Unite -buffer-name=files buffer<CR>
+nnoremap <Leader>B        :<C-u>Unite tab:no-current<CR>
+nnoremap <Leader>ua       :<C-u>Unite grep:.<CR>
+nnoremap <Leader>uA       :<C-U>Unite -auto-preview grep:.<CR>
+nnoremap <Leader>ub       :<C-u>Unite bookmark<CR>
+nnoremap <Leader>uC       :<C-u>Unite colorscheme -auto-preview<CR>
+nnoremap <Leader>uc       :<C-u>Unite -default-action=edit command<CR>
+nnoremap <Leader>ud       :<C-u>Unite -unique -buffer-name=files -default-action=cd<Space>directory_mru<CR>
+nnoremap <Leader>uF       :<C-u>Unite -unique -buffer-name=files file<CR>
+nnoremap <Leader>uf       :<C-u>Unite -unique -buffer-name=files file_rec/async<CR>
+nnoremap <Leader>ug       :<C-u>Unite file_rec/git<CR>
+nnoremap <Leader>uh       :<C-u>Unite history/command -default-action=edit<CR>
+nnoremap <Leader>u:       :<C-u>Unite history/command -default-action=edit<CR>
+nnoremap <Leader>uj       :<C-u>Unite -auto-preview jump<CR>
+nnoremap <Leader>uJ       :<C-u>Unite junkfile<CR>
+nnoremap <Leader>ul       :<C-u>Unite -no-quit -auto-preview location_list<CR>
+nnoremap <Leader>uL       :<C-u>Unite line<CR>
+nnoremap <Leader>um       :<C-u>Unite -unique -buffer-name=files file_mru<CR>
+nnoremap <Leader>uM       :<C-u>Unite mapping<CR>
+nnoremap <Leader>uo       :<C-u>Unite outline<CR>
+nnoremap <Leader>uq       :<C-u>Unite -auto-preview quickfix<CR>
+nnoremap <Leader>ur       :<C-u>Unite quickrun_config -default-action=set_global_quickrun_config<CR>
+nnoremap <Leader>uR       :<C-u>Unite quickrun_config -default-action=execute<CR>
+nnoremap <Leader>us       :<C-u>Unite file_rec:~/.vim/part<CR>
+nnoremap <Leader>uS       :<C-u>Unite located_session<CR>
+nnoremap <Leader>uT       :<C-u>Unite tab:no-current<CR>
+nnoremap <Leader>ut       :<C-u>Unite tag<CR>
+nnoremap <Leader>uv       :<C-u>Unite variable<CR>
+nnoremap <Leader>uw       :<C-u>Unite window:no-current<CR>
+nnoremap <Leader>uy       :<C-u>Unite history/yank<CR>
+nnoremap <Leader>u/       :<C-u>Unite -buffer-name=search line:forward<CR>
+nnoremap <Leader>u?       :<C-u>Unite -buffer-name=search line:backward<CR>
+nnoremap <Leader>uz       :<C-u>Unite -default-action=append zsh_history<CR>
+nnoremap <Leader>uZ       :<C-u>Unite -default-action=append output/shellcmd:tail\ -n100\ /tmp/terminal-log/all.log<CR>
 
-nnoremap [s :UnitePrevious<CR>
-nnoremap ]s :UniteNext<CR>
-nnoremap [S :UniteFirst<CR>
-nnoremap ]S :UniteLast<CR>
+nnoremap <Leader>up :UnitePrevious<CR>
+nnoremap <Leader>un :UniteNext<CR>
+nnoremap <Leader>uf :UniteFirst<CR>
+nnoremap <Leader>ul :UniteLast<CR>
 
 " }}}
 

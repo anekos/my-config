@@ -134,7 +134,6 @@ Plug 'mattn/flappyvird-vim'
 Plug 'mattn/habatobi-vim'
 Plug 'mattn/invader-vim'
 Plug 'thinca/vim-threes'
-Plug 'progressbar-widget'
 " Plug 'mattn/die-vim'
 
 " }}}
@@ -210,7 +209,6 @@ Plug 'kana/vim-submode'
 Plug 'tpope/vim-surround'
 Plug 'thinca/vim-portal' " n_<Leader>pb n_<Leader>po
 Plug 't9md/vim-textmanip' " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
-Plug 'tyru/vim-altercmd'
 
 " }}}
 
@@ -222,9 +220,11 @@ Plug 'tyru/vim-altercmd'
 "     u   = URL
 "     y   = Syntax
 "     z   = Fold
+"     ar  = Entire
 Plug 'kana/vim-textobj-fold'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-syntax'
+Plug 'kana/vim-textobj-entire'
 Plug 'mattn/vim-textobj-url'
 Plug 'osyo-manga/vim-textobj-multiblock'
 
@@ -276,6 +276,7 @@ Plug 'Shougo/neomru.vim'
 Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/unite-help'
 Plug 'Shougo/unite-outline'
+Plug 'Shougo/denite.nvim'
 Plug 'Shougo/unite.vim'
 Plug 'thinca/vim-unite-history'
 Plug 'tsukkee/unite-tag'
@@ -292,6 +293,7 @@ Plug 'kmnk/vim-unite-giti'
 Plug 'lambdalisue/vim-gista'
 Plug 'lambdalisue/vim-gita'
 Plug 'rhysd/git-messenger.vim'
+Plug 'rhysd/committia.vim'
 Plug 'tpope/vim-fugitive'
 
 " }}}

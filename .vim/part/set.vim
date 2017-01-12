@@ -121,8 +121,14 @@ set display=lastline
 " タブを常に表示
 set showtabline=2
 
-" for RecentFiles.vim
-set viminfo& viminfo+=! viminfo+=n~/.vim-temp/info/
+" う゛ぃみんふぉ
+set viminfo=
+set viminfo+='1000                     " マークが復元される履歴の最大
+set viminfo+=<50                       " 各レジスタで保存される行数の最大値
+set viminfo+=s50                       " Kbyte単位でのフラグの最大値
+set viminfo+=h                         " viminfo ファイルの読み込み時に、'hlsearch' を無効にする。
+set viminfo+=!                         " 大文字のみで構成されるグローバル変数を保存する
+set viminfo+=n~/.vim-temp/info/viminfo " viminfo の保存場所
 
 " ウィンドウサイズの自動調整
 set noequalalways
@@ -143,7 +149,7 @@ set viewoptions-=options
 set keywordprg=
 
 " ++
-set history=1000
+set history=10000
 
 " Unicode の記号などを全角で表示する
 set ambiwidth=double
@@ -176,7 +182,7 @@ set selection=inclusive
 set grepprg=grep\ -rnIH\ --exclude-dir=.svn\ --exclude-dir=.git\ --exclude='*.json'\ --exclude='*.log'\ --exclude='*min.js'\ --exclude='*min.css'
 
 " メッセージの省略
-set shortmess=T
+set shortmess=tToOlmnrwxf
 
 " 正規表現エンジン
 set regexpengine=0 " 0=自動選択, 1=old, 2=Neko Felis Association
@@ -186,9 +192,6 @@ set updatetime=1000
 
 " 長すぎる行で重くなると嫌ですね
 " set synmaxcol=666
-
-" oldfile=1000
-set viminfo='1000,<50,s10,h,!
 
 " いろいろり
 set termguicolors

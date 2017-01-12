@@ -140,14 +140,6 @@ let g:brightest#enable_clear_highlight_on_CursorMoved = 1
 
 " }}}
 
-" Calendar.vim {{{
-
-let g:calendar_first_day = 'monday'
-let g:calendar_time_zone = '+0900'
-let g:calendar_date_endian = 'big'
-
-" }}}
-
 " Capture {{{
 
 let g:capture_open_command = 'tabnew'
@@ -178,6 +170,22 @@ let g:comfortable_motion_no_default_key_mappings = 0
 
 " }}}
 
+" commitia {{{
+
+let g:committia_open_only_vim_starting = 0
+
+
+" https://github.com/rhysd/committia.vim
+let g:committia_hooks = {}
+function! g:committia_hooks.edit_open(info)
+    setlocal spell
+
+    imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
+    imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
+endfunction
+
+" }}}
+
 " ft-clojure {{{
 
 let g:clojure#indent#definiens = '\%(letfn\|proxy\|reify\)$\|.\+/def.*'
@@ -186,7 +194,7 @@ let g:clojure#indent#special = '\%(^\|/\)def'
 " }}}
 
 " fontzoom {{{
-"
+
 let g:fontzoom_no_default_key_mappings=1
 
 " }}}
@@ -275,19 +283,19 @@ let g:nox_diary_id_base = 'diary/'
 
 " manga-osort {{{
 
-let g:manga_osort_default_options = {'ignorecase' : 1}
+let g:manga_osort_default_options = {'ignorecase': 1}
 let g:manga_osort_alias = {
-  \   '#zsh' : {'pattern' : '^#', 'key' : 1},
-  \   '#haskell-import' : {'pattern' : '^import', 'keyprefix' : 'import\s\+\(qualified\s\)\?'},
-  \   '#paragraph' : {'pattern' : '^\S'},
-  \   '#neobundle' : {'keyprefix' : 'NeoBundle\S*', 'pattern' : 'NeoBundle'},
-  \   '#vimrc' : {'pattern' : '^"'},
-  \   '#common-list-definition' : {'pattern' : '^('},
-  \   '#nox-definiton-list' : {'pattern' : '^[^\s:]', 'key': 1}
-  \ }
+\   '#zsh': {'pattern': '^#', 'key': 1},
+\   '#haskell-import': {'pattern': '^import', 'keyprefix': 'import\s\+\(qualified\s\)\?'},
+\   '#paragraph': {'pattern': '^\S'},
+\   '#neobundle': {'keyprefix': 'NeoBundle\S*', 'pattern': 'NeoBundle'},
+\   '#vimrc': {'pattern': '^"'},
+\   '#common-list-definition': {'pattern': '^('},
+\   '#nox-definiton-list': {'pattern': '^[^\s:]', 'key': 1}
+\ }
 let g:manga_osort_context = [
-  \   {'pattern' : '^NeoBundle ', 'arguments': '#neobundle'},
-  \ ]
+\   {'pattern': '^NeoBundle ', 'arguments': '#neobundle'},
+\ ]
 
 " }}}
 
@@ -352,17 +360,6 @@ augroup END
 " NeoSnippet {{{
 
 let g:neosnippet#snippets_directory = '~/.vim/snippets'
-
-imap <C-q>     <Plug>(neosnippet_expand_or_jump)
-smap <C-q>     <Plug>(neosnippet_expand_or_jump)
-
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
 
 " }}}
 
@@ -652,6 +649,12 @@ let g:sonictemplate_vim_template_dir = ['$HOME/.vim/template']
 
 " }}}
 
+" surround {{{
+
+let g:surround_no_insert_mappings = 1
+
+" }}}
+
 " Table mode {{{
 
 let g:table_mode_disable_mappings = 0
@@ -842,19 +845,19 @@ let g:user_emmet_mode = 'inv'
 let g:user_emmet_leader_key = '<C-y>'
 
 let g:user_emmet_settings = {
-\   'indentation' : '  ',
-\   'ruby' : {
-\     'aliases' : {
-\       'req' : 'require '
+\   'indentation': '  ',
+\   'ruby': {
+\     'aliases': {
+\       'req': 'require '
 \     },
 \   },
-\   'perl' : {
-\     'aliases' : {
-\       'req' : 'require '
+\   'perl': {
+\     'aliases': {
+\       'req': 'require '
 \     },
-\     'snippets' : {
-\       'use' : "use strict\nuse warnings\n\n",
-\       'warn' : "warn \"|\";",
+\     'snippets': {
+\       'use': "use strict\nuse warnings\n\n",
+\       'warn': "warn \"|\";",
 \     }
 \   }
 \ }
@@ -998,7 +1001,6 @@ Plug 'mattn/flappyvird-vim'
 Plug 'mattn/habatobi-vim'
 Plug 'mattn/invader-vim'
 Plug 'thinca/vim-threes'
-Plug 'progressbar-widget'
 Plug 'mattn/die-vim'
 
 " }}}
@@ -1074,7 +1076,6 @@ Plug 'kana/vim-submode'
 Plug 'tpope/vim-surround'
 Plug 'thinca/vim-portal' " n_<Leader>pb n_<Leader>po
 Plug 't9md/vim-textmanip' " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
-Plug 'tyru/vim-altercmd'
 
 " }}}
 
@@ -1086,9 +1087,11 @@ Plug 'tyru/vim-altercmd'
 "     u   = URL
 "     y   = Syntax
 "     z   = Fold
+"     ar  = Entire
 Plug 'kana/vim-textobj-fold'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-syntax'
+Plug 'kana/vim-textobj-entire'
 Plug 'mattn/vim-textobj-url'
 Plug 'osyo-manga/vim-textobj-multiblock'
 
@@ -1140,6 +1143,7 @@ Plug 'Shougo/neomru.vim'
 Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/unite-help'
 Plug 'Shougo/unite-outline'
+Plug 'Shougo/denite.nvim'
 Plug 'Shougo/unite.vim'
 Plug 'thinca/vim-unite-history'
 Plug 'tsukkee/unite-tag'
@@ -1156,6 +1160,7 @@ Plug 'kmnk/vim-unite-giti'
 Plug 'lambdalisue/vim-gista'
 Plug 'lambdalisue/vim-gita'
 Plug 'rhysd/git-messenger.vim'
+Plug 'rhysd/committia.vim'
 Plug 'tpope/vim-fugitive'
 
 " }}}
@@ -1415,8 +1420,14 @@ set display=lastline
 " タブを常に表示
 set showtabline=2
 
-" for RecentFiles.vim
-set viminfo& viminfo+=! viminfo+=n~/.vim-temp/info/
+" う゛ぃみんふぉ
+set viminfo=
+set viminfo+='1000                     " マークが復元される履歴の最大
+set viminfo+=<50                       " 各レジスタで保存される行数の最大値
+set viminfo+=s50                       " Kbyte単位でのフラグの最大値
+set viminfo+=h                         " viminfo ファイルの読み込み時に、'hlsearch' を無効にする。
+set viminfo+=!                         " 大文字のみで構成されるグローバル変数を保存する
+set viminfo+=n~/.vim-temp/info/viminfo " viminfo の保存場所
 
 " ウィンドウサイズの自動調整
 set noequalalways
@@ -1437,7 +1448,7 @@ set viewoptions-=options
 set keywordprg=
 
 " ++
-set history=1000
+set history=10000
 
 " Unicode の記号などを全角で表示する
 set ambiwidth=double
@@ -1470,7 +1481,7 @@ set selection=inclusive
 set grepprg=grep\ -rnIH\ --exclude-dir=.svn\ --exclude-dir=.git\ --exclude='*.json'\ --exclude='*.log'\ --exclude='*min.js'\ --exclude='*min.css'
 
 " メッセージの省略
-set shortmess=T
+set shortmess=tToOlmnrwxf
 
 " 正規表現エンジン
 set regexpengine=0 " 0=自動選択, 1=old, 2=Neko Felis Association
@@ -1480,9 +1491,6 @@ set updatetime=1000
 
 " 長すぎる行で重くなると嫌ですね
 " set synmaxcol=666
-
-" oldfile=1000
-set viminfo='1000,<50,s10,h,!
 
 " いろいろり
 set termguicolors
@@ -1531,12 +1539,12 @@ cnoremap <Del> <C-h>
 
 " override {{{
 
-" コマンドモード時にカーソル移動するのに便利ー
+" 小指を鍛えるエディタ風
 inoremap <C-a> <C-o>^
 inoremap <C-e> <C-o>$
+
+" コマンドモードの移動
 cnoremap <C-a> <Home>
-cnoremap <C-f> <Right>
-cnoremap <C-b> <Left>
 cnoremap <C-d> <Del>
 
 " 検索時に結果が中央に来るようにする
@@ -1563,8 +1571,10 @@ map gz# <Plug>(asterisk-gz#)
 nnoremap <silent> <Esc><Esc> :<C-u>set hlsearch!<CR>
 
 " for US KBD
-nnoremap ; :
-xnoremap ; :
+nnoremap ; q:
+xnoremap ; q:
+nnoremap q: :
+xnoremap q: :
 nnoremap : ;
 xnoremap : ;
 
@@ -1594,15 +1604,15 @@ nnoremap ! :Switch<CR>
 " タブ
 nnoremap gh 1gt
 
-" error
-nnoremap ,cp :cprevious<CR>
-nnoremap ,cn :cnext<CR>
-nnoremap ,cf :cfirst<CR>
-nnoremap ,cl :clast<CR>
-nnoremap ,lp :lprevious<CR>
-nnoremap ,ln :lnext<CR>
-nnoremap ,lf :lfirst<CR>
-nnoremap ,ll :llast<CR>
+" quickfix
+nnoremap <Leader>cp :cprevious<CR>
+nnoremap <Leader>cn :cnext<CR>
+nnoremap <Leader>cf :cfirst<CR>
+nnoremap <Leader>cl :clast<CR>
+nnoremap <Leader>lp :lprevious<CR>
+nnoremap <Leader>ln :lnext<CR>
+nnoremap <Leader>lf :lfirst<CR>
+nnoremap <Leader>ll :llast<CR>
 
 " 小窓を大きくする風
 nnoremap <C-w>o :MaximizeModoki<CR>
@@ -1639,7 +1649,7 @@ nnoremap <C-p> :tabprev<CR>
 cnoremap <C-g> <C-c>
 
 " like ranger
-nnoremap <expr> cd ":\<C-u>cd\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.')
+nnoremap <expr> cd ":\<C-u>cd\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.') . "\<C-f>"
 
 " 改行
 nnoremap <CR> A<CR><Esc>
@@ -1672,13 +1682,13 @@ nmap s <Leader>
 xmap s <Leader>
 
 " Migemo 検索
-noremap <Leader>/ :<C-u>Migemo<Space>
+noremap <Leader>/ :<C-u>Migemo<Space><C-f>
 
 " buffer
 nnoremap <Leader>x :<C-u>wincmd c<CR>
 
 " ref.vim
-nnoremap <Leader>R :<C-u>Ref<Space>
+nnoremap <Leader>R :<C-u>Ref<Space><C-f>
 
 " QuickRun
 nnoremap <Leader>r :<C-u>QuickRun<CR>
@@ -1686,7 +1696,7 @@ vnoremap <Leader>r :<C-u>'<,'>QuickRun<CR>
 
 " tab
 nnoremap <Leader>tn :<C-u>tabnew<CR>
-nnoremap <Leader>te :<C-u>tabedit<Space>
+nnoremap <Leader>te :tabedit<Space><C-f>
 nnoremap <Leader>tx :<C-u>tabclose<CR>
 nnoremap <Leader>tm :<C-u>tabnew<Bar>Unite -unique -buffer-name=files file_mru<CR>
 
@@ -1699,7 +1709,7 @@ xmap <Leader>o <Plug>(openbrowser-smart-search)
 nmap <Leader>hh <Plug>(quickhl-manual-this)
 nmap <Leader>hr <Plug>(quickhl-manual-reset)
 nnoremap <Leader>hd :<C-u>QuickhlManualDelete<CR>
-nnoremap <Leader>ha :<C-u>QuickhlManualAdd<Space>
+nnoremap <Leader>ha :<C-u>QuickhlManualAdd<Space><C-f>
 
 " 保存 ﾎﾟﾗﾎﾟﾗﾎﾟﾗ
 nnoremap <Leader>w :<C-u>update<CR>
@@ -1707,7 +1717,7 @@ nnoremap <Leader>W :<C-u>wall<CR>
 nnoremap <Leader>z ZZ
 
 " nox
-nnoremap <Leader>ns :<C-u>NoxSearch<Space>
+nnoremap <Leader>ns :<C-u>NoxSearch<Space><C-f>
 nnoremap <Leader>nt :<C-u>Unite nox_tag<CR>
 nnoremap <Leader>nm :<C-u>Unite nox_mlt<CR>
 nnoremap <Leader>nM :<C-u>Unite nox_mlt_source<CR>
@@ -1728,6 +1738,24 @@ nnoremap <Leader><Leader>b :<C-u>CleanupWindows<CR>
 
 " }}}
 
+" Command line window {{{
+
+autocmd CmdwinEnter * call s:initialize_command_window()
+
+function! s:initialize_command_window()
+  inoremap <buffer><expr> <Space> ambicmd#expand("\<Space>")
+  inoremap <buffer><expr> <CR>    ambicmd#expand("\<CR>")
+
+  inoremap <buffer>       <C-g>   <C-c><C-c>
+  inoremap <buffer>       <C-k>   <Up><End>
+  inoremap <buffer>       <C-l>   <Down><End>
+
+  nnoremap <buffer>       <C-g>   <C-c><C-c>
+  startinsert!
+endfunction
+
+" }}}
+
 " for plugin {{{
 
 " multiblock
@@ -1737,7 +1765,8 @@ xmap ab <Plug>(textobj-multiblock-a)
 xmap ib <Plug>(textobj-multiblock-i)
 
 " ambcmd
-cnoremap <expr> <C-o> ambicmd#expand("\<Space>")
+cnoremap <expr> <Space> ambicmd#expand("\<Space>")
+cnoremap <expr> <CR> ambicmd#expand("\<CR>")
 
 " textmanip
 xmap <C-j> <Plug>(textmanip-move-down)
@@ -1753,6 +1782,12 @@ vnoremap <Leader>> :VimShellJoinedSendString<CR>
 " Fontzoom
 nnoremap <silent> + :<C-u>Fontzoom +<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
 nnoremap <silent> - :<C-u>Fontzoom -<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
+
+" neosnippet
+imap <C-q> <Plug>(neosnippet_expand_or_jump)
+smap <C-q> <Plug>(neosnippet_expand_or_jump)
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 " }}}
 
@@ -1859,65 +1894,7 @@ call s:init_sticky_shift_by_semi_colon()
 
 " }}}
 
-" AlterCmd {{{
-
-call altercmd#load()
-
-AlterCommand a Aref
-AlterCommand ag Ag
-AlterCommand agit Agit
-AlterCommand align Alignta
-AlterCommand ar Aref
-AlterCommand bg BGrep
-AlterCommand burn Burn
-AlterCommand cap Capture
-AlterCommand cdp CdProjectRoot
-AlterCommand chmod Chmod
-AlterCommand co copen
-AlterCommand date Date
-AlterCommand execlip Execlip
-AlterCommand gita Gita
-AlterCommand jq %!jq .
-AlterCommand lein Lein
-AlterCommand ln Ln
-AlterCommand lo lopen
-AlterCommand man Man
-AlterCommand mfc MFC
-AlterCommand mkp MarkdownPreview
-AlterCommand mks MkSession
-AlterCommand noxa NoxAttach
-AlterCommand noxb NoxBrowserOpen
-AlterCommand noxc NoxCat
-AlterCommand noxd NoxDiary
-AlterCommand noxl NoxLocationOpen
-AlterCommand noxm NoxMlt
-AlterCommand noxn NoxNew
-AlterCommand noxo NoxOpen
-AlterCommand noxp NoxPreview
-AlterCommand noxs NoxSearch
-AlterCommand noxt NoxTagAdd
-AlterCommand noxtu NoxTagUpdate
-AlterCommand noxu NoxUnugly
-AlterCommand nyancat Unite -update-time=50 -winheight=25 nyancat_anim
-AlterCommand qk QuicKill
-AlterCommand qr QuickRun
-AlterCommand rc Rc
-AlterCommand ref Ref
-AlterCommand rep Repanty
-AlterCommand res Restart
-AlterCommand sorc Sorc
-AlterCommand ssf SSF
-AlterCommand tm tabmove
-AlterCommand vf VimFiler
-AlterCommand vfe VimFileExplorer
-AlterCommand vs VimShell
-AlterCommand w1 w!
-AlterCommand w2 w!
-AlterCommand w3 w!
-
-" }}}
-
-" submode.vim {{{
+" submode {{{
 
 " from http://d.hatena.ne.jp/tyru/20100502/vim_mappings
 
@@ -2071,7 +2048,7 @@ endfunction
 "   :'<,'>Ln
 "   :Ln
 "   :Ln :t
-command! -bar -range -nargs=1 Ln call s:ln(<line1>, <Line2>, <q-args>)
+command! -bar -range -nargs=? Ln call s:ln(<line1>, <Line2>, <q-args>)
 
 " }}}
 
@@ -2092,39 +2069,6 @@ function! s:numeronym(word)
 endfunction
 
 command! -bar -nargs=* Numeronym call s:numeronym(<q-args>)
-
-" }}}
-
-" XMonad xc を使ってウィンドウをリフレッシュ {{{
-
-augroup XMonadRefreshWindow
-  autocmd!
-augroup END
-
-" 念の為) この関数が実行されるまでに、'updatetime' が変更されても上書きされてしまう問題有り。
-function! s:xmonad_refresh_window_delayed()
-  silent call vimproc#system('~/.xmonad/bin/xc command refresh-window')
-
-  let &updatetime = s:xmonad_refresh_window_updatetime_backup
-  unlet s:xmonad_refresh_window_updatetime_backup
-  autocmd! XMonadRefreshWindow
-endfunction
-
-function! s:xmonad_refresh_window()
-  if !has('gui_running')
-    return
-  endif
-
-  if exists('s:xmonad_refresh_window_updatetime_backup')
-    return
-  endif
-
-  let s:xmonad_refresh_window_updatetime_backup = &updatetime
-  set updatetime=200
-  autocmd XMonadRefreshWindow CursorHold * call s:xmonad_refresh_window_delayed()
-endfunction
-
-command! -bar XMonadRefreshWindow call s:xmonad_refresh_window()
 
 " }}}
 
@@ -2627,6 +2571,24 @@ endfunction
 
 " }}}
 
+" XMonad xc を使ってウィンドウをリフレッシュ {{{
+
+function! s:xmonad_refresh_window_delayed(...)
+  silent call vimproc#system('~/.xmonad/bin/xc command refresh-window')
+endfunction
+
+function! s:xmonad_refresh_window()
+  if !has('gui_running')
+    return
+  endif
+
+  call timer_start(200, function('s:xmonad_refresh_window_delayed'))
+endfunction
+
+command! -bar XMonadRefreshWindow call s:xmonad_refresh_window()
+
+" }}}
+
 
 " from ~/.vim/part/autocmd.vim
 "=============================================
@@ -2644,9 +2606,6 @@ MeowtoCmd QuickFixCmdPost * cwin
 " 折りたたみの保存 - http://vim-users.jp/2009/10/hack84/
 MeowtoCmd BufWritePost * if expand('%') != '' && &buftype !~ 'nofile' | mkview | endif
 MeowtoCmd BufRead * if expand('%') != '' && &buftype !~ 'nofile' | silent loadview | endif
-
-" セッションロード後に、XMonad 的なリフレッシュ
-MeowtoCmd SessionLoadPost * XMonadRefreshWindow
 
 MeowtoCmd BufNewFile,BufRead *.nox set filetype=nox
 
@@ -3000,47 +2959,47 @@ let g:unite_source_alias_aliases = {
 
 nnoremap <Space>          :<C-u>Unite -buffer-name=files -default-action=switch buffer file_rec/async file/new<CR>
 nnoremap <Leader><Space>  :<C-u>Unite -buffer-name=files -default-action=tabswitch buffer file_rec/async file/new<CR>
-nnoremap <Leader>uu :<C-u>Unite<Space>
-nnoremap <Leader>U :<C-u>UniteResume<CR>
-nnoremap <Leader>b :<C-u>Unite -buffer-name=files buffer<CR>
-nnoremap <Leader>B :<C-u>Unite tab:no-current<CR>
-nnoremap <Leader>ua :<C-u>Unite grep:.<CR>
-nnoremap <Leader>uA :<C-U>Unite -auto-preview grep:.<CR>
-nnoremap <Leader>ub :<C-u>Unite bookmark<CR>
-nnoremap <Leader>uC :<C-u>Unite colorscheme -auto-preview<CR>
-nnoremap <Leader>uc :<C-u>Unite -default-action=edit command<CR>
-nnoremap <Leader>ud :<C-u>Unite -unique -buffer-name=files -default-action=cd<Space>directory_mru<CR>
-nnoremap <Leader>uF :<C-u>Unite -unique -buffer-name=files file<CR>
-nnoremap <Leader>uf :<C-u>Unite -unique -buffer-name=files file_rec/async<CR>
-nnoremap <Leader>ug :<C-u>Unite file_rec/git<CR>
-nnoremap <Leader>uh :<C-u>Unite history/command -default-action=edit<CR>
-nnoremap <Leader>u: :<C-u>Unite history/command -default-action=edit<CR>
-nnoremap <Leader>uj :<C-u>Unite -auto-preview jump<CR>
-nnoremap <Leader>uJ :<C-u>Unite junkfile<CR>
-nnoremap <Leader>ul :<C-u>Unite -no-quit -auto-preview location_list<CR>
-nnoremap <Leader>uL :<C-u>Unite line<CR>
-nnoremap <Leader>um :<C-u>Unite -unique -buffer-name=files file_mru<CR>
-nnoremap <Leader>uM :<C-u>Unite mapping<CR>
-nnoremap <Leader>uo :<C-u>Unite outline<CR>
-nnoremap <Leader>uq :<C-u>Unite -auto-preview quickfix<CR>
-nnoremap <Leader>ur :<C-u>Unite quickrun_config -default-action=set_global_quickrun_config<CR>
-nnoremap <Leader>uR :<C-u>Unite quickrun_config -default-action=execute<CR>
-nnoremap <Leader>us :<C-u>Unite file_rec:~/.vim/part<CR>
-nnoremap <Leader>uS :<C-u>Unite located_session<CR>
-nnoremap <Leader>uT :<C-u>Unite tab:no-current<CR>
-nnoremap <Leader>ut :<C-u>Unite tag<CR>
-nnoremap <Leader>uv :<C-u>Unite variable<CR>
-nnoremap <Leader>uw :<C-u>Unite window:no-current<CR>
-nnoremap <Leader>uy :<C-u>Unite history/yank<CR>
-nnoremap <Leader>u/ :<C-u>Unite -buffer-name=search line:forward<CR>
-nnoremap <Leader>u? :<C-u>Unite -buffer-name=search line:backward<CR>
-nnoremap <Leader>uz :<C-u>Unite -default-action=append zsh_history<CR>
-nnoremap <Leader>uZ :<C-u>Unite -default-action=append output/shellcmd:tail\ -n100\ /tmp/terminal-log/all.log<CR>
+nnoremap <Leader>uuu      :<C-u>Unite<Space><C-f>
+nnoremap <Leader>U        :<C-u>UniteResume<CR>
+nnoremap <Leader>b        :<C-u>Unite -buffer-name=files buffer<CR>
+nnoremap <Leader>B        :<C-u>Unite tab:no-current<CR>
+nnoremap <Leader>ua       :<C-u>Unite grep:.<CR>
+nnoremap <Leader>uA       :<C-U>Unite -auto-preview grep:.<CR>
+nnoremap <Leader>ub       :<C-u>Unite bookmark<CR>
+nnoremap <Leader>uC       :<C-u>Unite colorscheme -auto-preview<CR>
+nnoremap <Leader>uc       :<C-u>Unite -default-action=edit command<CR>
+nnoremap <Leader>ud       :<C-u>Unite -unique -buffer-name=files -default-action=cd<Space>directory_mru<CR>
+nnoremap <Leader>uF       :<C-u>Unite -unique -buffer-name=files file<CR>
+nnoremap <Leader>uf       :<C-u>Unite -unique -buffer-name=files file_rec/async<CR>
+nnoremap <Leader>ug       :<C-u>Unite file_rec/git<CR>
+nnoremap <Leader>uh       :<C-u>Unite history/command -default-action=edit<CR>
+nnoremap <Leader>u:       :<C-u>Unite history/command -default-action=edit<CR>
+nnoremap <Leader>uj       :<C-u>Unite -auto-preview jump<CR>
+nnoremap <Leader>uJ       :<C-u>Unite junkfile<CR>
+nnoremap <Leader>ul       :<C-u>Unite -no-quit -auto-preview location_list<CR>
+nnoremap <Leader>uL       :<C-u>Unite line<CR>
+nnoremap <Leader>um       :<C-u>Unite -unique -buffer-name=files file_mru<CR>
+nnoremap <Leader>uM       :<C-u>Unite mapping<CR>
+nnoremap <Leader>uo       :<C-u>Unite outline<CR>
+nnoremap <Leader>uq       :<C-u>Unite -auto-preview quickfix<CR>
+nnoremap <Leader>ur       :<C-u>Unite quickrun_config -default-action=set_global_quickrun_config<CR>
+nnoremap <Leader>uR       :<C-u>Unite quickrun_config -default-action=execute<CR>
+nnoremap <Leader>us       :<C-u>Unite file_rec:~/.vim/part<CR>
+nnoremap <Leader>uS       :<C-u>Unite located_session<CR>
+nnoremap <Leader>uT       :<C-u>Unite tab:no-current<CR>
+nnoremap <Leader>ut       :<C-u>Unite tag<CR>
+nnoremap <Leader>uv       :<C-u>Unite variable<CR>
+nnoremap <Leader>uw       :<C-u>Unite window:no-current<CR>
+nnoremap <Leader>uy       :<C-u>Unite history/yank<CR>
+nnoremap <Leader>u/       :<C-u>Unite -buffer-name=search line:forward<CR>
+nnoremap <Leader>u?       :<C-u>Unite -buffer-name=search line:backward<CR>
+nnoremap <Leader>uz       :<C-u>Unite -default-action=append zsh_history<CR>
+nnoremap <Leader>uZ       :<C-u>Unite -default-action=append output/shellcmd:tail\ -n100\ /tmp/terminal-log/all.log<CR>
 
-nnoremap [s :UnitePrevious<CR>
-nnoremap ]s :UniteNext<CR>
-nnoremap [S :UniteFirst<CR>
-nnoremap ]S :UniteLast<CR>
+nnoremap <Leader>up :UnitePrevious<CR>
+nnoremap <Leader>un :UniteNext<CR>
+nnoremap <Leader>uf :UniteFirst<CR>
+nnoremap <Leader>ul :UniteLast<CR>
 
 " }}}
 
@@ -3389,6 +3348,21 @@ let g:watchdogs_check_CursorHold_enable = 0
 call watchdogs#setup(g:quickrun_config)
 
 
+" quickrun のバッファ毎の設定をしてみる
+function! s:set_quickrun_config()
+  if filereadable('Cargo.toml')
+    let l:name = 'rust/cargo/build'
+  elseif filereadable('Makefile')
+    let l:name = 'make'
+  else
+    return
+  endif
+
+  let b:quickrun_config = g:quickrun_config[l:name]
+endfunction
+autocmd Meowrc BufReadPost * call s:set_quickrun_config()
+
+
 " from ~/.vim/part/plugin/lexima.vim
 "================================
 " |\  |\  /|   |   | |\  /| |\
@@ -3475,9 +3449,6 @@ set guioptions=gitc
 "  1 hoge.vim
 set guitablabel=%N:\ %f
 
-" 一行やろ?
-set cmdheight=1
-
 " }}}
 
 " フォント {{{
@@ -3542,3 +3513,5 @@ let g:lightline.colorscheme = 'solarized'
 " あぱ
 filetype plugin indent on
 syntax enable
+
+"                                -*- coding: utf-8 -*-

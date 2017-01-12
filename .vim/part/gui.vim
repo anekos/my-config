@@ -18,9 +18,6 @@ set guioptions=gitc
 "  1 hoge.vim
 set guitablabel=%N:\ %f
 
-" 一行やろ?
-set cmdheight=1
-
 " }}}
 
 " フォント {{{

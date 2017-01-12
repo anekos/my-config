@@ -111,7 +111,7 @@ endfunction
 "   :'<,'>Ln
 "   :Ln
 "   :Ln :t
-command! -bar -range -nargs=1 Ln call s:ln(<line1>, <Line2>, <q-args>)
+command! -bar -range -nargs=? Ln call s:ln(<line1>, <Line2>, <q-args>)
 
 " }}}
 
@@ -132,39 +132,6 @@ function! s:numeronym(word)
 endfunction
 
 command! -bar -nargs=* Numeronym call s:numeronym(<q-args>)
-
-" }}}
-
-" XMonad xc を使ってウィンドウをリフレッシュ {{{
-
-augroup XMonadRefreshWindow
-  autocmd!
-augroup END
-
-" 念の為) この関数が実行されるまでに、'updatetime' が変更されても上書きされてしまう問題有り。
-function! s:xmonad_refresh_window_delayed()
-  silent call vimproc#system('~/.xmonad/bin/xc command refresh-window')
-
-  let &updatetime = s:xmonad_refresh_window_updatetime_backup
-  unlet s:xmonad_refresh_window_updatetime_backup
-  autocmd! XMonadRefreshWindow
-endfunction
-
-function! s:xmonad_refresh_window()
-  if !has('gui_running')
-    return
-  endif
-
-  if exists('s:xmonad_refresh_window_updatetime_backup')
-    return
-  endif
-
-  let s:xmonad_refresh_window_updatetime_backup = &updatetime
-  set updatetime=200
-  autocmd XMonadRefreshWindow CursorHold * call s:xmonad_refresh_window_delayed()
-endfunction
-
-command! -bar XMonadRefreshWindow call s:xmonad_refresh_window()
 
 " }}}
 
@@ -664,5 +631,23 @@ function! s:repanty() abort
   echo system('panty summon --send ":so /tmp/repanty.vim<CR>"')
   quitall
 endfunction
+
+" }}}
+
+" XMonad xc を使ってウィンドウをリフレッシュ {{{
+
+function! s:xmonad_refresh_window_delayed(...)
+  silent call vimproc#system('~/.xmonad/bin/xc command refresh-window')
+endfunction
+
+function! s:xmonad_refresh_window()
+  if !has('gui_running')
+    return
+  endif
+
+  call timer_start(200, function('s:xmonad_refresh_window_delayed'))
+endfunction
+
+command! -bar XMonadRefreshWindow call s:xmonad_refresh_window()
 
 " }}}

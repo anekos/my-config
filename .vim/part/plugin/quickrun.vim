@@ -226,3 +226,18 @@ let g:Qfstatusline#UpdateCmd = function('lightline#update')
 let g:watchdogs_check_BufWritePost_enables = {'sh': 1, 'scala': 0}
 let g:watchdogs_check_CursorHold_enable = 0
 call watchdogs#setup(g:quickrun_config)
+
+
+" quickrun のバッファ毎の設定をしてみる
+function! s:set_quickrun_config()
+  if filereadable('Cargo.toml')
+    let l:name = 'rust/cargo/build'
+  elseif filereadable('Makefile')
+    let l:name = 'make'
+  else
+    return
+  endif
+
+  let b:quickrun_config = g:quickrun_config[l:name]
+endfunction
+autocmd Meowrc BufReadPost * call s:set_quickrun_config()

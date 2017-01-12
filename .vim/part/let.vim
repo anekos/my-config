@@ -51,14 +51,6 @@ let g:brightest#enable_clear_highlight_on_CursorMoved = 1
 
 " }}}
 
-" Calendar.vim {{{
-
-let g:calendar_first_day = 'monday'
-let g:calendar_time_zone = '+0900'
-let g:calendar_date_endian = 'big'
-
-" }}}
-
 " Capture {{{
 
 let g:capture_open_command = 'tabnew'
@@ -89,6 +81,22 @@ let g:comfortable_motion_no_default_key_mappings = 0
 
 " }}}
 
+" commitia {{{
+
+let g:committia_open_only_vim_starting = 0
+
+
+" https://github.com/rhysd/committia.vim
+let g:committia_hooks = {}
+function! g:committia_hooks.edit_open(info)
+    setlocal spell
+
+    imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
+    imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
+endfunction
+
+" }}}
+
 " ft-clojure {{{
 
 let g:clojure#indent#definiens = '\%(letfn\|proxy\|reify\)$\|.\+/def.*'
@@ -97,7 +105,7 @@ let g:clojure#indent#special = '\%(^\|/\)def'
 " }}}
 
 " fontzoom {{{
-"
+
 let g:fontzoom_no_default_key_mappings=1
 
 " }}}
@@ -186,19 +194,19 @@ let g:nox_diary_id_base = 'diary/'
 
 " manga-osort {{{
 
-let g:manga_osort_default_options = {'ignorecase' : 1}
+let g:manga_osort_default_options = {'ignorecase': 1}
 let g:manga_osort_alias = {
-  \   '#zsh' : {'pattern' : '^#', 'key' : 1},
-  \   '#haskell-import' : {'pattern' : '^import', 'keyprefix' : 'import\s\+\(qualified\s\)\?'},
-  \   '#paragraph' : {'pattern' : '^\S'},
-  \   '#neobundle' : {'keyprefix' : 'NeoBundle\S*', 'pattern' : 'NeoBundle'},
-  \   '#vimrc' : {'pattern' : '^"'},
-  \   '#common-list-definition' : {'pattern' : '^('},
-  \   '#nox-definiton-list' : {'pattern' : '^[^\s:]', 'key': 1}
-  \ }
+\   '#zsh': {'pattern': '^#', 'key': 1},
+\   '#haskell-import': {'pattern': '^import', 'keyprefix': 'import\s\+\(qualified\s\)\?'},
+\   '#paragraph': {'pattern': '^\S'},
+\   '#neobundle': {'keyprefix': 'NeoBundle\S*', 'pattern': 'NeoBundle'},
+\   '#vimrc': {'pattern': '^"'},
+\   '#common-list-definition': {'pattern': '^('},
+\   '#nox-definiton-list': {'pattern': '^[^\s:]', 'key': 1}
+\ }
 let g:manga_osort_context = [
-  \   {'pattern' : '^NeoBundle ', 'arguments': '#neobundle'},
-  \ ]
+\   {'pattern': '^NeoBundle ', 'arguments': '#neobundle'},
+\ ]
 
 " }}}
 
@@ -263,17 +271,6 @@ augroup END
 " NeoSnippet {{{
 
 let g:neosnippet#snippets_directory = '~/.vim/snippets'
-
-imap <C-q>     <Plug>(neosnippet_expand_or_jump)
-smap <C-q>     <Plug>(neosnippet_expand_or_jump)
-
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
 
 " }}}
 
@@ -563,6 +560,12 @@ let g:sonictemplate_vim_template_dir = ['$HOME/.vim/template']
 
 " }}}
 
+" surround {{{
+
+let g:surround_no_insert_mappings = 1
+
+" }}}
+
 " Table mode {{{
 
 let g:table_mode_disable_mappings = 0
@@ -753,19 +756,19 @@ let g:user_emmet_mode = 'inv'
 let g:user_emmet_leader_key = '<C-y>'
 
 let g:user_emmet_settings = {
-\   'indentation' : '  ',
-\   'ruby' : {
-\     'aliases' : {
-\       'req' : 'require '
+\   'indentation': '  ',
+\   'ruby': {
+\     'aliases': {
+\       'req': 'require '
 \     },
 \   },
-\   'perl' : {
-\     'aliases' : {
-\       'req' : 'require '
+\   'perl': {
+\     'aliases': {
+\       'req': 'require '
 \     },
-\     'snippets' : {
-\       'use' : "use strict\nuse warnings\n\n",
-\       'warn' : "warn \"|\";",
+\     'snippets': {
+\       'use': "use strict\nuse warnings\n\n",
+\       'warn': "warn \"|\";",
 \     }
 \   }
 \ }

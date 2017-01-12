@@ -114,3 +114,5 @@ endfunction
 call s:sources(g:my_rc_files)
 
 " }}}
+
+"                                -*- coding: utf-8 -*-

@@ -15,9 +15,6 @@ MeowtoCmd QuickFixCmdPost * cwin
 MeowtoCmd BufWritePost * if expand('%') != '' && &buftype !~ 'nofile' | mkview | endif
 MeowtoCmd BufRead * if expand('%') != '' && &buftype !~ 'nofile' | silent loadview | endif
 
-" セッションロード後に、XMonad 的なリフレッシュ
-MeowtoCmd SessionLoadPost * XMonadRefreshWindow
-
 MeowtoCmd BufNewFile,BufRead *.nox set filetype=nox
 
 " ファイルが他で更新されていないかチェックする

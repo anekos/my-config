@@ -23,12 +23,12 @@ cnoremap <Del> <C-h>
 
 " override {{{
 
-" コマンドモード時にカーソル移動するのに便利ー
+" 小指を鍛えるエディタ風
 inoremap <C-a> <C-o>^
 inoremap <C-e> <C-o>$
+
+" コマンドモードの移動
 cnoremap <C-a> <Home>
-cnoremap <C-f> <Right>
-cnoremap <C-b> <Left>
 cnoremap <C-d> <Del>
 
 " 検索時に結果が中央に来るようにする
@@ -55,8 +55,10 @@ map gz# <Plug>(asterisk-gz#)
 nnoremap <silent> <Esc><Esc> :<C-u>set hlsearch!<CR>
 
 " for US KBD
-nnoremap ; :
-xnoremap ; :
+nnoremap ; q:
+xnoremap ; q:
+nnoremap q: :
+xnoremap q: :
 nnoremap : ;
 xnoremap : ;
 
@@ -86,15 +88,15 @@ nnoremap ! :Switch<CR>
 " タブ
 nnoremap gh 1gt
 
-" error
-nnoremap ,cp :cprevious<CR>
-nnoremap ,cn :cnext<CR>
-nnoremap ,cf :cfirst<CR>
-nnoremap ,cl :clast<CR>
-nnoremap ,lp :lprevious<CR>
-nnoremap ,ln :lnext<CR>
-nnoremap ,lf :lfirst<CR>
-nnoremap ,ll :llast<CR>
+" quickfix
+nnoremap <Leader>cp :cprevious<CR>
+nnoremap <Leader>cn :cnext<CR>
+nnoremap <Leader>cf :cfirst<CR>
+nnoremap <Leader>cl :clast<CR>
+nnoremap <Leader>lp :lprevious<CR>
+nnoremap <Leader>ln :lnext<CR>
+nnoremap <Leader>lf :lfirst<CR>
+nnoremap <Leader>ll :llast<CR>
 
 " 小窓を大きくする風
 nnoremap <C-w>o :MaximizeModoki<CR>
@@ -131,7 +133,7 @@ nnoremap <C-p> :tabprev<CR>
 cnoremap <C-g> <C-c>
 
 " like ranger
-nnoremap <expr> cd ":\<C-u>cd\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.')
+nnoremap <expr> cd ":\<C-u>cd\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.') . "\<C-f>"
 
 " 改行
 nnoremap <CR> A<CR><Esc>
@@ -164,13 +166,13 @@ nmap s <Leader>
 xmap s <Leader>
 
 " Migemo 検索
-noremap <Leader>/ :<C-u>Migemo<Space>
+noremap <Leader>/ :<C-u>Migemo<Space><C-f>
 
 " buffer
 nnoremap <Leader>x :<C-u>wincmd c<CR>
 
 " ref.vim
-nnoremap <Leader>R :<C-u>Ref<Space>
+nnoremap <Leader>R :<C-u>Ref<Space><C-f>
 
 " QuickRun
 nnoremap <Leader>r :<C-u>QuickRun<CR>
@@ -178,7 +180,7 @@ vnoremap <Leader>r :<C-u>'<,'>QuickRun<CR>
 
 " tab
 nnoremap <Leader>tn :<C-u>tabnew<CR>
-nnoremap <Leader>te :<C-u>tabedit<Space>
+nnoremap <Leader>te :tabedit<Space><C-f>
 nnoremap <Leader>tx :<C-u>tabclose<CR>
 nnoremap <Leader>tm :<C-u>tabnew<Bar>Unite -unique -buffer-name=files file_mru<CR>
 
@@ -191,7 +193,7 @@ xmap <Leader>o <Plug>(openbrowser-smart-search)
 nmap <Leader>hh <Plug>(quickhl-manual-this)
 nmap <Leader>hr <Plug>(quickhl-manual-reset)
 nnoremap <Leader>hd :<C-u>QuickhlManualDelete<CR>
-nnoremap <Leader>ha :<C-u>QuickhlManualAdd<Space>
+nnoremap <Leader>ha :<C-u>QuickhlManualAdd<Space><C-f>
 
 " 保存 ﾎﾟﾗﾎﾟﾗﾎﾟﾗ
 nnoremap <Leader>w :<C-u>update<CR>
@@ -199,7 +201,7 @@ nnoremap <Leader>W :<C-u>wall<CR>
 nnoremap <Leader>z ZZ
 
 " nox
-nnoremap <Leader>ns :<C-u>NoxSearch<Space>
+nnoremap <Leader>ns :<C-u>NoxSearch<Space><C-f>
 nnoremap <Leader>nt :<C-u>Unite nox_tag<CR>
 nnoremap <Leader>nm :<C-u>Unite nox_mlt<CR>
 nnoremap <Leader>nM :<C-u>Unite nox_mlt_source<CR>
@@ -220,6 +222,24 @@ nnoremap <Leader><Leader>b :<C-u>CleanupWindows<CR>
 
 " }}}
 
+" Command line window {{{
+
+autocmd CmdwinEnter * call s:initialize_command_window()
+
+function! s:initialize_command_window()
+  inoremap <buffer><expr> <Space> ambicmd#expand("\<Space>")
+  inoremap <buffer><expr> <CR>    ambicmd#expand("\<CR>")
+
+  inoremap <buffer>       <C-g>   <C-c><C-c>
+  inoremap <buffer>       <C-k>   <Up><End>
+  inoremap <buffer>       <C-l>   <Down><End>
+
+  nnoremap <buffer>       <C-g>   <C-c><C-c>
+  startinsert!
+endfunction
+
+" }}}
+
 " for plugin {{{
 
 " multiblock
@@ -229,7 +249,8 @@ xmap ab <Plug>(textobj-multiblock-a)
 xmap ib <Plug>(textobj-multiblock-i)
 
 " ambcmd
-cnoremap <expr> <C-o> ambicmd#expand("\<Space>")
+cnoremap <expr> <Space> ambicmd#expand("\<Space>")
+cnoremap <expr> <CR> ambicmd#expand("\<CR>")
 
 " textmanip
 xmap <C-j> <Plug>(textmanip-move-down)
@@ -245,6 +266,12 @@ vnoremap <Leader>> :VimShellJoinedSendString<CR>
 " Fontzoom
 nnoremap <silent> + :<C-u>Fontzoom +<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
 nnoremap <silent> - :<C-u>Fontzoom -<C-r>=v:count1<CR><CR>:XMonadRefreshWindow<CR>
+
+" neosnippet
+imap <C-q> <Plug>(neosnippet_expand_or_jump)
+smap <C-q> <Plug>(neosnippet_expand_or_jump)
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 " }}}
 
@@ -352,65 +379,7 @@ call s:init_sticky_shift_by_semi_colon()
 
 " }}}
 
-" AlterCmd {{{
-
-call altercmd#load()
-
-AlterCommand a Aref
-AlterCommand ag Ag
-AlterCommand agit Agit
-AlterCommand align Alignta
-AlterCommand ar Aref
-AlterCommand bg BGrep
-AlterCommand burn Burn
-AlterCommand cap Capture
-AlterCommand cdp CdProjectRoot
-AlterCommand chmod Chmod
-AlterCommand co copen
-AlterCommand date Date
-AlterCommand execlip Execlip
-AlterCommand gita Gita
-AlterCommand jq %!jq .
-AlterCommand lein Lein
-AlterCommand ln Ln
-AlterCommand lo lopen
-AlterCommand man Man
-AlterCommand mfc MFC
-AlterCommand mkp MarkdownPreview
-AlterCommand mks MkSession
-AlterCommand noxa NoxAttach
-AlterCommand noxb NoxBrowserOpen
-AlterCommand noxc NoxCat
-AlterCommand noxd NoxDiary
-AlterCommand noxl NoxLocationOpen
-AlterCommand noxm NoxMlt
-AlterCommand noxn NoxNew
-AlterCommand noxo NoxOpen
-AlterCommand noxp NoxPreview
-AlterCommand noxs NoxSearch
-AlterCommand noxt NoxTagAdd
-AlterCommand noxtu NoxTagUpdate
-AlterCommand noxu NoxUnugly
-AlterCommand nyancat Unite -update-time=50 -winheight=25 nyancat_anim
-AlterCommand qk QuicKill
-AlterCommand qr QuickRun
-AlterCommand rc Rc
-AlterCommand ref Ref
-AlterCommand rep Repanty
-AlterCommand res Restart
-AlterCommand sorc Sorc
-AlterCommand ssf SSF
-AlterCommand tm tabmove
-AlterCommand vf VimFiler
-AlterCommand vfe VimFileExplorer
-AlterCommand vs VimShell
-AlterCommand w1 w!
-AlterCommand w2 w!
-AlterCommand w3 w!
-
-" }}}
-
-" submode.vim {{{
+" submode {{{
 
 " from http://d.hatena.ne.jp/tyru/20100502/vim_mappings
 
