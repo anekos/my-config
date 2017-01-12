@@ -6,6 +6,11 @@
 " |   | /     \ |     |  |   |   |   |    |
 "===========================================
 
+
+if !(has('cryptv') && v:version >= 800)
+  finish
+endif
+
 let g:myline = {}
 
 
@@ -126,7 +131,7 @@ endfunction
 
 function! g:myline.pokemode()
   let l:mode = lightline#mode()
-  if has('cryptv') && l:mode ==# 'NORMAL'
+  if l:mode ==# 'NORMAL'
     return pokemon#getdaze()
   else
     return l:mode
