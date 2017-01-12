@@ -228,13 +228,14 @@ autocmd CmdwinEnter * call s:initialize_command_window()
 
 function! s:initialize_command_window()
   inoremap <buffer><expr> <Space> ambicmd#expand("\<Space>")
-  inoremap <buffer><expr> <CR>    ambicmd#expand("\<CR>")
+  inoremap <buffer><expr> <CR>    ambicmd#expand("\<CR>\<CR>")
 
   inoremap <buffer>       <C-g>   <C-c><C-c>
   inoremap <buffer>       <C-k>   <Up><End>
   inoremap <buffer>       <C-l>   <Down><End>
 
   nnoremap <buffer>       <C-g>   <C-c><C-c>
+
   startinsert!
 endfunction
 

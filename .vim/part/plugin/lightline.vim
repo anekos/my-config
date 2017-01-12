@@ -37,10 +37,10 @@ let g:lightline = {
 \   'mode_map': {'c': 'NORMAL'},
 \   'active': {
 \     'left': [
-\       ['readonly', 'filename', 'modified'],
+\       ['readonly', 'filename', 'checker', 'modified'],
 \       ['git_branch', 'git_traffic', 'git_status'],
 \       ['mode', 'paste'],
-\       ['syntaxcheck']
+\       ['checker']
 \     ],
 \     'right': [
 \       ['lineinfo'],
@@ -64,10 +64,10 @@ let g:lightline = {
 \     'git_status': 'g:myline.git_status',
 \   },
 \   'component_expand': {
-\     'syntaxcheck': 'qfstatusline#Update',
+\     'checker': 'qfstatusline#Update',
 \   },
 \   'component_type': {
-\     'syntaxcheck': 'error',
+\     'checker': 'error',
 \   },
 \   'tab_component_function': {
 \     'tabfilename': 'MyLineTabFileName'
@@ -121,6 +121,8 @@ endfunction
 function! g:myline.charCode()
   return winwidth(0) > 90 ? GetCharCode() : ''
 endfunction
+
+let g:Qfstatusline#UpdateCmd = function('lightline#update')
 
 " FIXME
 function! MyLineTabFileName(n)

@@ -77,6 +77,7 @@ Plug 'osyo-manga/vim-watchdogs'         " Syntax Checker
 Plug 'thinca/vim-qfreplace'             " quickfix 上で r を押して、元ファイルを置換する
 Plug 'thinca/vim-quickrun'              " くいっくるん
 Plug 'tyru/caw.vim'                     " コメントアウトするやつ
+Plug 'dannyob/quickfixstatus'           " quickfix の該当行にいくと、エラー内容をネコーする
 
 " }}}
 

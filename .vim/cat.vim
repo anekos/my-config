@@ -944,6 +944,7 @@ Plug 'osyo-manga/vim-watchdogs'         " Syntax Checker
 Plug 'thinca/vim-qfreplace'             " quickfix 上で r を押して、元ファイルを置換する
 Plug 'thinca/vim-quickrun'              " くいっくるん
 Plug 'tyru/caw.vim'                     " コメントアウトするやつ
+Plug 'dannyob/quickfixstatus'           " quickfix の該当行にいくと、エラー内容をネコーする
 
 " }}}
 
@@ -1756,13 +1757,14 @@ autocmd CmdwinEnter * call s:initialize_command_window()
 
 function! s:initialize_command_window()
   inoremap <buffer><expr> <Space> ambicmd#expand("\<Space>")
-  inoremap <buffer><expr> <CR>    ambicmd#expand("\<CR>")
+  inoremap <buffer><expr> <CR>    ambicmd#expand("\<CR>\<CR>")
 
   inoremap <buffer>       <C-g>   <C-c><C-c>
   inoremap <buffer>       <C-k>   <Up><End>
   inoremap <buffer>       <C-l>   <Down><End>
 
   nnoremap <buffer>       <C-g>   <C-c><C-c>
+
   startinsert!
 endfunction
 
@@ -2612,8 +2614,6 @@ command! -bar XMonadRefreshWindow call s:xmonad_refresh_window()
 "=============================================
 
 
-" quickfix
-MeowtoCmd QuickFixCmdPost * cwin
 
 " 折りたたみの保存 - http://vim-users.jp/2009/10/hack84/
 MeowtoCmd BufWritePost * if expand('%') != '' && &buftype !~ 'nofile' | mkview | endif
@@ -2757,10 +2757,10 @@ let g:lightline = {
 \   'mode_map': {'c': 'NORMAL'},
 \   'active': {
 \     'left': [
-\       ['readonly', 'filename', 'modified'],
+\       ['readonly', 'filename', 'checker', 'modified'],
 \       ['git_branch', 'git_traffic', 'git_status'],
 \       ['mode', 'paste'],
-\       ['syntaxcheck']
+\       ['checker']
 \     ],
 \     'right': [
 \       ['lineinfo'],
@@ -2784,10 +2784,10 @@ let g:lightline = {
 \     'git_status': 'g:myline.git_status',
 \   },
 \   'component_expand': {
-\     'syntaxcheck': 'qfstatusline#Update',
+\     'checker': 'qfstatusline#Update',
 \   },
 \   'component_type': {
-\     'syntaxcheck': 'error',
+\     'checker': 'error',
 \   },
 \   'tab_component_function': {
 \     'tabfilename': 'MyLineTabFileName'
@@ -2841,6 +2841,8 @@ endfunction
 function! g:myline.charCode()
   return winwidth(0) > 90 ? GetCharCode() : ''
 endfunction
+
+let g:Qfstatusline#UpdateCmd = function('lightline#update')
 
 " FIXME
 function! MyLineTabFileName(n)
@@ -3315,13 +3317,21 @@ let g:quickrun_config = {
 \     'type': executable('vint') ? 'watchdogs_checker/vint' : '',
 \   },
 \   'rust': {
-\     'type': 'rust/cargo/build'
+\     'type': 'rust/cargo/quickfix'
+\   },
+\   'rust/watchdogs_checker': {
+\     'type': 'rust/cargo/quickfix',
+\     'outputter': 'quickfix',
 \   },
 \   'rust/rustc': {
 \     'command': 'rustc',
 \     'exec': ['RUST_LOG=error %c %o %s -o %s:p:r', '%s:p:r %a'],
 \     'tempfile': '%{tempname()}.rs',
 \     'hook/sweep/files': '%S:p:r',
+\   },
+\   'rust/cargo/quickfix': {
+\     'command': 'cargo',
+\     'exec': 'RUST_LOG=error %c quickfix %o',
 \   },
 \   'rust/cargo/build': {
 \     'command': 'cargo',
@@ -3345,11 +3355,11 @@ let g:quickrun_config = {
 \	  'watchdogs_checker/_' : {
 \     'outputter': 'quickfix',
 \	  	'outputter/quickfix/open_cmd': 'HierStart',
-\     'hook/echo/enable' : 1,
+\     'hook/echo/enable': 1,
 \     'hook/echo/output_failure': '> Some Errors Found!!!!',
 \     'hook/echo/output_success': '> No Errors Found.',
-\     'hook/qfstatusline_update/enable_exit' : 1,
-\     'hook/qfstatusline_update/priority_exit' : 4,
+\     'hook/qfstatusline_update/enable_exit': 1,
+\     'hook/qfstatusline_update/priority_exit': 4,
 \	  },
 \   'watchdogs_checker/vint' : {
 \     'command': 'vint',
@@ -3373,7 +3383,7 @@ let g:Qfstatusline#UpdateCmd = function('lightline#update')
 
 " http://d.hatena.ne.jp/osyo-manga/20120919/1348054752 - shabadou.vim を使って quickrun.vim をカスタマイズしよう - C++でゲームプログラミング
 
-let g:watchdogs_check_BufWritePost_enables = {'sh': 1, 'scala': 0}
+let g:watchdogs_check_BufWritePost_enables = {'sh': 1, 'scala': 0, 'rust': 1}
 let g:watchdogs_check_CursorHold_enable = 0
 call watchdogs#setup(g:quickrun_config)
 
@@ -3381,14 +3391,14 @@ call watchdogs#setup(g:quickrun_config)
 " quickrun のバッファ毎の設定をしてみる
 function! s:set_quickrun_config()
   if filereadable('Cargo.toml')
-    let l:name = 'rust/cargo/build'
+    let l:name = 'rust/cargo/quickfix'
   elseif filereadable('Makefile')
     let l:name = 'make'
   else
     return
   endif
 
-  let b:quickrun_config = g:quickrun_config[l:name]
+  let b:quickrun_config = {'type': l:name}
 endfunction
 autocmd Meowrc BufReadPost * call s:set_quickrun_config()
 

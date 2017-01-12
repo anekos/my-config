@@ -165,13 +165,21 @@ let g:quickrun_config = {
 \     'type': executable('vint') ? 'watchdogs_checker/vint' : '',
 \   },
 \   'rust': {
-\     'type': 'rust/cargo/build'
+\     'type': 'rust/cargo/quickfix'
+\   },
+\   'rust/watchdogs_checker': {
+\     'type': 'rust/cargo/quickfix',
+\     'outputter': 'quickfix',
 \   },
 \   'rust/rustc': {
 \     'command': 'rustc',
 \     'exec': ['RUST_LOG=error %c %o %s -o %s:p:r', '%s:p:r %a'],
 \     'tempfile': '%{tempname()}.rs',
 \     'hook/sweep/files': '%S:p:r',
+\   },
+\   'rust/cargo/quickfix': {
+\     'command': 'cargo',
+\     'exec': 'RUST_LOG=error %c quickfix %o',
 \   },
 \   'rust/cargo/build': {
 \     'command': 'cargo',
@@ -195,11 +203,11 @@ let g:quickrun_config = {
 \	  'watchdogs_checker/_' : {
 \     'outputter': 'quickfix',
 \	  	'outputter/quickfix/open_cmd': 'HierStart',
-\     'hook/echo/enable' : 1,
+\     'hook/echo/enable': 1,
 \     'hook/echo/output_failure': '> Some Errors Found!!!!',
 \     'hook/echo/output_success': '> No Errors Found.',
-\     'hook/qfstatusline_update/enable_exit' : 1,
-\     'hook/qfstatusline_update/priority_exit' : 4,
+\     'hook/qfstatusline_update/enable_exit': 1,
+\     'hook/qfstatusline_update/priority_exit': 4,
 \	  },
 \   'watchdogs_checker/vint' : {
 \     'command': 'vint',
@@ -223,7 +231,7 @@ let g:Qfstatusline#UpdateCmd = function('lightline#update')
 
 " http://d.hatena.ne.jp/osyo-manga/20120919/1348054752 - shabadou.vim を使って quickrun.vim をカスタマイズしよう - C++でゲームプログラミング
 
-let g:watchdogs_check_BufWritePost_enables = {'sh': 1, 'scala': 0}
+let g:watchdogs_check_BufWritePost_enables = {'sh': 1, 'scala': 0, 'rust': 1}
 let g:watchdogs_check_CursorHold_enable = 0
 call watchdogs#setup(g:quickrun_config)
 
@@ -231,13 +239,13 @@ call watchdogs#setup(g:quickrun_config)
 " quickrun のバッファ毎の設定をしてみる
 function! s:set_quickrun_config()
   if filereadable('Cargo.toml')
-    let l:name = 'rust/cargo/build'
+    let l:name = 'rust/cargo/quickfix'
   elseif filereadable('Makefile')
     let l:name = 'make'
   else
     return
   endif
 
-  let b:quickrun_config = g:quickrun_config[l:name]
+  let b:quickrun_config = {'type': l:name}
 endfunction
 autocmd Meowrc BufReadPost * call s:set_quickrun_config()

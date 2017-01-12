@@ -8,8 +8,6 @@
 
 scriptencoding utf8
 
-" quickfix
-MeowtoCmd QuickFixCmdPost * cwin
 
 " 折りたたみの保存 - http://vim-users.jp/2009/10/hack84/
 MeowtoCmd BufWritePost * if expand('%') != '' && &buftype !~ 'nofile' | mkview | endif
