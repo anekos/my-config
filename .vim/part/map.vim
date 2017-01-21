@@ -43,7 +43,6 @@ map g/ <Plug>(incsearch-stay)
 " nnoremap ?  /\v
 
 " 検索のハイライト
-noremap <Silent> <Plug>(vimrc-searchafter) Nzz:set hlsearch<CR>
 map *   <Plug>(asterisk-*)
 map #   <Plug>(asterisk-#)
 map g*  <Plug>(asterisk-g*)
@@ -52,11 +51,11 @@ map z*  <Plug>(asterisk-z*)
 map gz* <Plug>(asterisk-gz*)
 map z#  <Plug>(asterisk-z#)
 map gz# <Plug>(asterisk-gz#)
-nnoremap <silent> <Esc><Esc> :<C-u>set hlsearch!<CR>
+nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
 
 " for US KBD
-nnoremap ; q:
-xnoremap ; q:
+nnoremap <expr> ; quickrun#hook#lightline_quickrun_status#current() ==# '' ? 'q:' : ':'
+xnoremap <expr> ; quickrun#hook#lightline_quickrun_status#current() ==# '' ? 'q:' : ':'
 nnoremap q: :
 xnoremap q: :
 nnoremap : ;
@@ -105,10 +104,6 @@ nnoremap <C-w>o :MaximizeModoki<CR>
 
 " map {{{
 
-" Save like Emacs
-inoremap <C-x><C-s> <Esc>:<C-u>w<CR>a
-inoremap <C-x>s <Esc>:<C-u>w<CR>a
-
 " 挿入モードでの移動
 inoremap <C-a> <Home>
 inoremap <C-e> <End>
@@ -156,6 +151,18 @@ vnoremap <silent> . :normal .<CR>
 
 " for lexima <BS>
 imap <C-h> <BS>
+
+" inu-operator-surround
+map <silent>Sa <Plug>(operator-surround-append)
+map <silent>Sd <Plug>(operator-surround-delete)
+map <silent>Sr <Plug>(operator-surround-replace)
+nmap <silent>Sdd <Plug>(operator-surround-delete)<Plug>(textobj-multiblock-a)
+nmap <silent>Srr <Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)
+
+" オペレータ実行時にカーソルを移動しないようにする - http://secret-garden.hatenablog.com/entry/2015/03/18/232847
+map gu <Plug>(operator-stay-cursor-gu)
+map gU <Plug>(operator-stay-cursor-gU)
+map <expr> = operator#stay_cursor#wrapper('=')
 
 " }}}
 
@@ -224,17 +231,35 @@ nnoremap <Leader><Leader>b :<C-u>CleanupWindows<CR>
 
 " Command line window {{{
 
-autocmd CmdwinEnter * call s:initialize_command_window()
+autocmd Meowrc CmdwinEnter * call s:initialize_command_window()
 
 function! s:initialize_command_window()
-  inoremap <buffer><expr> <Space> ambicmd#expand("\<Space>")
-  inoremap <buffer><expr> <CR>    ambicmd#expand("\<CR>\<CR>")
+  if getcmdwintype() ==# ':'
+    inoremap <buffer><expr> <C-o>       ambicmd#expand('')
+    " inoremap <buffer><expr> <CR>        ambicmd#expand("\<Esc>\<CR>")
+  endif
 
-  inoremap <buffer>       <C-g>   <C-c><C-c>
-  inoremap <buffer>       <C-k>   <Up><End>
-  inoremap <buffer>       <C-l>   <Down><End>
+  inoremap <buffer>       <C-g>       <C-c><C-c>
+  inoremap <buffer>       <C-k>       <Up><End>
+  inoremap <buffer>       <C-l>       <Down><End>
+  inoremap <buffer><expr> <C-j>       "\<CR>q" . getcmdwintype()
 
-  nnoremap <buffer>       <C-g>   <C-c><C-c>
+  " コマンドラインでの挙動をエミュレートする
+  inoremap <buffer>       <C-r>%      <C-r>#
+  inoremap <buffer>       <C-r><C-w>  <C-c><C-r><C-w><C-f>
+  inoremap <buffer>       <C-r><C-a>  <C-c><C-r><C-a><C-f>
+
+  " タブで何かする
+  inoremap <buffer>       <C-t>       <Home>tab <End><CR>
+
+  " Abbr
+  iabbrev <buffer><expr>  n.          bufname('#')
+  iabbrev <buffer><expr>  e.          expand(input('Filename modifier: ', '#:'))
+  iabbrev <buffer><expr>  h.          expand('#:h')
+  iabbrev <buffer><expr>  /.          @/
+
+  " 閉じる
+  nnoremap <buffer>       <C-g>       <C-c><C-c>
 
   startinsert!
 endfunction
@@ -327,6 +352,7 @@ inoremap ７ 7
 inoremap ８ 8
 inoremap ９ 9
 inoremap ～ ~
+inoremap ？ ?
 
 " }}}
 

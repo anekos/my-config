@@ -8,23 +8,23 @@
 scriptencoding utf8
 
 " Default plugins {{{
-"
-let g:loaded_gzip               = 1
-let g:loaded_tar                = 1
-let g:loaded_tarPlugin          = 1
-let g:loaded_zip                = 1
-let g:loaded_zipPlugin          = 1
+
 let g:loaded_2html_plugin       = 1
-let g:loaded_vimball            = 1
-let g:loaded_vimballPlugin      = 1
 let g:loaded_getscript          = 1
 let g:loaded_getscriptPlugin    = 1
+let g:loaded_gzip               = 1
 let g:loaded_logipat            = 1
-" let g:loaded_rrhelper           = 1
-" let g:loaded_netrw              = 1
+let g:loaded_netrw              = 1
+let g:loaded_tar                = 1
+let g:loaded_tarPlugin          = 1
+let g:loaded_vimball            = 1
+let g:loaded_vimballPlugin      = 1
+let g:loaded_zip                = 1
+let g:loaded_zipPlugin          = 1
+" let g:loaded_netrwFileHandlers  = 1
 " let g:loaded_netrwPlugin        = 1
 " let g:loaded_netrwSettings      = 1
-" let g:loaded_netrwFileHandlers  = 1
+" let g:loaded_rrhelper           = 1
 
 " }}}
 
@@ -259,18 +259,27 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
 " }}}
 
-" neoclojure {{{
-
-augroup vimrc-neoclojure
-  autocmd!
-  " autocmd FileType clojure setlocal omnifunc=neoclojure#complete#omni_auto
-augroup END
-
-" }}}
-
 " NeoSnippet {{{
 
 let g:neosnippet#snippets_directory = '~/.vim/snippets'
+
+" }}}
+
+" operator-surround {{{
+
+" {} b = Block
+" [] s = Square bracket
+" () p = Parentheses
+" <> t = hoge Than moge
+
+let g:operator#surround#blocks = {
+\   '-' : [
+\       {'block': ['{', '}'], 'motionwise': ['char', 'line', 'block'], 'keys': ['b', '7', '8'] },
+\       {'block': ['[', ']'], 'motionwise': ['char', 'line', 'block'], 'keys': ['s', 'u', 'i'] },
+\       {'block': ['(', ')'], 'motionwise': ['char', 'line', 'block'], 'keys': ['p', 'j', 'k'] },
+\       {'block': ['<', '>'], 'motionwise': ['char', 'line', 'block'], 'keys': ['t', 'm', 'l'] },
+\   ]
+\ }
 
 " }}}
 

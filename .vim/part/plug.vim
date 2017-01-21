@@ -48,6 +48,7 @@ Plug 'lifepillar/vim-solarized8'        " ム
 Plug 'morhetz/gruvbox'                  " ゥ
 Plug 'popkirby/lightline-iceberg'       " ス
 Plug 'rhysd/vim-color-spring-night'     " キ
+Plug 'vim-scripts/random.vim'           " ィ
 
 
 " }}}
@@ -122,6 +123,7 @@ Plug 'derekwyatt/vim-scala'
 " Rust
 Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim'
+Plug 'rhysd/rust-doc.vim'               " どくいぬ
 
 " }}}
 
@@ -146,7 +148,7 @@ Plug 'thinca/vim-threes'
 " Information {{{
 
 Plug 'itchyny/lightline.vim'
-Plug 'KazuakiM/vim-qfstatusline'
+Plug 'itchyny/vim-quickrun-lightline-hooks'
 Plug 'manicmaniac/betterga'
 " Plug 'majutsushi/tagbar'
 
@@ -155,7 +157,6 @@ Plug 'manicmaniac/betterga'
 " Library {{{
 
 Plug 'haya14busa/vim-migemo'
-Plug 'kana/vim-operator-user'
 Plug 'kana/vim-textobj-user'
 Plug 'mattn/webapi-vim'
 Plug 'Shougo/vimproc.vim'
@@ -192,6 +193,7 @@ Plug 'haya14busa/vim-asterisk'
 Plug 'rking/ag.vim'
 Plug 'tyru/chdir-proj-root.vim'
 Plug 'vim-scripts/gtags.vim'
+Plug 'thinca/vim-visualstar'
 if v:version >= 800
   Plug 'osyo-manga/vim-over'
 endif
@@ -213,9 +215,16 @@ Plug 'deris/vim-rengbang'
 Plug 'gcmt/wildfire.vim'
 Plug 'kana/vim-niceblock'
 Plug 'kana/vim-submode'
-Plug 'tpope/vim-surround'
-Plug 'thinca/vim-portal' " n_<Leader>pb n_<Leader>po
-Plug 't9md/vim-textmanip' " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
+Plug 'thinca/vim-portal'                " n_<Leader>pb n_<Leader>po
+Plug 't9md/vim-textmanip'               " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
+
+" }}}
+
+" Operator{{{
+
+Plug 'kana/vim-operator-user'
+Plug 'rhysd/vim-operator-surround'      " 犬を囲んで○○する
+Plug 'osyo-manga/vim-operator-stay-cursor'
 
 " }}}
 
@@ -239,8 +248,8 @@ Plug 'osyo-manga/vim-textobj-multiblock'
 
 " Tool {{{
 
-Plug 'tasuten/gcalc.vim' " Google 電卓
-Plug 'Shougo/vinarise' " バイナリエディア
+Plug 'tasuten/gcalc.vim'                " Google 電卓
+Plug 'Shougo/vinarise'                  " バイナリエディア
 Plug 'tpope/vim-speeddating'
 
 " }}}

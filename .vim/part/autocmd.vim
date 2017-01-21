@@ -16,7 +16,7 @@ MeowtoCmd BufRead * if expand('%') != '' && &buftype !~ 'nofile' | silent loadvi
 MeowtoCmd BufNewFile,BufRead *.nox set filetype=nox
 
 " ファイルが他で更新されていないかチェックする
-MeowtoCmd WinEnter,FocusGained * checktime
+MeowtoCmd WinEnter,FocusGained * if expand('%') != '' && &buftype !~ 'nofile' | checktime | endif
 
 " 自動でプロジェクトのルートを作業ディレクトリにする
 MeowtoCmd BufReadPost * silent CdProjectRoot
@@ -31,14 +31,44 @@ if exists('&vtlc')
   MeowtoCmd TabEnter * if 3 <= tabpagenr('$') | set vtlc=20 showtabline=0 | else | set vtlc=0 showtabline=2 | endif
 endif
 
+" ftdetect {{{
+
+autocmd BufNewFile,BufRead *vimperatorrc*,*.vimp  setfiletype vimperator
+autocmd BufNewFile,BufRead *.csv                  setfiletype csv
+autocmd BufNewFile,BufRead liname-*.txt           setfiletype liname
+autocmd BufNewFile,BufRead *.ano                  setfiletype arduino
+autocmd BufNewFile,BufRead *.rs                   setfiletype rust
+" }}}
+
 " ファイルが変更されていたらヤバくなる {{{
 
-function! s:OnFileChangedShell()
-  let v:fcs_choice = ''
-  call anekos#rainbow#start() " start osyo rainbow
+let s:fcs_kill_targets = {}
+
+function! s:prepare_to_kill_fcs_gopher(pid)
+  call system('xgopherc -m Gyaaa')
+  let l:timer = timer_start(2000, function('s:kill_fcs_gopher'), {'repeat': 1})
+  let s:fcs_kill_targets[l:timer] = a:pid
 endfunction
 
-autocmd Meowrc FileChangedShell * call s:OnFileChangedShell()
+function! s:kill_fcs_gopher(timer)
+  call system(printf('kill %s', s:fcs_kill_targets[a:timer]))
+  unlet s:fcs_kill_targets[a:timer]
+endfunction
+
+function! s:on_file_change_shell(file)
+  let v:fcs_choice = ''
+  if executable('xgopher')
+    let l:pid = system('xgopher & ; echo $!')
+    augroup meowrc_fcs
+      autocmd!
+      execute 'autocmd' 'BufReadPost' escape(a:file, ' ') printf('call s:prepare_to_kill_fcs_gopher(%d)', l:pid)
+    augroup END
+  else
+    call anekos#rainbow#start() " start osyo rainbow
+  endif
+endfunction
+
+autocmd Meowrc FileChangedShell * call s:on_file_change_shell(expand('<afile>'))
 
 " }}}
 
@@ -70,5 +100,21 @@ function! s:auto_mkdir(dir, force)
     call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
   endif
 endfunction
+
+" }}}
+
+" ポータルが生える {{{
+
+let s:rand = vital#vital#import('Random').range
+
+function! s:wild_shot()
+  for color in ['orange', 'blue']
+    let line = s:rand(line('$')) + 1
+    let col = s:rand(col([line, '$']) - 1) + 1
+    call portal#shoot(color, [bufnr('%'), line, col, 0])
+  endfor
+endfunction
+
+autocmd Meowrc BufReadPost * call s:wild_shot()
 
 " }}}

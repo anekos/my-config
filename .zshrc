@@ -775,7 +775,6 @@ alias bell='echo -e "\\a"'
 
 # vim
 alias v="gvim"
-alias vimshell='gvim -c VimShell -c "bdelete 1"'
 alias vimlein='vim -c "VimShellInteractive lein repl" -c "bdelete 1" -c "split"'
 alias vil='find . -maxdepth 3 -type f | egrep -v "/(\\..*|classes)" | vim -c "setlocal readonly nomodified" - '
 alias vinarise='vim -c Vinarise'

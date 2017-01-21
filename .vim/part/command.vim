@@ -551,8 +551,12 @@ command! -bar MaximizeModoki call s:maximize_modoki()
 function! s:CleanupNotMicrosofts()
   for l:winnr in range(1, winnr('$'))
     let l:bufnr = winbufnr(l:winnr)
-    if l:bufnr >= 0 && bufname(l:bufnr) ==# ''
-      execute 'bdelete' l:bufnr
+    if l:bufnr >= 0 
+      if bufname(l:bufnr) ==# ''
+        execute 'bdelete' l:bufnr
+      elseif getbufvar(l:bufnr, '&filetype', '') ==# 'quickrun'
+        execute 'bdelete!' l:bufnr
+      endif
     endif
   endfor
 

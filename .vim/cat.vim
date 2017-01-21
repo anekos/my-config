@@ -97,23 +97,23 @@ let g:my_plugins = [
 
 
 " Default plugins {{{
-"
-let g:loaded_gzip               = 1
-let g:loaded_tar                = 1
-let g:loaded_tarPlugin          = 1
-let g:loaded_zip                = 1
-let g:loaded_zipPlugin          = 1
+
 let g:loaded_2html_plugin       = 1
-let g:loaded_vimball            = 1
-let g:loaded_vimballPlugin      = 1
 let g:loaded_getscript          = 1
 let g:loaded_getscriptPlugin    = 1
+let g:loaded_gzip               = 1
 let g:loaded_logipat            = 1
-" let g:loaded_rrhelper           = 1
-" let g:loaded_netrw              = 1
+let g:loaded_netrw              = 1
+let g:loaded_tar                = 1
+let g:loaded_tarPlugin          = 1
+let g:loaded_vimball            = 1
+let g:loaded_vimballPlugin      = 1
+let g:loaded_zip                = 1
+let g:loaded_zipPlugin          = 1
+" let g:loaded_netrwFileHandlers  = 1
 " let g:loaded_netrwPlugin        = 1
 " let g:loaded_netrwSettings      = 1
-" let g:loaded_netrwFileHandlers  = 1
+" let g:loaded_rrhelper           = 1
 
 " }}}
 
@@ -348,18 +348,27 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
 " }}}
 
-" neoclojure {{{
-
-augroup vimrc-neoclojure
-  autocmd!
-  " autocmd FileType clojure setlocal omnifunc=neoclojure#complete#omni_auto
-augroup END
-
-" }}}
-
 " NeoSnippet {{{
 
 let g:neosnippet#snippets_directory = '~/.vim/snippets'
+
+" }}}
+
+" operator-surround {{{
+
+" {} b = Block
+" [] s = Square bracket
+" () p = Parentheses
+" <> t = hoge Than moge
+
+let g:operator#surround#blocks = {
+\   '-' : [
+\       {'block': ['{', '}'], 'motionwise': ['char', 'line', 'block'], 'keys': ['b', '7', '8'] },
+\       {'block': ['[', ']'], 'motionwise': ['char', 'line', 'block'], 'keys': ['s', 'u', 'i'] },
+\       {'block': ['(', ')'], 'motionwise': ['char', 'line', 'block'], 'keys': ['p', 'j', 'k'] },
+\       {'block': ['<', '>'], 'motionwise': ['char', 'line', 'block'], 'keys': ['t', 'm', 'l'] },
+\   ]
+\ }
 
 " }}}
 
@@ -915,6 +924,7 @@ Plug 'lifepillar/vim-solarized8'        " ム
 Plug 'morhetz/gruvbox'                  " ゥ
 Plug 'popkirby/lightline-iceberg'       " ス
 Plug 'rhysd/vim-color-spring-night'     " キ
+Plug 'vim-scripts/random.vim'           " ィ
 
 
 " }}}
@@ -989,6 +999,7 @@ Plug 'derekwyatt/vim-scala'
 " Rust
 Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim'
+Plug 'rhysd/rust-doc.vim'               " どくいぬ
 
 " }}}
 
@@ -1013,7 +1024,7 @@ Plug 'mattn/die-vim'
 " Information {{{
 
 Plug 'itchyny/lightline.vim'
-Plug 'KazuakiM/vim-qfstatusline'
+Plug 'itchyny/vim-quickrun-lightline-hooks'
 Plug 'manicmaniac/betterga'
 " Plug 'majutsushi/tagbar'
 
@@ -1022,7 +1033,6 @@ Plug 'manicmaniac/betterga'
 " Library {{{
 
 Plug 'haya14busa/vim-migemo'
-Plug 'kana/vim-operator-user'
 Plug 'kana/vim-textobj-user'
 Plug 'mattn/webapi-vim'
 Plug 'Shougo/vimproc.vim'
@@ -1059,6 +1069,7 @@ Plug 'haya14busa/vim-asterisk'
 Plug 'rking/ag.vim'
 Plug 'tyru/chdir-proj-root.vim'
 Plug 'vim-scripts/gtags.vim'
+Plug 'thinca/vim-visualstar'
 if v:version >= 800
   Plug 'osyo-manga/vim-over'
 endif
@@ -1080,9 +1091,16 @@ Plug 'deris/vim-rengbang'
 Plug 'gcmt/wildfire.vim'
 Plug 'kana/vim-niceblock'
 Plug 'kana/vim-submode'
-Plug 'tpope/vim-surround'
-Plug 'thinca/vim-portal' " n_<Leader>pb n_<Leader>po
-Plug 't9md/vim-textmanip' " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
+Plug 'thinca/vim-portal'                " n_<Leader>pb n_<Leader>po
+Plug 't9md/vim-textmanip'               " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
+
+" }}}
+
+" Operator{{{
+
+Plug 'kana/vim-operator-user'
+Plug 'rhysd/vim-operator-surround'      " 犬を囲んで○○する
+Plug 'osyo-manga/vim-operator-stay-cursor'
 
 " }}}
 
@@ -1106,8 +1124,8 @@ Plug 'osyo-manga/vim-textobj-multiblock'
 
 " Tool {{{
 
-Plug 'tasuten/gcalc.vim' " Google 電卓
-Plug 'Shougo/vinarise' " バイナリエディア
+Plug 'tasuten/gcalc.vim'                " Google 電卓
+Plug 'Shougo/vinarise'                  " バイナリエディア
 Plug 'tpope/vim-speeddating'
 
 " }}}
@@ -1255,7 +1273,11 @@ call plug#end()
 "=====================
 
 
-let $PATH = $HOME . '/bin:' . $HOME . '/.cabal/bin:' . $PATH
+if !exists('g:original_env_path')
+  let g:original_env_path = $PATH
+endif
+
+let $PATH = join([expand('~/bin'), expand('~/.cabal/bin'), g:original_env_path], ':')
 
 
 " from ~/.vim/part/utils.vim
@@ -1267,6 +1289,7 @@ let $PATH = $HOME . '/bin:' . $HOME . '/.cabal/bin:' . $PATH
 "========================
 
 
+
 " Generate 1 to n
 function! Rand(n)
   " http://vim-jp.org/vim-users-jp/2009/11/05/Hack-98.html
@@ -1274,35 +1297,21 @@ function! Rand(n)
   return reltimestr(reltime())[l:match_end : ] % (a:n + 1)
 endfunction
 
-" https://github.com/Lokaltog/vim-powerline/blob/develop/autoload/Powerline/Functions.vim
-function! GetCharCode()
-  " Get the output of :ascii
-  redir => l:ascii
-  silent! ascii
+" Big Sky :: vimでスクリプト内関数を書き換える http://mattn.kaoriya.net/software/vim/20090826003359.htm
+function! GetScriptId(filename)
+  let l:scriptnames = ''
+
+  redir => l:scriptnames
+  silent! scriptnames
   redir END
-  if match(l:ascii, 'NUL') != -1
-    return 'NUL'
-  endif
 
-  " Zero pad hex values
-  let l:nrformat = '0x%02x'
+  let l:script_table = {}
+  let l:head = '^\s*\(\d\+\):\s*\(.*\)$'
+  for l:line in split(l:scriptnames, "\n")
+    let l:script_table[tolower(substitute(l:line, l:head, '\2', ''))] = substitute(l:line, l:head, '\1', '')
+  endfor
 
-  let l:encoding = (&fileencoding ==# '' ? &encoding : &fileencoding)
-
-  if l:encoding ==# 'utf-8'
-    " Zero pad with 4 zeroes in unicode files
-    let l:nrformat = '0x%04x'
-  endif
-
-  " Get the character and the numeric value from the return value of :ascii
-  " This matches the two first pieces of the return value, e.g.
-  " "<F>  70" => char: 'F', nr: '70'
-  let [l:str, l:char, l:nr; l:rest] = matchlist(l:ascii, '\v\<(.{-1,})\>\s*([0-9]+)')
-
-  " Format the numeric value
-  let l:nr = printf(l:nrformat, l:nr)
-
-  return "'". l:char ."' ". l:nr
+  return l:script_table[tolower(a:filename)]
 endfunction
 
 
@@ -1572,7 +1581,6 @@ map g/ <Plug>(incsearch-stay)
 " nnoremap ?  /\v
 
 " 検索のハイライト
-noremap <Silent> <Plug>(vimrc-searchafter) Nzz:set hlsearch<CR>
 map *   <Plug>(asterisk-*)
 map #   <Plug>(asterisk-#)
 map g*  <Plug>(asterisk-g*)
@@ -1581,11 +1589,11 @@ map z*  <Plug>(asterisk-z*)
 map gz* <Plug>(asterisk-gz*)
 map z#  <Plug>(asterisk-z#)
 map gz# <Plug>(asterisk-gz#)
-nnoremap <silent> <Esc><Esc> :<C-u>set hlsearch!<CR>
+nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
 
 " for US KBD
-nnoremap ; q:
-xnoremap ; q:
+nnoremap <expr> ; quickrun#hook#lightline_quickrun_status#current() ==# '' ? 'q:' : ':'
+xnoremap <expr> ; quickrun#hook#lightline_quickrun_status#current() ==# '' ? 'q:' : ':'
 nnoremap q: :
 xnoremap q: :
 nnoremap : ;
@@ -1634,10 +1642,6 @@ nnoremap <C-w>o :MaximizeModoki<CR>
 
 " map {{{
 
-" Save like Emacs
-inoremap <C-x><C-s> <Esc>:<C-u>w<CR>a
-inoremap <C-x>s <Esc>:<C-u>w<CR>a
-
 " 挿入モードでの移動
 inoremap <C-a> <Home>
 inoremap <C-e> <End>
@@ -1685,6 +1689,18 @@ vnoremap <silent> . :normal .<CR>
 
 " for lexima <BS>
 imap <C-h> <BS>
+
+" inu-operator-surround
+map <silent>Sa <Plug>(operator-surround-append)
+map <silent>Sd <Plug>(operator-surround-delete)
+map <silent>Sr <Plug>(operator-surround-replace)
+nmap <silent>Sdd <Plug>(operator-surround-delete)<Plug>(textobj-multiblock-a)
+nmap <silent>Srr <Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)
+
+" オペレータ実行時にカーソルを移動しないようにする - http://secret-garden.hatenablog.com/entry/2015/03/18/232847
+map gu <Plug>(operator-stay-cursor-gu)
+map gU <Plug>(operator-stay-cursor-gU)
+map <expr> = operator#stay_cursor#wrapper('=')
 
 " }}}
 
@@ -1753,17 +1769,35 @@ nnoremap <Leader><Leader>b :<C-u>CleanupWindows<CR>
 
 " Command line window {{{
 
-autocmd CmdwinEnter * call s:initialize_command_window()
+autocmd Meowrc CmdwinEnter * call s:initialize_command_window()
 
 function! s:initialize_command_window()
-  inoremap <buffer><expr> <Space> ambicmd#expand("\<Space>")
-  inoremap <buffer><expr> <CR>    ambicmd#expand("\<CR>\<CR>")
+  if getcmdwintype() ==# ':'
+    inoremap <buffer><expr> <C-o>       ambicmd#expand('')
+    " inoremap <buffer><expr> <CR>        ambicmd#expand("\<Esc>\<CR>")
+  endif
 
-  inoremap <buffer>       <C-g>   <C-c><C-c>
-  inoremap <buffer>       <C-k>   <Up><End>
-  inoremap <buffer>       <C-l>   <Down><End>
+  inoremap <buffer>       <C-g>       <C-c><C-c>
+  inoremap <buffer>       <C-k>       <Up><End>
+  inoremap <buffer>       <C-l>       <Down><End>
+  inoremap <buffer><expr> <C-j>       "\<CR>q" . getcmdwintype()
 
-  nnoremap <buffer>       <C-g>   <C-c><C-c>
+  " コマンドラインでの挙動をエミュレートする
+  inoremap <buffer>       <C-r>%      <C-r>#
+  inoremap <buffer>       <C-r><C-w>  <C-c><C-r><C-w><C-f>
+  inoremap <buffer>       <C-r><C-a>  <C-c><C-r><C-a><C-f>
+
+  " タブで何かする
+  inoremap <buffer>       <C-t>       <Home>tab <End><CR>
+
+  " Abbr
+  iabbrev <buffer><expr>  n.          bufname('#')
+  iabbrev <buffer><expr>  e.          expand(input('Filename modifier: ', '#:'))
+  iabbrev <buffer><expr>  h.          expand('#:h')
+  iabbrev <buffer><expr>  /.          @/
+
+  " 閉じる
+  nnoremap <buffer>       <C-g>       <C-c><C-c>
 
   startinsert!
 endfunction
@@ -1855,6 +1889,7 @@ inoremap ７ 7
 inoremap ８ 8
 inoremap ９ 9
 inoremap ～ ~
+inoremap ？ ?
 
 " }}}
 
@@ -2502,8 +2537,12 @@ command! -bar MaximizeModoki call s:maximize_modoki()
 function! s:CleanupNotMicrosofts()
   for l:winnr in range(1, winnr('$'))
     let l:bufnr = winbufnr(l:winnr)
-    if l:bufnr >= 0 && bufname(l:bufnr) ==# ''
-      execute 'bdelete' l:bufnr
+    if l:bufnr >= 0 
+      if bufname(l:bufnr) ==# ''
+        execute 'bdelete' l:bufnr
+      elseif getbufvar(l:bufnr, '&filetype', '') ==# 'quickrun'
+        execute 'bdelete!' l:bufnr
+      endif
     endif
   endfor
 
@@ -2622,7 +2661,7 @@ MeowtoCmd BufRead * if expand('%') != '' && &buftype !~ 'nofile' | silent loadvi
 MeowtoCmd BufNewFile,BufRead *.nox set filetype=nox
 
 " ファイルが他で更新されていないかチェックする
-MeowtoCmd WinEnter,FocusGained * checktime
+MeowtoCmd WinEnter,FocusGained * if expand('%') != '' && &buftype !~ 'nofile' | checktime | endif
 
 " 自動でプロジェクトのルートを作業ディレクトリにする
 MeowtoCmd BufReadPost * silent CdProjectRoot
@@ -2637,14 +2676,44 @@ if exists('&vtlc')
   MeowtoCmd TabEnter * if 3 <= tabpagenr('$') | set vtlc=20 showtabline=0 | else | set vtlc=0 showtabline=2 | endif
 endif
 
+" ftdetect {{{
+
+autocmd BufNewFile,BufRead *vimperatorrc*,*.vimp  setfiletype vimperator
+autocmd BufNewFile,BufRead *.csv                  setfiletype csv
+autocmd BufNewFile,BufRead liname-*.txt           setfiletype liname
+autocmd BufNewFile,BufRead *.ano                  setfiletype arduino
+autocmd BufNewFile,BufRead *.rs                   setfiletype rust
+" }}}
+
 " ファイルが変更されていたらヤバくなる {{{
 
-function! s:OnFileChangedShell()
-  let v:fcs_choice = ''
-  call anekos#rainbow#start() " start osyo rainbow
+let s:fcs_kill_targets = {}
+
+function! s:prepare_to_kill_fcs_gopher(pid)
+  call system('xgopherc -m Gyaaa')
+  let l:timer = timer_start(2000, function('s:kill_fcs_gopher'), {'repeat': 1})
+  let s:fcs_kill_targets[l:timer] = a:pid
 endfunction
 
-autocmd Meowrc FileChangedShell * call s:OnFileChangedShell()
+function! s:kill_fcs_gopher(timer)
+  call system(printf('kill %s', s:fcs_kill_targets[a:timer]))
+  unlet s:fcs_kill_targets[a:timer]
+endfunction
+
+function! s:on_file_change_shell(file)
+  let v:fcs_choice = ''
+  if executable('xgopher')
+    let l:pid = system('xgopher & ; echo $!')
+    augroup meowrc_fcs
+      autocmd!
+      execute 'autocmd' 'BufReadPost' escape(a:file, ' ') printf('call s:prepare_to_kill_fcs_gopher(%d)', l:pid)
+    augroup END
+  else
+    call anekos#rainbow#start() " start osyo rainbow
+  endif
+endfunction
+
+autocmd Meowrc FileChangedShell * call s:on_file_change_shell(expand('<afile>'))
 
 " }}}
 
@@ -2676,6 +2745,22 @@ function! s:auto_mkdir(dir, force)
     call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
   endif
 endfunction
+
+" }}}
+
+" ポータルが生える {{{
+
+let s:rand = vital#vital#import('Random').range
+
+function! s:wild_shot()
+  for color in ['orange', 'blue']
+    let line = s:rand(line('$')) + 1
+    let col = s:rand(col([line, '$']) - 1) + 1
+    call portal#shoot(color, [bufnr('%'), line, col, 0])
+  endfor
+endfunction
+
+autocmd Meowrc BufReadPost * call s:wild_shot()
 
 " }}}
 
@@ -2727,6 +2812,8 @@ endif
 "===========================================
 
 
+" シンプルバージョン {{{
+
 if !(has('cryptv') && v:version >= 800)
   let g:lightline = {
   \   'enable': {'tabline': 0},
@@ -2749,45 +2836,44 @@ if !(has('cryptv') && v:version >= 800)
   finish
 endif
 
-let g:myline = {}
+" }}}
 
+" にゃっふりバージョン {{{
 
 let g:lightline = {
 \   'enable': {'tabline': 0},
 \   'mode_map': {'c': 'NORMAL'},
 \   'active': {
 \     'left': [
-\       ['readonly', 'filename', 'checker', 'modified'],
+\       ['readonly', 'filename', 'modified'],
 \       ['git_branch', 'git_traffic', 'git_status'],
-\       ['mode', 'paste'],
-\       ['checker']
+\       ['errors', 'quickrun'],
 \     ],
 \     'right': [
-\       ['lineinfo'],
-\       ['percent'],
-\       ['fileformat', 'fileencoding', 'filetype'],
-\       ['charcode']
+\       ['filetype', 'fileformat', 'fileencoding', 'pokemon'],
+\       ['charcode', 'percent', 'lineinfo'],
+\       ['paste'],
 \     ]
 \   },
 \   'component_function': {
 \     'modified': 'g:myline.modified',
 \     'readonly': 'g:myline.readonly',
-\     'fugitive': 'g:myline.fugitive',
 \     'filename': 'g:myline.filename',
-\     'fileformat': 'g:myline.fileformat',
-\     'filetype': 'g:myline.filetype',
-\     'fileencoding': 'g:myline.fileencoding',
-\     'mode': 'g:myline.mode',
-\     'charcode': 'g:myline.charCode',
-\     'git_branch': 'g:myline.git_branch',
-\     'git_traffic': 'g:myline.git_traffic',
-\     'git_status': 'g:myline.git_status',
+\     'fileformat': 'w200 &fileformat',
+\     'filetype': "w150 strlen(&filetype) ? &filetype : 'noft'",
+\     'fileencoding': 'w150 strlen(&fileencoding) ? &fileencoding : &encoding',
+\     'pokemon': 'pokemon#getdaze',
+\     'charcode': 'w150 g:myline.charCode',
+\     'git_branch': "w200 gita#statusline#preset('branch_fancy')",
+\     'git_traffic': "w200 gita#statusline#preset('traffic_fancy')",
+\     'git_status': "w200 gita#statusline#preset('status')",
 \   },
 \   'component_expand': {
-\     'checker': 'qfstatusline#Update',
+\     'errors': 'g:myline.errors',
+\     'quickrun': 'quickrun#hook#lightline_quickrun_status#current',
 \   },
 \   'component_type': {
-\     'checker': 'error',
+\     'errors': 'error',
 \   },
 \   'tab_component_function': {
 \     'tabfilename': 'MyLineTabFileName'
@@ -2800,6 +2886,11 @@ let g:lightline.tab = {'active': ['tabnum', 'tabfilename', 'modified'], }
 let g:lightline.tab.inactive = g:lightline.tab.active
 let g:lightline.inactive = g:lightline.active
 
+" }}}
+
+" ネコンポコネント関数 {{{
+
+let g:myline = {}
 
 function! g:myline.modified()
   return &filetype =~# 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
@@ -2816,33 +2907,50 @@ function! g:myline.filename()
         \ '' !=# expand('%:t') ? expand('%:t') : '[No Name]')
 endfunction
 
-function! g:myline.fugitive()
-  try
-    if &filetype !~? 'vimfiler\|gundo' && exists('*fugitive#head')
-      return fugitive#head()
-    endif
-  catch
-  endtry
-  return ''
-endfunction
-
-function! g:myline.fileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! g:myline.filetype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! g:myline.fileencoding()
-  return winwidth(0) > 70 ? (strlen(&fileencoding) ? &fileencoding : &encoding) : ''
-endfunction
-
 function! g:myline.charCode()
-  return winwidth(0) > 90 ? GetCharCode() : ''
+  if winwidth(0) < 70
+    return ''
+  endif
+
+  " https://github.com/Lokaltog/vim-powerline/blob/develop/autoload/Powerline/Functions.vim
+
+  " Get the output of :ascii
+  redir => l:ascii
+  silent! ascii
+  redir END
+  if match(l:ascii, 'NUL') != -1
+    return 'NUL 0x----'
+  endif
+
+  " Zero pad hex values
+  let l:nrformat = '0x%02x'
+
+  let l:encoding = (&fileencoding ==# '' ? &encoding : &fileencoding)
+
+  if l:encoding ==# 'utf-8'
+    " Zero pad with 4 zeroes in unicode files
+    let l:nrformat = '0x%04x'
+  endif
+
+  " Get the character and the numeric value from the return value of :ascii
+  " This matches the two first pieces of the return value, e.g.
+  " "<F>  70" => char: 'F', nr: '70'
+  let [l:str, l:char, l:nr; l:rest] = matchlist(l:ascii, '\v\<(.{-1,})\>\s*([0-9]+)')
+
+  " Format the numeric value
+  let l:nr = printf(l:nrformat, l:nr)
+
+  return "'". l:char ."' ". l:nr
 endfunction
 
-let g:Qfstatusline#UpdateCmd = function('lightline#update')
+function! g:myline.errors()
+  let l:num = len(getqflist())
+  if l:num > 0
+    return printf('%d errors', l:num)
+  else
+    return ''
+  endif
+endfunction
 
 " FIXME
 function! MyLineTabFileName(n)
@@ -2850,37 +2958,45 @@ function! MyLineTabFileName(n)
   let l:winnr = tabpagewinnr(a:n)
   let l:name = expand('#' . buflist[winnr - 1] . ':t')
 
-  if l:name =~ 'mod.rs'
+  if l:name =~# 'mod.rs'
     let l:name = expand('#' . buflist[winnr - 1] . ':h:t') . '/m'
   endif
 
   return l:name !=# '' ? l:name : '[No Name]'
 endfunction
 
-function! g:myline.git_branch()
-  return gita#statusline#preset('branch_fancy')
+" }}}
+
+" 幅を考慮したバージョンにすりかえる {{{
+
+function! s:consider_window_width(dict)
+  for [l:key, l:value] in items(a:dict)
+    let l:matched = matchlist(l:value, '\vw(\d+) (.+)')
+
+    if len(l:matched) > 0
+      let [_, l:width, l:name, _, _, _, _, _, _, _] = l:matched
+      let l:wrapper_name = printf('g:lightline_wrapped_functions.wrapper_%d', len(keys(g:lightline_wrapped_functions)))
+
+      let l:suffix = (l:name =~? '\v^%(g:)?[._a-z]+$' && exists('*' . l:name)) ? '()' : ''
+
+      execute printf("function! %s()\n", l:wrapper_name)
+      \   printf("if winwidth('.') > %d\n", l:width)
+      \     printf("return %s%s\n", l:name, l:suffix)
+      \   "else\n"
+      \     "return ''\n"
+      \   "endif\n"
+      \ "endfunction\n"
+
+      let a:dict[l:key] = l:wrapper_name
+    endif
+  endfor
 endfunction
 
-function! g:myline.git_traffic()
-  return gita#statusline#preset('traffic_fancy')
-endfunction
+let g:lightline_wrapped_functions = {}
 
-function! g:myline.git_status()
-  return gita#statusline#preset('status')
-endfunction
+call s:consider_window_width(g:lightline.component_function)
 
-function! g:myline.pokemode()
-  let l:mode = lightline#mode()
-  if l:mode ==# 'NORMAL'
-    return pokemon#getdaze()
-  else
-    return l:mode
-  endif
-endfunction
-
-function! g:myline.mode()
-  return winwidth(0) > 60 ? g:myline.pokemode() : ''
-endfunction
+" }}}
 
 
 " from ~/.vim/part/plugin/unite.vim
@@ -3162,72 +3278,52 @@ call s:init_unite_something_menu()
 
 
 
-let g:quickrun_config = {
-\   '_' : {
-\     'runner' : 'job',
-\     'runner/job/interval' : 1,
-\     'runner/vimproc/sleep' : 10,
-\     'runner/vimproc/updatetime' : 600,
-\     'hook/nuko/enable' : 0,
-\     'hook/nuko/wait' : 2,
+
+if 0-0
+  silent /^let s:jobs/+1,/^\\ } " jobs/-1OSort {$
+  silent /^let s:common/+1,/^\\ } " common/-1OSort {$
+  silent /^let s:watchdogs/+1,/^\\ } " watchdogs/-1OSort {$
+endif
+
+let s:common = {
+\   '_': {
+\     'runner': 'job',
+\     'runner/vimproc/sleep': 10,
+\     'runner/vimproc/updatetime': 600,
+\     'hook/nuko/enable': 0,
+\     'hook/nuko/wait': 2,
+\     'hook/lightline_quickrun_status/enable': 1,
 \     'outputter': 'multi',
 \     'outputter/buffer/split': 'vertical rightbelow',
-\     'outputter/buffer/close_on_empty' : 1,
+\     'outputter/buffer/close_on_empty': 1,
 \     'outputter/buffer/running_mark': " ____________________\n< ﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮﾐｮ >\n --------------------\n        \\   ^__^\n         \\ (◕‿‿◕)\\_______\n           /(__)\\       )\\/\\\n             || ||----w |\n                ||     ||",
 \     'outputter/quickfix/open_cmd': '',
 \     'outputter/multi/targets': ['buffer', 'quickfix']
-\   },
-\   'make' : {
-\     'command': 'make',
-\     'exec': '%c %o',
-\     'outputter': 'buffer'
-\   },
-\   'javascript': {
-\     'command': 'eslint'
-\   },
-\   'scala': {
-\     'type': 'scala/sbt/test-compile'
-\   },
-\   'scala/sbt/compile': {
-\     'command': 'sbt',
-\     'cmdopt': '-Dsbt.log.noformat=true',
-\     'runner': 'concurrent_process',
-\     'runner/concurrent_process/load': 'compile',
-\     'runner/concurrent_process/prompt': '\[.*\] \$ '
-\   },
-\   'scala/sbt/test-compile': {
-\     'command': 'sbt',
-\     'cmdopt': '-Dsbt.log.noformat=true',
-\     'runner': 'concurrent_process',
-\     'runner/concurrent_process/load': 'test:compile',
-\     'runner/concurrent_process/prompt': '\[.*\] \$ '
-\   },
-\   'scala/sbt/test': {
-\     'command': 'sbt',
-\     'cmdopt': '-Dsbt.log.noformat=true',
-\     'runner': 'concurrent_process',
-\     'runner/concurrent_process/load': 'test',
-\     'runner/concurrent_process/prompt': '\[.*\] \$ '
-\   },
-\   'scala/sbt/sync/compile': {
-\     'command': 'sbt',
-\     'exec': '%c -Dsbt.log.noformat=true compile'
-\   },
-\   'scala/sbt/sync/test-compile': {
-\     'command': 'sbt',
-\     'exec': '%c -Dsbt.log.noformat=true test:compile',
-\     'outputter': 'quickfix'
-\   },
+\   }
+\ } " common
+
+let s:jobs = {
 \   'clojure': {
 \     'type': 'clojure/lein/load-file'
 \   },
-\   'clojure/clj': {'command': 'clj', 'exec': '%c %s %a'},
-\   'clojure/watchdogs_checker': {
-\     'type': 'clojure/lein/eastwood'
+\   'clojure/clj': {
+\     'command': 'clj',
+\     'exec': '%c %s %a'
 \   },
 \   'clojure/lein/compile': {
 \     'command': 'lein',
 \     'exec': '%c compile %a'
+\   },
+\   'clojure/lein/deps': {
+\     'command': 'lein',
+\     'exec': '%c deps %a'
+\   },
+\   'clojure/lein/load-file': {
+\     'command': 'lein',
+\     'cmdopt': 'repl',
+\     'runner': 'concurrent_process',
+\     'runner/concurrent_process/load': '(load-file "%S")',
+\     'runner/concurrent_process/prompt': '.*=> '
 \   },
 \   'clojure/lein/run': {
 \     'command': 'lein',
@@ -3237,28 +3333,21 @@ let g:quickrun_config = {
 \     'command': 'lein',
 \     'exec': '%c test %a'
 \   },
-\   'clojure/lein/load-file': {
-\     'command': 'lein',
-\     'cmdopt': 'repl',
-\     'runner': 'concurrent_process',
-\     'runner/concurrent_process/load': '(load-file "%S")',
-\     'runner/concurrent_process/prompt': '.*=> '
-\   },
-\   'clojure/lein/eastwood': {
-\     'type': 'watchdogs_checker/eastwood'
-\   },
-\   'clojure/lein/deps': {
-\     'command': 'lein',
-\     'exec': '%c deps %a'
-\   },
 \   'clojure/neoclojure': {
 \     'runner': 'neoclojure',
 \     'command': 'dummy',
-\     'tempfile'  : '%{tempname()}.clj'
+\     'tempfile': '%{tempname()}.clj'
 \   },
-\   'lisp/sbcl': {
-\     'command': 'sbcl',
-\     'cmdopt': '--script',
+\   'clojure/watchdogs_checker': {
+\     'type': 'watchdogs_checker/clojure/eastwood'
+\   },
+\   'haskell/cabal': {
+\     'command': 'cabal',
+\     'exec': '%c build %o',
+\     'cmdopt': ''
+\   },
+\   'javascript': {
+\     'command': 'eslint'
 \   },
 \   'json/elasticsearch-curl': {
 \     'command': '$HOME/script/dev/elasticsearch/curl',
@@ -3277,10 +3366,21 @@ let g:quickrun_config = {
 \     'outputter/error/error': 'message'
 \   },
 \   'haskell': {'type': 'haskell/runghc'},
-\   'haskell/cabal': {
-\     'command': 'cabal',
-\     'exec': '%c build %o',
-\     'cmdopt': ''
+\   'lisp': {
+\     'type': 'lisp/sbcl/load'
+\   },
+\   'lisp/sbcl/script': {
+\     'command': 'sbcl',
+\     'cmdopt': '--script',
+\   },
+\   'lisp/sbcl/load': {
+\     'command': 'sbcl',
+\     'exec': '%c --noinform --quit --load %s',
+\   },
+\   'make': {
+\     'command': 'make',
+\     'exec': '%c %o',
+\     'outputter': 'buffer'
 \   },
 \   'markdown': {
 \     'command': '$HOME/bin/preview-markdown',
@@ -3290,6 +3390,10 @@ let g:quickrun_config = {
 \     'outputter/error/error': 'buffer',
 \   },
 \   'nox': {'type': 'nox/preview'},
+\   'nox/pandoc/markdown/html': {
+\     'command': 'pandoc',
+\     'exec': '%c --from markdown --to html %s'
+\   },
 \   'nox/preview': {
 \     'command': '$HOME/bin/preview-nox',
 \     'exec': '%c %s',
@@ -3297,45 +3401,24 @@ let g:quickrun_config = {
 \     'outputter/error/success': 'message',
 \     'outputter/error/error': 'buffer',
 \   },
-\   'nox/pandoc/markdown/html': {
-\     'command': 'pandoc',
-\     'exec': '%c --from markdown --to html %s'
-\   },
 \   'nox/remark.js': {
 \     'command': '$HOME/script/markdown/remark.js',
 \     'exec': '%c %s'
 \   },
-\   'text': {
-\     'type': 'text/split-sentences-jp'
-\   },
-\   'text/split-sentences-jp': {
-\     'runner': 'vimscript',
-\     'outputter': 'message',
-\     'exec': '%%s/。/\r/g'
-\   },
-\   'vim/watchdogs_checker': {
-\     'type': executable('vint') ? 'watchdogs_checker/vint' : '',
+\   'python2': {
+\     'command': 'python2',
+\     'exec': '%c %s',
 \   },
 \   'rust': {
 \     'type': 'rust/cargo/quickfix'
 \   },
-\   'rust/watchdogs_checker': {
-\     'type': 'rust/cargo/quickfix',
-\     'outputter': 'quickfix',
-\   },
-\   'rust/rustc': {
-\     'command': 'rustc',
-\     'exec': ['RUST_LOG=error %c %o %s -o %s:p:r', '%s:p:r %a'],
-\     'tempfile': '%{tempname()}.rs',
-\     'hook/sweep/files': '%S:p:r',
-\   },
-\   'rust/cargo/quickfix': {
-\     'command': 'cargo',
-\     'exec': 'RUST_LOG=error %c quickfix %o',
-\   },
 \   'rust/cargo/build': {
 \     'command': 'cargo',
 \     'exec': 'RUST_LOG=error %c build %o',
+\   },
+\   'rust/cargo/quickfix': {
+\     'command': 'cargo',
+\     'exec': '%c quickfix',
 \   },
 \   'rust/cargo/run': {
 \     'command': 'cargo',
@@ -3349,41 +3432,124 @@ let g:quickrun_config = {
 \     'command': 'cargo',
 \     'exec': ['RUST_LOG=error %c clean --target=debug', 'RUST_LOG=error %c +nightly clippy'],
 \   },
+\   'rust/rustc': {
+\     'command': 'rustc',
+\     'exec': ['RUST_LOG=error %c %o %s -o %s:p:r', '%s:p:r %a'],
+\     'tempfile': '%{tempname()}.rs',
+\     'hook/sweep/files': '%S:p:r',
+\   },
+\   'rust/rustc/syntax': {
+\     'command': 'rustc',
+\     'exec': ['RUST_LOG=error %c +nightly %o -Zparse-only %s'],
+\   },
+\   'rust/watchdogs_checker': {
+\     'type': 'watchdogs_checker/rust/update',
+\   },
+\   'scala': {
+\     'type': 'scala/sbt/test-compile'
+\   },
+\   'scala/sbt/compile': {
+\     'command': 'sbt',
+\     'cmdopt': '-Dsbt.log.noformat=true',
+\     'runner': 'concurrent_process',
+\     'runner/concurrent_process/load': 'compile',
+\     'runner/concurrent_process/prompt': '\[.*\] \$ '
+\   },
+\   'scala/sbt/sync/compile': {
+\     'command': 'sbt',
+\     'exec': '%c -Dsbt.log.noformat=true compile'
+\   },
+\   'scala/sbt/sync/test-compile': {
+\     'command': 'sbt',
+\     'exec': '%c -Dsbt.log.noformat=true test:compile',
+\     'outputter': 'quickfix'
+\   },
+\   'scala/sbt/test': {
+\     'command': 'sbt',
+\     'cmdopt': '-Dsbt.log.noformat=true',
+\     'runner': 'concurrent_process',
+\     'runner/concurrent_process/load': 'test',
+\     'runner/concurrent_process/prompt': '\[.*\] \$ '
+\   },
+\   'scala/sbt/test-compile': {
+\     'command': 'sbt',
+\     'cmdopt': '-Dsbt.log.noformat=true',
+\     'runner': 'concurrent_process',
+\     'runner/concurrent_process/load': 'test:compile',
+\     'runner/concurrent_process/prompt': '\[.*\] \$ '
+\   },
+\   'scala/watchdogs_checker': {
+\     'type': 'watchdogs_checker/scala/sbt'
+\   },
 \   'sh/watchdogs_checker': {
-\     'type': 'watchdogs_checker/shellcheck',
+\     'type': 'watchdogs_checker/sh/shellcheck',
 \   },
-\	  'watchdogs_checker/_' : {
-\     'outputter': 'quickfix',
-\	  	'outputter/quickfix/open_cmd': 'HierStart',
+\   'text': {
+\     'type': 'text/split-sentences-jp'
+\   },
+\   'text/split-sentences-jp': {
+\     'runner': 'vimscript',
+\     'outputter': 'message',
+\     'exec': '%%s/。/\r/g'
+\   },
+\   'vim/watchdogs_checker': {
+\     'type': 'watchdogs_checker/vim/vint',
+\   },
+\ } " jobs
+
+let s:watchdogs = {
+\   'watchdogs_checker/_': {
 \     'hook/echo/enable': 1,
-\     'hook/echo/output_failure': '> Some Errors Found!!!!',
-\     'hook/echo/output_success': '> No Errors Found.',
-\     'hook/qfstatusline_update/enable_exit': 1,
-\     'hook/qfstatusline_update/priority_exit': 4,
-\	  },
-\   'watchdogs_checker/vint' : {
-\     'command': 'vint',
-\     'exec': '%c %o %s:p',
+\     'outputter': 'quickfix',
+\     'outputter/quickfix/open_cmd': 'HierStart',
+\     'hook/lightline/enable': 1,
 \   },
-\   'watchdogs_checker/eastwood' : {
+\   'watchdogs_checker/clojure/eastwood': {
 \     'command': 'lein',
 \     'exec': '%c eastwood %a',
-\     'hook/nuko/enable' : 1,
+\     'hook/nuko/enable': 1,
 \   },
-\   'watchdogs_checker/shellcheck' : {
+\   'watchdogs_checker/rust/cargo/quickfix': {
+\     'command': 'cargo',
+\     'exec': '%c quickfix',
+\   },
+\   'watchdogs_checker/rust/rusty-tags': {
+\     'command': 'rusty-tags',
+\     'exec': '%c --quiet vi',
+\   },
+\   'watchdogs_checker/rust/update': {
+\     'command': '_',
+\     'exec': ['cargo quickfix', 'rusty-tags --quiet vi'],
+\   },
+\   'watchdogs_checker/scala/sbt': {
+\     'command': 'sbt',
+\     'cmdopt': '-Dsbt.log.noformat=true',
+\     'runner': 'concurrent_process',
+\     'runner/concurrent_process/load': 'test:compile',
+\     'runner/concurrent_process/prompt': '\[.*\] \$ '
+\   },
+\   'watchdogs_checker/sh/shellcheck': {
 \     'command': 'shellcheck',
 \     'exec': '%c %s'
 \   },
-\ }
+\   'watchdogs_checker/vim/vint': {
+\     'command': 'vint',
+\     'exec': '%c %s',
+\   },
+\ } " watchdogs
 
+
+" ↑の設定をマージしてセットする
+let g:quickrun_config = extend(extend(s:common, s:jobs, 'error'), s:watchdogs, 'error')
+
+
+" なにこれ?
 command! -bar -range QuicKill call quickrun#sweep_sessions()
 command! -bar InitQuickRun call quickrun#get_module('runner')
 
-let g:Qfstatusline#UpdateCmd = function('lightline#update')
 
-" http://d.hatena.ne.jp/osyo-manga/20120919/1348054752 - shabadou.vim を使って quickrun.vim をカスタマイズしよう - C++でゲームプログラミング
-
-let g:watchdogs_check_BufWritePost_enables = {'sh': 1, 'scala': 0, 'rust': 1}
+" ∪･ω･∪ - http://d.hatena.ne.jp/osyo-manga/20120919/1348054752 - shabadou.vim を使って quickrun.vim をカスタマイズしよう - C++でゲームプログラミング
+let g:watchdogs_check_BufWritePost_enables = {'_': 1, 'sh': 1, 'scala': 0, 'rust': 1, 'vim': 1}
 let g:watchdogs_check_CursorHold_enable = 0
 call watchdogs#setup(g:quickrun_config)
 
@@ -3400,7 +3566,8 @@ function! s:set_quickrun_config()
 
   let b:quickrun_config = {'type': l:name}
 endfunction
-autocmd Meowrc BufReadPost * call s:set_quickrun_config()
+" やっぱり、やめるとく?
+" autocmd Meowrc BufReadPost * call s:set_quickrun_config()
 
 
 " from ~/.vim/part/plugin/lexima.vim

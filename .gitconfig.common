@@ -70,7 +70,7 @@
 	# editor = panty summon -w -r git -b ':cd '$PWD'<CR>'
 	# editor = panty summon --nofork --role git --after 'xmessage important "$PANTY_WINDOWID"'
 	# editor = panty summon --nofork --role git --after '/tmp/xmosh/imp "$PANTY_WINDOWID"'
-	editor = panty summon --nofork --role git --after 'xc important "$PANTY_WINDOWID"' --send 'A'
+	editor = ~/bin/editor
 	excludesfile = ~/.gitignore
 	precomposeunicode = true # for Mac OS X - http://faithandbrave.hateblo.jp/entry/2016/02/08/144948
 

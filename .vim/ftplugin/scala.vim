@@ -1,3 +1,0 @@
-
-" inoremap <buffer> ,, {
-" inoremap <buffer> .. }

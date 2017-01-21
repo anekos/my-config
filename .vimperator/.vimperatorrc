@@ -152,7 +152,7 @@ set status=tabcount,bookmark,position,input,location
 set history=5000
 set newtab=all
 set hintchars=hjklasdfgyuiopqwertnmzxcvb
-set defsearch=google
+set defsearch=duckduckgo
 set noautocomplete
 
 " }}}
@@ -237,7 +237,7 @@ set! network.http.proxy.pipelining=true
 " タブの開閉編にアニメーション
 set! browser.tabs.animate=false
 
-set! network.dns.disableIPv6=false
+set! network.dns.disableIPv6=true
 
 " キャッシュの有効化
 set! browser.cache.memory.enable=true
@@ -311,6 +311,12 @@ nnoremap A :<C-u>nox<Space>wishlist<Space>
 " No mute
 nnoremap <C-m> <Cr>
 inoremap <C-m> <Cr>
+
+" copy
+nnoremap yy :copy %URL%<CR>
+nnoremap yd :copy nox-definition<CR>
+nnoremap yl :copy nox-link<CR>
+nnoremap yL :copy nox-list<CR>
 
 " }}}
 
@@ -418,11 +424,6 @@ nnoremap <Leader>ll :ril add<Space>
 nnoremap <Leader>ms :mystyle set<Space>
 nnoremap <Leader>mu :mystyle unset<Space>
 nnoremap <Leader>mp :mystyle permanent<CR>
-
-" copy
-nnoremap <Leader>cc :copy nox-link<CR>
-nnoremap <Leader>cd :copy nox-definition<CR>
-nnoremap <Leader>cl :copy nox-list<CR>
 
 " Site Search
 nnoremap <Leader>/ :sitesearch<Space>
