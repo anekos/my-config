@@ -77,7 +77,7 @@ command! -bar -nargs=* Chmod :call s:chmod(<q-args>)
 
 command! -nargs=* -bang -bar CopyCurrentFilepath :call s:copy_current_filepath('<bang>', <q-args>)
 
-function! s:copy_current_filepath (bang, modifier)
+function! s:copy_current_filepath(bang, modifier)
   let l:path = expand('%' . a:modifier)
   if a:bang ==# '!'
     let l:path = printf('L%d@%s', line('.'), l:path)
@@ -157,37 +157,41 @@ command! -bar -nargs=1 -complete=customlist,s:balloon_syntax_compl BallonSyntax 
 " }}}
 
 " テンキー表記を矢印に変換 {{{
-"
+
 function! s:kakuge_replace()
   " vint: -ProhibitCommandRelyOnUser -ProhibitCommandWithUnintendedSideEffect
-  silent! '<,'>s/1/↙/g
-  silent! '<,'>s/2/↓/g
-  silent! '<,'>s/3/↘/g
-  silent! '<,'>s/4/←/g
-  silent! '<,'>s/5/Ｎ/g
-  silent! '<,'>s/6/→/g
-  silent! '<,'>s/7/↖/g
-  silent! '<,'>s/8/↑/g
-  silent! '<,'>s/9/↗/g
-  silent! '<,'>s/p/Ｐ/gi
-  silent! '<,'>s/k/Ｋ/gi
-  silent! '<,'>s/h/Ｈ/gi
-  silent! '<,'>s/t/Ｔ/gi
+  silent! keeppatterns '<,'>s/1/↙/g
+  silent! keeppatterns '<,'>s/2/↓/g
+  silent! keeppatterns '<,'>s/3/↘/g
+  silent! keeppatterns '<,'>s/4/←/g
+  silent! keeppatterns '<,'>s/5/Ｎ/g
+  silent! keeppatterns '<,'>s/6/→/g
+  silent! keeppatterns '<,'>s/7/↖/g
+  silent! keeppatterns '<,'>s/8/↑/g
+  silent! keeppatterns '<,'>s/9/↗/g
+  silent! keeppatterns '<,'>s/p/Ｐ/gi
+  silent! keeppatterns '<,'>s/k/Ｋ/gi
+  silent! keeppatterns '<,'>s/h/Ｈ/gi
+  silent! keeppatterns '<,'>s/t/Ｔ/gi
   " vint: +ProhibitCommandRelyOnUser +ProhibitCommandWithUnintendedSideEffect
 endfunction
 
 command! -bar -range=% KakugeReplace call s:kakuge_replace()
+
 " }}}
 
 " らんらんコマンド (quickrun) {{{
 
 let s:anekos_fixed_run_command = 'QuickRun'
 
-function! s:fix_run_command(command)
+function! s:fix_run_command(command, for_global)
   let l:command = len(a:command) ? a:command : getreg(':')
 
-  let b:anekos_fixed_run_command = l:command
-  let s:anekos_fixed_run_command = l:command
+  if a:for_global
+    let s:anekos_fixed_run_command = l:command
+  else
+    let b:anekos_fixed_run_command = l:command
+  endif
   echo 'fixed: ' . l:command
 endfunction
 
@@ -197,11 +201,12 @@ function! s:run_run_command()
   execute l:cmd
 endfunction
 
-command! -nargs=* -range FixRunCommand call s:fix_run_command(<q-args>)
+command! -nargs=* -range FixRunCommand call s:fix_run_command(<q-args>, <bang>0)
 command! -bar -range RunRunCommand call s:run_run_command()
 
 noremap <Leader>r          :RunRunCommand<CR>
 noremap <Leader><Leader>r  :FixRunCommand<CR>
+noremap <Leader><Leader>R  :FixRunCommand!<CR>
 
 " }}}
 
@@ -363,56 +368,6 @@ function! s:kill_me_baby ()
 endfunction
 
 command! -bar KillMeBaby call s:kill_me_baby()
-
-" }}}
-
-" LongCat is Long {{{
-
-function! s:long_cat (n)
-  let l:top = copy([
-    \ '    /\___/\',
-    \ '   /       \',
-    \ '  |  o    o |',
-    \ '  \     #   |',
-    \ '   \   _|_ /',
-    \ '   /       \______',
-    \ '  / _______ ___   \',
-    \ '  |_____   \   \__/',
-    \ '   |    \__/'
-    \ ])
-
-  let l:middle = '   |       |'
-  let l:middle_c = '   |   %   |'
-
-  let l:bottom = copy([
-    \ '   /        \',
-    \ '  /   ____   \',
-    \ '  |  /    \  |',
-    \ '  | |      | |',
-    \ ' /  |      |  \',
-    \ ' \__/      \__/'
-    \ ])
-
-  let l:middles = []
-  if a:n =~# '^\d\+$'
-    for l:_ in range(1, str2nr(a:n))
-      let l:middles = add(l:middles, l:middle)
-    endfor
-  else
-    for l:i in range(0, len(a:n) - 1)
-      let l:middles = add(l:middles, substitute(l:middle_c, '%', a:n[l:i], ''))
-    endfor
-  endif
-
-  return extend(extend(l:top, l:middles), l:bottom)
-endfunction
-
-function! s:spawn_longcat (...)
-  let l:n = get(a:, 1, 20)
-  call append(line('.'), s:long_cat(l:n))
-endfunction
-
-command! -bar -nargs=? LongCat call s:spawn_longcat(<q-args>)
 
 " }}}
 
@@ -653,5 +608,49 @@ function! s:xmonad_refresh_window()
 endfunction
 
 command! -bar XMonadRefreshWindow call s:xmonad_refresh_window()
+
+" }}}
+
+" errorformat のテスト {{{
+
+function! s:test_errorformat(buf)
+  try
+    cgetexpr getbufline(a:buf, 1, '$')
+    " PP filter(getqflist(), 'v:val.lnum > 0')
+    PP getqflist()
+  catch
+    echo v:exception
+    echo v:throwpoint
+  finally
+  endtry
+endfunction
+
+command! -nargs=1 -complete=buffer TestErrorFormat call s:test_errorformat(<q-args>)
+
+" }}}
+
+" タグファイルを生成する {{{
+
+function! s:gen_tag_file__scala()
+  let l:cmdline = ['ctags', '--language-force=scala', '--recurse']
+
+  for l:dir in map(systemlist('find -name build.sbt'), "fnamemodify(v:val, ':h')")
+    call add(l:cmdline, l:dir . '/app')
+    call add(l:cmdline, l:dir . '/src')
+  endfor
+
+  return l:cmdline
+endfunction
+
+function! s:generate_tag_file(...)
+  let l:filetype = get(a:, 0, &filetype)
+  if len(l:filetype)
+    let l:filetype = &filetype
+  endif
+  let l:cmdline = call('s:gen_tag_file__' . l:filetype, [])
+  call system(join(l:cmdline, ' '))
+endfunction
+
+command! -nargs=? Gentags call s:generate_tag_file(<q-args>)
 
 " }}}

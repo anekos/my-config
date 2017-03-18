@@ -5,6 +5,24 @@
 
 # }}}
 
+# ENV {{{
+
+[ -f ~/.envrc ] && source ~/.envrc
+
+export LINAME_EDITOR='gvim -f'
+
+export DARCS_ALWAYS_COLOR=1
+
+case "$OSTYPE" in
+  linux*)
+    export TERMCMD=urxvt
+  ;;
+esac
+
+export ANSIBLE_COW_SELECTION=random
+
+# }}}
+
 # Util functions {{{
 
 function has-command () {
@@ -585,22 +603,6 @@ esac
 HISTFILE=~/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000 # 100万パワー
-
-# }}}
-
-# ENV {{{
-
-export LINAME_EDITOR='gvim -f'
-
-export DARCS_ALWAYS_COLOR=1
-
-case "$OSTYPE" in
-  linux*)
-    export TERMCMD=urxvt
-  ;;
-esac
-
-export ANSIBLE_COW_SELECTION=random
 
 # }}}
 

@@ -57,13 +57,13 @@
     'PDF.js',
     'prevent-pseudo-domain',
     'readitlater', // see archive
-    'refe',
+    // 'refe',
     'sbmcommentsviewer',
     // 'statstat',
     //'statusbar_panel',
     'stella',
     'slideshare',
-    'subscldr',
+    // 'subscldr',
     // 'piyo-ui',
     //'tab-history',
     //'tabsort',
@@ -348,8 +348,18 @@
           ['%URL%']
         ],
         [
+          'qutebrowser',
+          'qutebrowser',
+          ['%URL%']
+        ],
+        [
           'surf',
           'surf',
+          ['%URL%']
+        ],
+        [
+          'chrysoberyl',
+          'chrysoberyl',
           ['%URL%']
         ],
       ];
@@ -928,4 +938,22 @@
     );
   } // }}}
 
+  if (1) { // ページの画像っぽいのを全てひらく {{{
+    commands.addUserCommand(
+      ['chrysoberyl'],
+      'Open images on chrysoberyl',
+      function (args) {
+        let selector = args.length <= 0 ? 'img,a' : args.join(',');
+        io.system(
+          'chrysoberyl --min-width 200 --min-height 200 > /tmp/xmosh/vimperator-chrysoberyl.log',
+          Array.slice(content.document.querySelectorAll(selector)).filter(
+            function (it) /\.(jpg|jpeg|gif|png)$/.test(it.href) || (it.src && ((it.width * it.height) >= (320 * 240)))
+          ).map(
+            function (it) it.src || it.href).join('\n'));
+      },
+      {},
+      true
+    );
+  } // }}}
+  
 })();

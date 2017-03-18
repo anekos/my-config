@@ -1,0 +1,13 @@
+{
+  "host": "localhost",
+  "port": 9200,
+  "method": "GET",
+  "path": "/nox/_analyze",
+  "query": "pretty",
+  "data": {
+    "tokenizer": "uax_url_email",
+    "text": "foo bar http://example.com/foo?query test+dummy@example.com"
+  },
+  "filter": ".tokens[].token",
+  "jq": "jq -r"
+}

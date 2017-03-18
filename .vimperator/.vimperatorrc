@@ -564,8 +564,8 @@ abbr #v             #vimperator
 cabbr .fm           http://turntable.fm/metallum #turntablefm
 
 abbr -j .title      buffer.title
-abbr -j .url        liberator.plugins.bitly.jmp(buffer.URL)
-abbr -j .tu         '"' + abbreviations.get(modes.INSERT, '.title').text + '" - ' + liberator.plugins.bitly.jmp(buffer.URL)
+abbr -j .url        buffer.URL
+abbr -j .tu         '"' + abbreviations.get(modes.INSERT, '.title').text + '" - ' + buffer.URL
 abbr -j .impala     liberator.plugins.haneru.getc(buffer.URL)[0]
 
 abbr -j .song       let (song = liberator.plugins.mpdCurrentsong.API.getSongInfo()) <>{song.Title} / {song.Artist} #NowPlaying</>

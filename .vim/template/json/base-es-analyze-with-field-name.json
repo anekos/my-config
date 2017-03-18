@@ -1,0 +1,13 @@
+{
+  "host": "localhost",
+  "port": 9200,
+  "method": "GET",
+  "path": "/nox/_analyze",
+  "query": "pretty",
+  "data": {
+    "field": "content",
+    "text": "foo bar"
+  },
+  "filter": ".tokens[].token",
+  "jq": "jq -r"
+}

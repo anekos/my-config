@@ -58,7 +58,7 @@ endif
 
 if !isdirectory(expand('~/.vim-temp'))
   function s:initialize()
-    let l:dirs = split('backup swap undo view info')
+    let l:dirs = split('backup bakaup swap undo view info')
     for l:dir in l:dirs
       call mkdir(expand('~/.vim-temp/') . l:dir, 'p')
     endfor
@@ -81,6 +81,7 @@ let g:my_plugins = [
       \   {'name': 'fancy',    'path': 'vim-fancy'},
       \   {'name': 'colocolo', 'path': 'colocolo.vim'},
       \   {'name': 'guruguru', 'path': 'guruguru.vim'},
+      \   {'name': 'longcat',  'path': 'longcat.vim'},
       \ ]
 
 "}}}

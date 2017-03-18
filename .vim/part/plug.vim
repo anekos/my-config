@@ -183,6 +183,9 @@ Plug 'heavenshell/vim-slack'
 Plug 'kana/vim-operator-replace'        " yank しないで置換する: _{motion}
 Plug 'wellle/targets.vim'               " :help targets
 Plug 'tommcdo/vim-exchange'             " テキスト交換: n_cx{motion} n_cxx v_X n_cxc
+Plug 'kana/vim-operator-user'
+Plug 'rhysd/vim-operator-surround'      " 犬を囲んで○○する
+Plug 'osyo-manga/vim-operator-stay-cursor'
 
 " }}}
 
@@ -194,17 +197,18 @@ Plug 'rking/ag.vim'
 Plug 'tyru/chdir-proj-root.vim'
 Plug 'vim-scripts/gtags.vim'
 Plug 'thinca/vim-visualstar'
-if v:version >= 800
-  Plug 'osyo-manga/vim-over'
-endif
+" if v:version >= 800
+"   Plug 'osyo-manga/vim-over'
+" endif
 
 " }}}
 
 " Shell {{{
 
-Plug 'b4b4r07/vim-shellutils'
 Plug 'Shougo/vimshell'
+Plug 'b4b4r07/vim-shellutils'
 Plug 'mattn/vim-terminal'
+Plug 'koturn/vim-replica'
 
 " }}}
 
@@ -217,14 +221,6 @@ Plug 'kana/vim-niceblock'
 Plug 'kana/vim-submode'
 Plug 'thinca/vim-portal'                " n_<Leader>pb n_<Leader>po
 Plug 't9md/vim-textmanip'               " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
-
-" }}}
-
-" Operator{{{
-
-Plug 'kana/vim-operator-user'
-Plug 'rhysd/vim-operator-surround'      " 犬を囲んで○○する
-Plug 'osyo-manga/vim-operator-stay-cursor'
 
 " }}}
 
@@ -337,8 +333,9 @@ Plug 'tyru/open-browser.vim'            " カーソル下の URL をブラウザ
 Plug 'skywind3000/asyncrun.vim'         " 非同期でシェルのコマンドを実行し、quickfix ににゅるっと出す
 Plug 'haya14busa/vim-gtrans'            " Goooogle 翻訳
 Plug 'yami-beta/vim-responsive-tabline' " れすぽんちぶのタブ表示
-Plug 'yuttie/comfortable-motion.vim'    " 慣性スクロール
 Plug 'rhysd/inazuma.vim'                " 目をギョロギョロ(Inazumize)させながら、コードを読む
+Plug 'cocopon/vaffle.vim'               " ファァアイラァ (select = Space, new fIle = i, new fOlder = o)
+Plug 'aiya000/aho-bakaup.vim'           " アホやバカをサポートする
 
 " }}}
 

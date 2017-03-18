@@ -1,0 +1,29 @@
+[package]
+name = "FIXME"
+version = "0.1.0"
+authors = ["anekos <anekos@snca.net>"]
+repository = "https://github.com/anekos/FIXME"
+keywords = []
+license-file = "LICENSE"
+readme = "README.md"
+description = "FIXME"
+# documentation = "http://anekos.github.io/FIXME"
+
+[[bin]]
+name = "FIXME"
+doc = false
+
+[dependencies]
+argparse = "0.2"
+ctrlc = { version = "2.0", features = ["termination"] }
+env_logger = "0.3"
+inotify = "0.3"
+lazy_static = "0.2"
+libc = "0.2"
+log = "0.3"
+patrol = "0.3.0"
+rand = "0.3"
+rustc-serialize = "0.3"
+unix_socket = "0.5"
+walkdir = "1.0.3"
+x11 = { version = "2.11", features = ["xlib", "xinerama"] }

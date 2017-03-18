@@ -62,7 +62,7 @@ set undofile
 set undodir=~/.vim-temp/undo/
 
 " View ディレクトリ
-set viewdir=~/.vim-temp/view
+set viewdir=~/.vim-temp/view/
 
 " 補完設定
 set complete=.,b,w,u,k
@@ -183,7 +183,6 @@ set grepprg=grep\ -rnIH\ --exclude-dir=.svn\ --exclude-dir=.git\ --exclude='*.js
 
 " メッセージの省略
 set shortmess=tToOlmnrwxf
-
 
 " CursorHold とかに使われるね
 set updatetime=1000

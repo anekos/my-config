@@ -26,6 +26,11 @@ MeowtoCmd FileType c,cpp,rust,haskell,python nmap <buffer>K <Plug>(devdocs-under
 " ヘルプ以外の空バッファウィンドウを閉じる
 MeowtoCmd BufNewFile,WinEnter,BufEnter,BufWinEnter * KillMeBaby
 
+" ノーマルモードを抜けると、ドブネズミがジャンプ
+if executable('xgopherc')
+  MeowtoCmd InsertLeave * call system('xgopherc -j')
+endif
+
 " 縦タブラインはよこい
 if exists('&vtlc')
   MeowtoCmd TabEnter * if 3 <= tabpagenr('$') | set vtlc=20 showtabline=0 | else | set vtlc=0 showtabline=2 | endif
@@ -42,33 +47,58 @@ autocmd BufNewFile,BufRead *.rs                   setfiletype rust
 
 " ファイルが変更されていたらヤバくなる {{{
 
-let s:fcs_kill_targets = {}
+let s:fcs_timer_to_file = {}
+let s:fcs_file_to_pid = {}
+let s:fcs_gophers = {}
 
-function! s:prepare_to_kill_fcs_gopher(pid)
-  call system('xgopherc -m Gyaaa')
-  let l:timer = timer_start(2000, function('s:kill_fcs_gopher'), {'repeat': 1})
-  let s:fcs_kill_targets[l:timer] = a:pid
+function! s:on_fcs_reload()
+  let l:file = expand('%:p')
+  let l:pid = get(s:fcs_file_to_pid, l:file, '')
+  if len(l:pid)
+    unlet s:fcs_file_to_pid[l:file]
+    unlet s:fcs_gophers[l:pid]
+    call system('kill ' . shellescape(l:pid))
+  endif
 endfunction
 
-function! s:kill_fcs_gopher(timer)
-  call system(printf('kill %s', s:fcs_kill_targets[a:timer]))
-  unlet s:fcs_kill_targets[a:timer]
+function! s:on_fcs_say(timer)
+  echomsg string(a:timer)
+  let l:file = get(s:fcs_timer_to_file, a:timer, '')
+  if len(l:file)
+    let l:leaf = fnamemodify(l:file, ':p:h:t') . '/' . fnamemodify(l:file, ':p:t')
+    call system('xgopherc -m ' . shellescape(l:leaf))
+    unlet s:fcs_timer_to_file[a:timer]
+  endif
 endfunction
 
 function! s:on_file_change_shell(file)
   let v:fcs_choice = ''
-  if executable('xgopher')
-    let l:pid = system('xgopher & ; echo $!')
-    augroup meowrc_fcs
-      autocmd!
-      execute 'autocmd' 'BufReadPost' escape(a:file, ' ') printf('call s:prepare_to_kill_fcs_gopher(%d)', l:pid)
-    augroup END
-  else
+
+  if !executable('xgopher')
     call anekos#rainbow#start() " start osyo rainbow
+    return
   endif
+
+  let l:file = fnamemodify(a:file, ':p')
+  let l:pid = systemlist('xgopher & ; echo $!')[0]
+
+  let l:timer = timer_start(2000, function('s:on_fcs_say'), {'repeat': 1})
+
+  let s:fcs_file_to_pid[l:file] = l:pid
+  let s:fcs_timer_to_file[l:timer] = l:file
+  let s:fcs_gophers[l:pid] = 1
+endfunction
+
+function! s:on_fcs_quit()
+  for l:pid in keys(s:fcs_gophers)
+    call system(printf('kill %s', l:pid))
+  endfor
+  let s:gophers = {}
 endfunction
 
 autocmd Meowrc FileChangedShell * call s:on_file_change_shell(expand('<afile>'))
+autocmd Meowrc VimLeave * call s:on_fcs_quit()
+autocmd Meowrc BufReadPost * call s:on_fcs_reload()
 
 " }}}
 
@@ -115,6 +145,6 @@ function! s:wild_shot()
   endfor
 endfunction
 
-autocmd Meowrc BufReadPost * call s:wild_shot()
+" autocmd Meowrc BufReadPost * call s:wild_shot()
 
 " }}}

@@ -56,8 +56,8 @@ nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
 " for US KBD
 nnoremap <expr> ; quickrun#hook#lightline_quickrun_status#current() ==# '' ? 'q:' : ':'
 xnoremap <expr> ; quickrun#hook#lightline_quickrun_status#current() ==# '' ? 'q:' : ':'
-nnoremap q: :
-xnoremap q: :
+nnoremap <Leader>: :
+xnoremap <Leader>: :
 nnoremap : ;
 xnoremap : ;
 
@@ -132,9 +132,6 @@ nnoremap <expr> cd ":\<C-u>cd\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.
 
 " 改行
 nnoremap <CR> A<CR><Esc>
-
-" tag jump
-nnoremap <C-k> :<C-u>execute 'vertical' 'botright' 'stjump' expand('<cword>')<CR>
 
 " for vimeight
 vnoremap <C-a> <C-a>gv
@@ -218,8 +215,8 @@ nnoremap <Leader>nl :<C-u>NoxLocationOpen<CR>
 nnoremap <Leader>N :<C-u>NeoCompleteToggle<CR>
 
 " caw - commentout
-nmap <Leader>cc <plug>(caw:tildepos:toggle)
-vmap <Leader>cc <plug>(caw:tildepos:toggle)
+nmap <Leader>cc <plug>(caw:hatpos:toggle)
+vmap <Leader>cc <plug>(caw:hatpos:toggle)
 
 " }}}
 
@@ -235,8 +232,9 @@ autocmd Meowrc CmdwinEnter * call s:initialize_command_window()
 
 function! s:initialize_command_window()
   if getcmdwintype() ==# ':'
-    inoremap <buffer><expr> <C-o>       ambicmd#expand('')
-    " inoremap <buffer><expr> <CR>        ambicmd#expand("\<Esc>\<CR>")
+    inoremap <buffer><expr> <C-o>       ambicmd#expand("\<C-]>")
+    inoremap <buffer><expr> <Space>     ambicmd#expand("\<C-]>\<Space>")
+    inoremap <buffer><expr> <CR>        ambicmd#expand("\<C-]>\<CR>")
   endif
 
   inoremap <buffer>       <C-g>       <C-c><C-c>
@@ -256,7 +254,9 @@ function! s:initialize_command_window()
   iabbrev <buffer><expr>  n.          bufname('#')
   iabbrev <buffer><expr>  e.          expand(input('Filename modifier: ', '#:'))
   iabbrev <buffer><expr>  h.          expand('#:h')
+  iabbrev <buffer><expr>  p.          expand('#:p')
   iabbrev <buffer><expr>  /.          @/
+  iabbrev <buffer><expr>  c.          @+
 
   " 閉じる
   nnoremap <buffer>       <C-g>       <C-c><C-c>
@@ -429,8 +429,8 @@ call submode#enter_with('scroll', 'n', '', ',ss', '<C-d>:redraw<CR>')
 call submode#leave_with('scroll', 'n', '', '<Esc>')
 " call submode#map       ('scroll', 'n', '', 'j', '<C-d>:redraw<CR>')
 " call submode#map       ('scroll', 'n', '', 'k', '<C-u>:redraw<CR>')
-call submode#map       ('scroll', 'n', '', 'j', ':call comfortable_motion#flick(100)<CR>:redraw<CR>')
-call submode#map       ('scroll', 'n', '', 'k', ':call comfortable_motion#flick(-100)<CR>:redraw<CR>')
+call submode#map       ('scroll', 'n', '', 'j', '<C-d>')
+call submode#map       ('scroll', 'n', '', 'k', '<C-u>')
 call submode#map       ('scroll', 'n', '', 'a', ':let &l:scroll -= 3<CR>')
 call submode#map       ('scroll', 'n', '', 's', ':let &l:scroll += 3<CR>')
 

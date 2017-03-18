@@ -1,0 +1,9 @@
+    "aggs": {
+      "per-month": {
+        "date_histogram": {
+          "field": "createdAt",
+          "interval": "month",
+          "format": "yyyy/MM/dd"
+        }
+      }
+    }

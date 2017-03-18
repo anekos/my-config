@@ -17,7 +17,7 @@ if executable('sfind')
   let g:unite_source_rec_async_command = ['sfind']
 endif
 
-" Initialize {{{
+" Initialize (マッピングとかする) {{{
 
 function! s:init_unite()
   let l:runrun_register = {'is_selectable': 0}
@@ -28,8 +28,10 @@ function! s:init_unite()
 
   call unite#custom_action('command', 'runrun-register', l:runrun_register)
 
+  call unite#custom#source('file_mru', 'ignore_pattern', '')
+  call unite#custom#source('directory_mru', 'ignore_pattern', '')
   call unite#custom_source('buffer,file,file_rec,file_rec/async', 'sorters', 'sorter_word')
-  call unite#custom#source('file,file_rec,directory,directory_rec,file_mru,directory_mru,panty_file_mru,panty_directory_mru', 'converters', ['converter_shorten_path'])
+  call unite#custom#source('file,file_rec,directory,directory_rec,neomru,directory_mru,panty_file_mru,panty_directory_mru', 'converters', ['converter_shorten_path'])
 endfunction
 
 function! s:init_unite_buffer()
@@ -58,6 +60,9 @@ function! s:init_unite_buffer()
 
   inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
   nnoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+
+  inoremap <silent><buffer><expr> <C-j> unite#do_action('execute')
+  nnoremap <silent><buffer><expr> <C-j> unite#do_action('execute')
 endfunction
 
 call s:init_unite()
@@ -73,11 +78,11 @@ let s:open_panty = {
 
 function! s:open_panty.func(candidate)
   let l:path = a:candidate.word
-       if isdirectory(l:path)
-         execute 'cd' l:path
-       else
-         execute 'edit' l:path
-       endif
+  if isdirectory(l:path)
+    execute 'cd' l:path
+  else
+    execute 'edit' l:path
+  endif
 endfunction
 
 call unite#custom#action('file,directory', 'open_panty', s:open_panty)
@@ -104,9 +109,9 @@ let g:unite_source_alias_aliases = {
 
 " mappings {{{
 
-nnoremap <Space>          :<C-u>Unite -buffer-name=files -default-action=switch buffer file_rec/async file/new<CR>
-nnoremap <Leader><Space>  :<C-u>Unite -buffer-name=files -default-action=tabswitch buffer file_rec/async file/new<CR>
-nnoremap <Leader>uuu      :<C-u>Unite<Space><C-f>
+nnoremap <Space>          :<C-u>Unite -buffer-name=files -default-action=switch buffer file_rec/async<CR>
+nnoremap <Leader><Space>  :<C-u>Unite -buffer-name=files -default-action=tabswitch buffer file_rec/async<CR>
+nnoremap <Leader>uu       :<C-u>Unite<Space><C-f>
 nnoremap <Leader>U        :<C-u>UniteResume<CR>
 nnoremap <Leader>b        :<C-u>Unite -buffer-name=files buffer<CR>
 nnoremap <Leader>B        :<C-u>Unite tab:no-current<CR>
@@ -122,7 +127,7 @@ nnoremap <Leader>ug       :<C-u>Unite file_rec/git<CR>
 nnoremap <Leader>uh       :<C-u>Unite history/command -default-action=edit<CR>
 nnoremap <Leader>u:       :<C-u>Unite history/command -default-action=edit<CR>
 nnoremap <Leader>uj       :<C-u>Unite -auto-preview jump<CR>
-nnoremap <Leader>uJ       :<C-u>Unite junkfile<CR>
+nnoremap <Leader>uk       :<C-u>Unite tag<CR>
 nnoremap <Leader>ul       :<C-u>Unite -no-quit -auto-preview location_list<CR>
 nnoremap <Leader>uL       :<C-u>Unite line<CR>
 nnoremap <Leader>um       :<C-u>Unite -unique -buffer-name=files file_mru<CR>
@@ -133,8 +138,8 @@ nnoremap <Leader>ur       :<C-u>Unite quickrun_config -default-action=set_global
 nnoremap <Leader>uR       :<C-u>Unite quickrun_config -default-action=execute<CR>
 nnoremap <Leader>us       :<C-u>Unite file_rec:~/.vim/part<CR>
 nnoremap <Leader>uS       :<C-u>Unite located_session<CR>
+nnoremap <Leader>ut       :<C-u>Unite sonictemplate<CR>
 nnoremap <Leader>uT       :<C-u>Unite tab:no-current<CR>
-nnoremap <Leader>ut       :<C-u>Unite tag<CR>
 nnoremap <Leader>uv       :<C-u>Unite variable<CR>
 nnoremap <Leader>uw       :<C-u>Unite window:no-current<CR>
 nnoremap <Leader>uy       :<C-u>Unite history/yank<CR>
@@ -147,6 +152,8 @@ nnoremap <Leader>up :UnitePrevious<CR>
 nnoremap <Leader>un :UniteNext<CR>
 nnoremap <Leader>uf :UniteFirst<CR>
 nnoremap <Leader>ul :UniteLast<CR>
+
+noremap <expr> <Leader>k ":\<C-u>Unite tag -immediately -input=" . escape(expand('<cword>'), ' ') . '<CR>'
 
 " }}}
 

@@ -140,7 +140,7 @@ function! g:myline.charCode()
 endfunction
 
 function! g:myline.errors()
-  let l:num = len(getqflist())
+  let l:num = len(filter(getqflist(), 'v:val.bufnr > 0 && v:val.lnum > 0'))
   if l:num > 0
     return printf('%d errors', l:num)
   else

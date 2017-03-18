@@ -1,0 +1,13 @@
+{
+  "host": "localhost",
+  "port": 9200,
+  "method": "GET",
+  "path": "/nox/_search",
+  "query": "pretty",
+  "data": {
+    "query": {
+    }
+  },
+  "filter": ".",
+  "jq": "jq -r"
+}

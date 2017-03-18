@@ -58,7 +58,7 @@ endif
 
 if !isdirectory(expand('~/.vim-temp'))
   function s:initialize()
-    let l:dirs = split('backup swap undo view info')
+    let l:dirs = split('backup bakaup swap undo view info')
     for l:dir in l:dirs
       call mkdir(expand('~/.vim-temp/') . l:dir, 'p')
     endfor
@@ -81,6 +81,7 @@ let g:my_plugins = [
       \   {'name': 'fancy',    'path': 'vim-fancy'},
       \   {'name': 'colocolo', 'path': 'colocolo.vim'},
       \   {'name': 'guruguru', 'path': 'guruguru.vim'},
+      \   {'name': 'longcat',  'path': 'longcat.vim'},
       \ ]
 
 "}}}
@@ -114,6 +115,13 @@ let g:loaded_zipPlugin          = 1
 " let g:loaded_netrwPlugin        = 1
 " let g:loaded_netrwSettings      = 1
 " let g:loaded_rrhelper           = 1
+
+" }}}
+
+" {{{
+
+let g:bakaup_auto_backup = 1
+let g:bakaup_backup_dir	= expand('~/.vim-temp/bakaup/')
 
 " }}}
 
@@ -652,6 +660,12 @@ augroup END
 
 " }}}
 
+" sokoban {{{
+
+let g:SokobanLevelDirectory = expand('~/.vim-temp/plug/sokoban.vim/')
+
+" }}}
+
 " sonictemplate {{{
 
 let g:sonictemplate_vim_template_dir = ['$HOME/.vim/template']
@@ -741,7 +755,7 @@ let g:vimfiler_as_default_explorer = 1
 " VimShell {{{
 
 " VimShell に選択文字列を送信
-function! s:vs_send_string (line1, line2)
+function! s:vs_send_string(line1, line2)
   let l:string = ''
   for l:line in getline(a:line1, a:line2)
     let l:string .= substitute(l:line, '^\s\+|\s\+$', ' ', 'g')
@@ -1059,6 +1073,9 @@ Plug 'heavenshell/vim-slack'
 Plug 'kana/vim-operator-replace'        " yank しないで置換する: _{motion}
 Plug 'wellle/targets.vim'               " :help targets
 Plug 'tommcdo/vim-exchange'             " テキスト交換: n_cx{motion} n_cxx v_X n_cxc
+Plug 'kana/vim-operator-user'
+Plug 'rhysd/vim-operator-surround'      " 犬を囲んで○○する
+Plug 'osyo-manga/vim-operator-stay-cursor'
 
 " }}}
 
@@ -1070,17 +1087,18 @@ Plug 'rking/ag.vim'
 Plug 'tyru/chdir-proj-root.vim'
 Plug 'vim-scripts/gtags.vim'
 Plug 'thinca/vim-visualstar'
-if v:version >= 800
-  Plug 'osyo-manga/vim-over'
-endif
+" if v:version >= 800
+"   Plug 'osyo-manga/vim-over'
+" endif
 
 " }}}
 
 " Shell {{{
 
-Plug 'b4b4r07/vim-shellutils'
 Plug 'Shougo/vimshell'
+Plug 'b4b4r07/vim-shellutils'
 Plug 'mattn/vim-terminal'
+Plug 'koturn/vim-replica'
 
 " }}}
 
@@ -1093,14 +1111,6 @@ Plug 'kana/vim-niceblock'
 Plug 'kana/vim-submode'
 Plug 'thinca/vim-portal'                " n_<Leader>pb n_<Leader>po
 Plug 't9md/vim-textmanip'               " テキストを選択したブロックで移動する:  <C-h> <C-j> <C-k> <C-l>
-
-" }}}
-
-" Operator{{{
-
-Plug 'kana/vim-operator-user'
-Plug 'rhysd/vim-operator-surround'      " 犬を囲んで○○する
-Plug 'osyo-manga/vim-operator-stay-cursor'
 
 " }}}
 
@@ -1213,8 +1223,9 @@ Plug 'tyru/open-browser.vim'            " カーソル下の URL をブラウザ
 Plug 'skywind3000/asyncrun.vim'         " 非同期でシェルのコマンドを実行し、quickfix ににゅるっと出す
 Plug 'haya14busa/vim-gtrans'            " Goooogle 翻訳
 Plug 'yami-beta/vim-responsive-tabline' " れすぽんちぶのタブ表示
-Plug 'yuttie/comfortable-motion.vim'    " 慣性スクロール
 Plug 'rhysd/inazuma.vim'                " 目をギョロギョロ(Inazumize)させながら、コードを読む
+Plug 'cocopon/vaffle.vim'               " ファァアイラァ (select = Space, new fIle = i, new fOlder = o)
+Plug 'aiya000/aho-bakaup.vim'           " アホやバカをサポートする
 
 " }}}
 
@@ -1379,7 +1390,7 @@ set undofile
 set undodir=~/.vim-temp/undo/
 
 " View ディレクトリ
-set viewdir=~/.vim-temp/view
+set viewdir=~/.vim-temp/view/
 
 " 補完設定
 set complete=.,b,w,u,k
@@ -1501,7 +1512,6 @@ set grepprg=grep\ -rnIH\ --exclude-dir=.svn\ --exclude-dir=.git\ --exclude='*.js
 " メッセージの省略
 set shortmess=tToOlmnrwxf
 
-
 " CursorHold とかに使われるね
 set updatetime=1000
 
@@ -1594,8 +1604,8 @@ nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
 " for US KBD
 nnoremap <expr> ; quickrun#hook#lightline_quickrun_status#current() ==# '' ? 'q:' : ':'
 xnoremap <expr> ; quickrun#hook#lightline_quickrun_status#current() ==# '' ? 'q:' : ':'
-nnoremap q: :
-xnoremap q: :
+nnoremap <Leader>: :
+xnoremap <Leader>: :
 nnoremap : ;
 xnoremap : ;
 
@@ -1670,9 +1680,6 @@ nnoremap <expr> cd ":\<C-u>cd\<Space>" . fnamemodify(get(t:, 'cwd', '~/'), ':~:.
 
 " 改行
 nnoremap <CR> A<CR><Esc>
-
-" tag jump
-nnoremap <C-k> :<C-u>execute 'vertical' 'botright' 'stjump' expand('<cword>')<CR>
 
 " for vimeight
 vnoremap <C-a> <C-a>gv
@@ -1756,8 +1763,8 @@ nnoremap <Leader>nl :<C-u>NoxLocationOpen<CR>
 nnoremap <Leader>N :<C-u>NeoCompleteToggle<CR>
 
 " caw - commentout
-nmap <Leader>cc <plug>(caw:tildepos:toggle)
-vmap <Leader>cc <plug>(caw:tildepos:toggle)
+nmap <Leader>cc <plug>(caw:hatpos:toggle)
+vmap <Leader>cc <plug>(caw:hatpos:toggle)
 
 " }}}
 
@@ -1773,8 +1780,9 @@ autocmd Meowrc CmdwinEnter * call s:initialize_command_window()
 
 function! s:initialize_command_window()
   if getcmdwintype() ==# ':'
-    inoremap <buffer><expr> <C-o>       ambicmd#expand('')
-    " inoremap <buffer><expr> <CR>        ambicmd#expand("\<Esc>\<CR>")
+    inoremap <buffer><expr> <C-o>       ambicmd#expand("\<C-]>")
+    inoremap <buffer><expr> <Space>     ambicmd#expand("\<C-]>\<Space>")
+    inoremap <buffer><expr> <CR>        ambicmd#expand("\<C-]>\<CR>")
   endif
 
   inoremap <buffer>       <C-g>       <C-c><C-c>
@@ -1794,7 +1802,9 @@ function! s:initialize_command_window()
   iabbrev <buffer><expr>  n.          bufname('#')
   iabbrev <buffer><expr>  e.          expand(input('Filename modifier: ', '#:'))
   iabbrev <buffer><expr>  h.          expand('#:h')
+  iabbrev <buffer><expr>  p.          expand('#:p')
   iabbrev <buffer><expr>  /.          @/
+  iabbrev <buffer><expr>  c.          @+
 
   " 閉じる
   nnoremap <buffer>       <C-g>       <C-c><C-c>
@@ -1966,8 +1976,8 @@ call submode#enter_with('scroll', 'n', '', ',ss', '<C-d>:redraw<CR>')
 call submode#leave_with('scroll', 'n', '', '<Esc>')
 " call submode#map       ('scroll', 'n', '', 'j', '<C-d>:redraw<CR>')
 " call submode#map       ('scroll', 'n', '', 'k', '<C-u>:redraw<CR>')
-call submode#map       ('scroll', 'n', '', 'j', ':call comfortable_motion#flick(100)<CR>:redraw<CR>')
-call submode#map       ('scroll', 'n', '', 'k', ':call comfortable_motion#flick(-100)<CR>:redraw<CR>')
+call submode#map       ('scroll', 'n', '', 'j', '<C-d>')
+call submode#map       ('scroll', 'n', '', 'k', '<C-u>')
 call submode#map       ('scroll', 'n', '', 'a', ':let &l:scroll -= 3<CR>')
 call submode#map       ('scroll', 'n', '', 's', ':let &l:scroll += 3<CR>')
 
@@ -2063,7 +2073,7 @@ command! -bar -nargs=* Chmod :call s:chmod(<q-args>)
 
 command! -nargs=* -bang -bar CopyCurrentFilepath :call s:copy_current_filepath('<bang>', <q-args>)
 
-function! s:copy_current_filepath (bang, modifier)
+function! s:copy_current_filepath(bang, modifier)
   let l:path = expand('%' . a:modifier)
   if a:bang ==# '!'
     let l:path = printf('L%d@%s', line('.'), l:path)
@@ -2143,37 +2153,41 @@ command! -bar -nargs=1 -complete=customlist,s:balloon_syntax_compl BallonSyntax 
 " }}}
 
 " テンキー表記を矢印に変換 {{{
-"
+
 function! s:kakuge_replace()
   " vint: -ProhibitCommandRelyOnUser -ProhibitCommandWithUnintendedSideEffect
-  silent! '<,'>s/1/↙/g
-  silent! '<,'>s/2/↓/g
-  silent! '<,'>s/3/↘/g
-  silent! '<,'>s/4/←/g
-  silent! '<,'>s/5/Ｎ/g
-  silent! '<,'>s/6/→/g
-  silent! '<,'>s/7/↖/g
-  silent! '<,'>s/8/↑/g
-  silent! '<,'>s/9/↗/g
-  silent! '<,'>s/p/Ｐ/gi
-  silent! '<,'>s/k/Ｋ/gi
-  silent! '<,'>s/h/Ｈ/gi
-  silent! '<,'>s/t/Ｔ/gi
+  silent! keeppatterns '<,'>s/1/↙/g
+  silent! keeppatterns '<,'>s/2/↓/g
+  silent! keeppatterns '<,'>s/3/↘/g
+  silent! keeppatterns '<,'>s/4/←/g
+  silent! keeppatterns '<,'>s/5/Ｎ/g
+  silent! keeppatterns '<,'>s/6/→/g
+  silent! keeppatterns '<,'>s/7/↖/g
+  silent! keeppatterns '<,'>s/8/↑/g
+  silent! keeppatterns '<,'>s/9/↗/g
+  silent! keeppatterns '<,'>s/p/Ｐ/gi
+  silent! keeppatterns '<,'>s/k/Ｋ/gi
+  silent! keeppatterns '<,'>s/h/Ｈ/gi
+  silent! keeppatterns '<,'>s/t/Ｔ/gi
   " vint: +ProhibitCommandRelyOnUser +ProhibitCommandWithUnintendedSideEffect
 endfunction
 
 command! -bar -range=% KakugeReplace call s:kakuge_replace()
+
 " }}}
 
 " らんらんコマンド (quickrun) {{{
 
 let s:anekos_fixed_run_command = 'QuickRun'
 
-function! s:fix_run_command(command)
+function! s:fix_run_command(command, for_global)
   let l:command = len(a:command) ? a:command : getreg(':')
 
-  let b:anekos_fixed_run_command = l:command
-  let s:anekos_fixed_run_command = l:command
+  if a:for_global
+    let s:anekos_fixed_run_command = l:command
+  else
+    let b:anekos_fixed_run_command = l:command
+  endif
   echo 'fixed: ' . l:command
 endfunction
 
@@ -2183,11 +2197,12 @@ function! s:run_run_command()
   execute l:cmd
 endfunction
 
-command! -nargs=* -range FixRunCommand call s:fix_run_command(<q-args>)
+command! -nargs=* -range FixRunCommand call s:fix_run_command(<q-args>, <bang>0)
 command! -bar -range RunRunCommand call s:run_run_command()
 
 noremap <Leader>r          :RunRunCommand<CR>
 noremap <Leader><Leader>r  :FixRunCommand<CR>
+noremap <Leader><Leader>R  :FixRunCommand!<CR>
 
 " }}}
 
@@ -2349,56 +2364,6 @@ function! s:kill_me_baby ()
 endfunction
 
 command! -bar KillMeBaby call s:kill_me_baby()
-
-" }}}
-
-" LongCat is Long {{{
-
-function! s:long_cat (n)
-  let l:top = copy([
-    \ '    /\___/\',
-    \ '   /       \',
-    \ '  |  o    o |',
-    \ '  \     #   |',
-    \ '   \   _|_ /',
-    \ '   /       \______',
-    \ '  / _______ ___   \',
-    \ '  |_____   \   \__/',
-    \ '   |    \__/'
-    \ ])
-
-  let l:middle = '   |       |'
-  let l:middle_c = '   |   %   |'
-
-  let l:bottom = copy([
-    \ '   /        \',
-    \ '  /   ____   \',
-    \ '  |  /    \  |',
-    \ '  | |      | |',
-    \ ' /  |      |  \',
-    \ ' \__/      \__/'
-    \ ])
-
-  let l:middles = []
-  if a:n =~# '^\d\+$'
-    for l:_ in range(1, str2nr(a:n))
-      let l:middles = add(l:middles, l:middle)
-    endfor
-  else
-    for l:i in range(0, len(a:n) - 1)
-      let l:middles = add(l:middles, substitute(l:middle_c, '%', a:n[l:i], ''))
-    endfor
-  endif
-
-  return extend(extend(l:top, l:middles), l:bottom)
-endfunction
-
-function! s:spawn_longcat (...)
-  let l:n = get(a:, 1, 20)
-  call append(line('.'), s:long_cat(l:n))
-endfunction
-
-command! -bar -nargs=? LongCat call s:spawn_longcat(<q-args>)
 
 " }}}
 
@@ -2642,6 +2607,50 @@ command! -bar XMonadRefreshWindow call s:xmonad_refresh_window()
 
 " }}}
 
+" errorformat のテスト {{{
+
+function! s:test_errorformat(buf)
+  try
+    cgetexpr getbufline(a:buf, 1, '$')
+    " PP filter(getqflist(), 'v:val.lnum > 0')
+    PP getqflist()
+  catch
+    echo v:exception
+    echo v:throwpoint
+  finally
+  endtry
+endfunction
+
+command! -nargs=1 -complete=buffer TestErrorFormat call s:test_errorformat(<q-args>)
+
+" }}}
+
+" タグファイルを生成する {{{
+
+function! s:gen_tag_file__scala()
+  let l:cmdline = ['ctags', '--language-force=scala', '--recurse']
+
+  for l:dir in map(systemlist('find -name build.sbt'), "fnamemodify(v:val, ':h')")
+    call add(l:cmdline, l:dir . '/app')
+    call add(l:cmdline, l:dir . '/src')
+  endfor
+
+  return l:cmdline
+endfunction
+
+function! s:generate_tag_file(...)
+  let l:filetype = get(a:, 0, &filetype)
+  if len(l:filetype)
+    let l:filetype = &filetype
+  endif
+  let l:cmdline = call('s:gen_tag_file__' . l:filetype, [])
+  call system(join(l:cmdline, ' '))
+endfunction
+
+command! -nargs=? Gentags call s:generate_tag_file(<q-args>)
+
+" }}}
+
 
 " from ~/.vim/part/autocmd.vim
 "=============================================
@@ -2671,6 +2680,11 @@ MeowtoCmd FileType c,cpp,rust,haskell,python nmap <buffer>K <Plug>(devdocs-under
 " ヘルプ以外の空バッファウィンドウを閉じる
 MeowtoCmd BufNewFile,WinEnter,BufEnter,BufWinEnter * KillMeBaby
 
+" ノーマルモードを抜けると、ドブネズミがジャンプ
+if executable('xgopherc')
+  MeowtoCmd InsertLeave * call system('xgopherc -j')
+endif
+
 " 縦タブラインはよこい
 if exists('&vtlc')
   MeowtoCmd TabEnter * if 3 <= tabpagenr('$') | set vtlc=20 showtabline=0 | else | set vtlc=0 showtabline=2 | endif
@@ -2687,33 +2701,58 @@ autocmd BufNewFile,BufRead *.rs                   setfiletype rust
 
 " ファイルが変更されていたらヤバくなる {{{
 
-let s:fcs_kill_targets = {}
+let s:fcs_timer_to_file = {}
+let s:fcs_file_to_pid = {}
+let s:fcs_gophers = {}
 
-function! s:prepare_to_kill_fcs_gopher(pid)
-  call system('xgopherc -m Gyaaa')
-  let l:timer = timer_start(2000, function('s:kill_fcs_gopher'), {'repeat': 1})
-  let s:fcs_kill_targets[l:timer] = a:pid
+function! s:on_fcs_reload()
+  let l:file = expand('%:p')
+  let l:pid = get(s:fcs_file_to_pid, l:file, '')
+  if len(l:pid)
+    unlet s:fcs_file_to_pid[l:file]
+    unlet s:fcs_gophers[l:pid]
+    call system('kill ' . shellescape(l:pid))
+  endif
 endfunction
 
-function! s:kill_fcs_gopher(timer)
-  call system(printf('kill %s', s:fcs_kill_targets[a:timer]))
-  unlet s:fcs_kill_targets[a:timer]
+function! s:on_fcs_say(timer)
+  echomsg string(a:timer)
+  let l:file = get(s:fcs_timer_to_file, a:timer, '')
+  if len(l:file)
+    let l:leaf = fnamemodify(l:file, ':p:h:t') . '/' . fnamemodify(l:file, ':p:t')
+    call system('xgopherc -m ' . shellescape(l:leaf))
+    unlet s:fcs_timer_to_file[a:timer]
+  endif
 endfunction
 
 function! s:on_file_change_shell(file)
   let v:fcs_choice = ''
-  if executable('xgopher')
-    let l:pid = system('xgopher & ; echo $!')
-    augroup meowrc_fcs
-      autocmd!
-      execute 'autocmd' 'BufReadPost' escape(a:file, ' ') printf('call s:prepare_to_kill_fcs_gopher(%d)', l:pid)
-    augroup END
-  else
+
+  if !executable('xgopher')
     call anekos#rainbow#start() " start osyo rainbow
+    return
   endif
+
+  let l:file = fnamemodify(a:file, ':p')
+  let l:pid = systemlist('xgopher & ; echo $!')[0]
+
+  let l:timer = timer_start(2000, function('s:on_fcs_say'), {'repeat': 1})
+
+  let s:fcs_file_to_pid[l:file] = l:pid
+  let s:fcs_timer_to_file[l:timer] = l:file
+  let s:fcs_gophers[l:pid] = 1
+endfunction
+
+function! s:on_fcs_quit()
+  for l:pid in keys(s:fcs_gophers)
+    call system(printf('kill %s', l:pid))
+  endfor
+  let s:gophers = {}
 endfunction
 
 autocmd Meowrc FileChangedShell * call s:on_file_change_shell(expand('<afile>'))
+autocmd Meowrc VimLeave * call s:on_fcs_quit()
+autocmd Meowrc BufReadPost * call s:on_fcs_reload()
 
 " }}}
 
@@ -2760,7 +2799,7 @@ function! s:wild_shot()
   endfor
 endfunction
 
-autocmd Meowrc BufReadPost * call s:wild_shot()
+" autocmd Meowrc BufReadPost * call s:wild_shot()
 
 " }}}
 
@@ -2944,7 +2983,7 @@ function! g:myline.charCode()
 endfunction
 
 function! g:myline.errors()
-  let l:num = len(getqflist())
+  let l:num = len(filter(getqflist(), 'v:val.bufnr > 0 && v:val.lnum > 0'))
   if l:num > 0
     return printf('%d errors', l:num)
   else
@@ -3018,7 +3057,7 @@ if executable('sfind')
   let g:unite_source_rec_async_command = ['sfind']
 endif
 
-" Initialize {{{
+" Initialize (マッピングとかする) {{{
 
 function! s:init_unite()
   let l:runrun_register = {'is_selectable': 0}
@@ -3029,8 +3068,10 @@ function! s:init_unite()
 
   call unite#custom_action('command', 'runrun-register', l:runrun_register)
 
+  call unite#custom#source('file_mru', 'ignore_pattern', '')
+  call unite#custom#source('directory_mru', 'ignore_pattern', '')
   call unite#custom_source('buffer,file,file_rec,file_rec/async', 'sorters', 'sorter_word')
-  call unite#custom#source('file,file_rec,directory,directory_rec,file_mru,directory_mru,panty_file_mru,panty_directory_mru', 'converters', ['converter_shorten_path'])
+  call unite#custom#source('file,file_rec,directory,directory_rec,neomru,directory_mru,panty_file_mru,panty_directory_mru', 'converters', ['converter_shorten_path'])
 endfunction
 
 function! s:init_unite_buffer()
@@ -3059,6 +3100,9 @@ function! s:init_unite_buffer()
 
   inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
   nnoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+
+  inoremap <silent><buffer><expr> <C-j> unite#do_action('execute')
+  nnoremap <silent><buffer><expr> <C-j> unite#do_action('execute')
 endfunction
 
 call s:init_unite()
@@ -3074,11 +3118,11 @@ let s:open_panty = {
 
 function! s:open_panty.func(candidate)
   let l:path = a:candidate.word
-       if isdirectory(l:path)
-         execute 'cd' l:path
-       else
-         execute 'edit' l:path
-       endif
+  if isdirectory(l:path)
+    execute 'cd' l:path
+  else
+    execute 'edit' l:path
+  endif
 endfunction
 
 call unite#custom#action('file,directory', 'open_panty', s:open_panty)
@@ -3105,9 +3149,9 @@ let g:unite_source_alias_aliases = {
 
 " mappings {{{
 
-nnoremap <Space>          :<C-u>Unite -buffer-name=files -default-action=switch buffer file_rec/async file/new<CR>
-nnoremap <Leader><Space>  :<C-u>Unite -buffer-name=files -default-action=tabswitch buffer file_rec/async file/new<CR>
-nnoremap <Leader>uuu      :<C-u>Unite<Space><C-f>
+nnoremap <Space>          :<C-u>Unite -buffer-name=files -default-action=switch buffer file_rec/async<CR>
+nnoremap <Leader><Space>  :<C-u>Unite -buffer-name=files -default-action=tabswitch buffer file_rec/async<CR>
+nnoremap <Leader>uu       :<C-u>Unite<Space><C-f>
 nnoremap <Leader>U        :<C-u>UniteResume<CR>
 nnoremap <Leader>b        :<C-u>Unite -buffer-name=files buffer<CR>
 nnoremap <Leader>B        :<C-u>Unite tab:no-current<CR>
@@ -3123,7 +3167,7 @@ nnoremap <Leader>ug       :<C-u>Unite file_rec/git<CR>
 nnoremap <Leader>uh       :<C-u>Unite history/command -default-action=edit<CR>
 nnoremap <Leader>u:       :<C-u>Unite history/command -default-action=edit<CR>
 nnoremap <Leader>uj       :<C-u>Unite -auto-preview jump<CR>
-nnoremap <Leader>uJ       :<C-u>Unite junkfile<CR>
+nnoremap <Leader>uk       :<C-u>Unite tag<CR>
 nnoremap <Leader>ul       :<C-u>Unite -no-quit -auto-preview location_list<CR>
 nnoremap <Leader>uL       :<C-u>Unite line<CR>
 nnoremap <Leader>um       :<C-u>Unite -unique -buffer-name=files file_mru<CR>
@@ -3134,8 +3178,8 @@ nnoremap <Leader>ur       :<C-u>Unite quickrun_config -default-action=set_global
 nnoremap <Leader>uR       :<C-u>Unite quickrun_config -default-action=execute<CR>
 nnoremap <Leader>us       :<C-u>Unite file_rec:~/.vim/part<CR>
 nnoremap <Leader>uS       :<C-u>Unite located_session<CR>
+nnoremap <Leader>ut       :<C-u>Unite sonictemplate<CR>
 nnoremap <Leader>uT       :<C-u>Unite tab:no-current<CR>
-nnoremap <Leader>ut       :<C-u>Unite tag<CR>
 nnoremap <Leader>uv       :<C-u>Unite variable<CR>
 nnoremap <Leader>uw       :<C-u>Unite window:no-current<CR>
 nnoremap <Leader>uy       :<C-u>Unite history/yank<CR>
@@ -3148,6 +3192,8 @@ nnoremap <Leader>up :UnitePrevious<CR>
 nnoremap <Leader>un :UniteNext<CR>
 nnoremap <Leader>uf :UniteFirst<CR>
 nnoremap <Leader>ul :UniteLast<CR>
+
+noremap <expr> <Leader>k ":\<C-u>Unite tag -immediately -input=" . escape(expand('<cword>'), ' ') . '<CR>'
 
 " }}}
 
@@ -3347,35 +3393,31 @@ let s:jobs = {
 \     'cmdopt': ''
 \   },
 \   'javascript': {
-\     'command': 'eslint'
+\     'type': 'javascript/eslint',
 \   },
-\   'json/elasticsearch-curl': {
-\     'command': '$HOME/script/dev/elasticsearch/curl',
+\   'javascript/eslint': {
+\     'command': 'eslint',
+\     'exec': '%c --format unix %s',
+\   },
+\   'json': {
+\     'type': 'json/elasticsearch/curl',
+\   },
+\   'json/elasticsearch/curl': {
+\     'command': expand('~/script/dev/elasticsearch/curl'),
 \     'exec': '%c %s',
-\     'outputter': 'error',
-\     'outputter/buffer/filetype': 'json',
-\     'outputter/error/success': 'buffer',
-\     'outputter/error/error': 'message'
-\   },
-\   'json/elasticsearch-search': {
-\     'command': expand('~/script/dev/elasticsearch/search-with-json'),
-\     'exec': '%c %a %s',
-\     'outputter': 'error',
-\     'outputter/buffer/filetype': 'json',
-\     'outputter/error/success': 'buffer',
-\     'outputter/error/error': 'message'
+\     'outputter': 'buffer'
 \   },
 \   'haskell': {'type': 'haskell/runghc'},
 \   'lisp': {
 \     'type': 'lisp/sbcl/load'
 \   },
-\   'lisp/sbcl/script': {
-\     'command': 'sbcl',
-\     'cmdopt': '--script',
-\   },
 \   'lisp/sbcl/load': {
 \     'command': 'sbcl',
 \     'exec': '%c --noinform --quit --load %s',
+\   },
+\   'lisp/sbcl/script': {
+\     'command': 'sbcl',
+\     'cmdopt': '--script',
 \   },
 \   'make': {
 \     'command': 'make',
@@ -3409,16 +3451,32 @@ let s:jobs = {
 \     'command': 'python2',
 \     'exec': '%c %s',
 \   },
+\   'ruby/script': {
+\     'command': 'ruby',
+\     'exec': '%c %s %a',
+\   },
 \   'rust': {
-\     'type': 'rust/cargo/quickfix'
+\     'type': 'rust/cargo/build'
 \   },
 \   'rust/cargo/build': {
 \     'command': 'cargo',
 \     'exec': 'RUST_LOG=error %c build %o',
 \   },
+\   'rust/cargo/clean': {
+\     'command': 'cargo',
+\     'exec': '%c clean %a',
+\   },
+\   'rust/cargo/clippy': {
+\     'command': 'cargo',
+\     'exec': ['RUST_LOG=error %c clean --target=debug', 'RUST_LOG=error %c +nightly clippy'],
+\   },
 \   'rust/cargo/quickfix': {
 \     'command': 'cargo',
 \     'exec': '%c quickfix',
+\   },
+\   'rust/cargo/release': {
+\     'command': 'cargo',
+\     'exec': 'RUST_LOG=error %c build --release %o',
 \   },
 \   'rust/cargo/run': {
 \     'command': 'cargo',
@@ -3428,9 +3486,9 @@ let s:jobs = {
 \     'command': 'cargo',
 \     'exec': '%c script %s %a',
 \   },
-\   'rust/clippy': {
+\   'rust/cargo/test': {
 \     'command': 'cargo',
-\     'exec': ['RUST_LOG=error %c clean --target=debug', 'RUST_LOG=error %c +nightly clippy'],
+\     'exec': '%c test %o',
 \   },
 \   'rust/rustc': {
 \     'command': 'rustc',
@@ -3447,6 +3505,13 @@ let s:jobs = {
 \   },
 \   'scala': {
 \     'type': 'scala/sbt/test-compile'
+\   },
+\   'scala/sbt/clean': {
+\     'command': 'sbt',
+\     'cmdopt': '-Dsbt.log.noformat=true',
+\     'runner': 'concurrent_process',
+\     'runner/concurrent_process/load': 'clean',
+\     'runner/concurrent_process/prompt': '\[.*\] \$ '
 \   },
 \   'scala/sbt/compile': {
 \     'command': 'sbt',
@@ -3477,6 +3542,13 @@ let s:jobs = {
 \     'runner': 'concurrent_process',
 \     'runner/concurrent_process/load': 'test:compile',
 \     'runner/concurrent_process/prompt': '\[.*\] \$ '
+\   },
+\   'scala/tags': {
+\     'command': 'bash',
+\     'exec': "%c -c 'ctags --language-force=scala --recurse'",
+\     'outputter': 'error',
+\     'outputter/error/success': 'null',
+\     'outputter/error/error': 'message',
 \   },
 \   'scala/watchdogs_checker': {
 \     'type': 'watchdogs_checker/scala/sbt'
@@ -3530,7 +3602,7 @@ let s:watchdogs = {
 \   },
 \   'watchdogs_checker/sh/shellcheck': {
 \     'command': 'shellcheck',
-\     'exec': '%c %s'
+\     'exec': '%c --format gcc %s'
 \   },
 \   'watchdogs_checker/vim/vint': {
 \     'command': 'vint',

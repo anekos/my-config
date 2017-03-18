@@ -1,0 +1,2 @@
+  "filter": ".aggregations[].buckets[] | [.key_as_string, .doc_count | tostring] | join(\"\\t\")",
+

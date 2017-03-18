@@ -79,35 +79,31 @@ let s:jobs = {
 \     'cmdopt': ''
 \   },
 \   'javascript': {
-\     'command': 'eslint'
+\     'type': 'javascript/eslint',
 \   },
-\   'json/elasticsearch-curl': {
-\     'command': '$HOME/script/dev/elasticsearch/curl',
+\   'javascript/eslint': {
+\     'command': 'eslint',
+\     'exec': '%c --format unix %s',
+\   },
+\   'json': {
+\     'type': 'json/elasticsearch/curl',
+\   },
+\   'json/elasticsearch/curl': {
+\     'command': expand('~/script/dev/elasticsearch/curl'),
 \     'exec': '%c %s',
-\     'outputter': 'error',
-\     'outputter/buffer/filetype': 'json',
-\     'outputter/error/success': 'buffer',
-\     'outputter/error/error': 'message'
-\   },
-\   'json/elasticsearch-search': {
-\     'command': expand('~/script/dev/elasticsearch/search-with-json'),
-\     'exec': '%c %a %s',
-\     'outputter': 'error',
-\     'outputter/buffer/filetype': 'json',
-\     'outputter/error/success': 'buffer',
-\     'outputter/error/error': 'message'
+\     'outputter': 'buffer'
 \   },
 \   'haskell': {'type': 'haskell/runghc'},
 \   'lisp': {
 \     'type': 'lisp/sbcl/load'
 \   },
-\   'lisp/sbcl/script': {
-\     'command': 'sbcl',
-\     'cmdopt': '--script',
-\   },
 \   'lisp/sbcl/load': {
 \     'command': 'sbcl',
 \     'exec': '%c --noinform --quit --load %s',
+\   },
+\   'lisp/sbcl/script': {
+\     'command': 'sbcl',
+\     'cmdopt': '--script',
 \   },
 \   'make': {
 \     'command': 'make',
@@ -141,16 +137,32 @@ let s:jobs = {
 \     'command': 'python2',
 \     'exec': '%c %s',
 \   },
+\   'ruby/script': {
+\     'command': 'ruby',
+\     'exec': '%c %s %a',
+\   },
 \   'rust': {
-\     'type': 'rust/cargo/quickfix'
+\     'type': 'rust/cargo/build'
 \   },
 \   'rust/cargo/build': {
 \     'command': 'cargo',
 \     'exec': 'RUST_LOG=error %c build %o',
 \   },
+\   'rust/cargo/clean': {
+\     'command': 'cargo',
+\     'exec': '%c clean %a',
+\   },
+\   'rust/cargo/clippy': {
+\     'command': 'cargo',
+\     'exec': ['RUST_LOG=error %c clean --target=debug', 'RUST_LOG=error %c +nightly clippy'],
+\   },
 \   'rust/cargo/quickfix': {
 \     'command': 'cargo',
 \     'exec': '%c quickfix',
+\   },
+\   'rust/cargo/release': {
+\     'command': 'cargo',
+\     'exec': 'RUST_LOG=error %c build --release %o',
 \   },
 \   'rust/cargo/run': {
 \     'command': 'cargo',
@@ -160,9 +172,9 @@ let s:jobs = {
 \     'command': 'cargo',
 \     'exec': '%c script %s %a',
 \   },
-\   'rust/clippy': {
+\   'rust/cargo/test': {
 \     'command': 'cargo',
-\     'exec': ['RUST_LOG=error %c clean --target=debug', 'RUST_LOG=error %c +nightly clippy'],
+\     'exec': '%c test %o',
 \   },
 \   'rust/rustc': {
 \     'command': 'rustc',
@@ -179,6 +191,13 @@ let s:jobs = {
 \   },
 \   'scala': {
 \     'type': 'scala/sbt/test-compile'
+\   },
+\   'scala/sbt/clean': {
+\     'command': 'sbt',
+\     'cmdopt': '-Dsbt.log.noformat=true',
+\     'runner': 'concurrent_process',
+\     'runner/concurrent_process/load': 'clean',
+\     'runner/concurrent_process/prompt': '\[.*\] \$ '
 \   },
 \   'scala/sbt/compile': {
 \     'command': 'sbt',
@@ -209,6 +228,13 @@ let s:jobs = {
 \     'runner': 'concurrent_process',
 \     'runner/concurrent_process/load': 'test:compile',
 \     'runner/concurrent_process/prompt': '\[.*\] \$ '
+\   },
+\   'scala/tags': {
+\     'command': 'bash',
+\     'exec': "%c -c 'ctags --language-force=scala --recurse'",
+\     'outputter': 'error',
+\     'outputter/error/success': 'null',
+\     'outputter/error/error': 'message',
 \   },
 \   'scala/watchdogs_checker': {
 \     'type': 'watchdogs_checker/scala/sbt'
@@ -262,7 +288,7 @@ let s:watchdogs = {
 \   },
 \   'watchdogs_checker/sh/shellcheck': {
 \     'command': 'shellcheck',
-\     'exec': '%c %s'
+\     'exec': '%c --format gcc %s'
 \   },
 \   'watchdogs_checker/vim/vint': {
 \     'command': 'vint',

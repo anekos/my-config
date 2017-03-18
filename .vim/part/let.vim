@@ -28,6 +28,13 @@ let g:loaded_zipPlugin          = 1
 
 " }}}
 
+" {{{
+
+let g:bakaup_auto_backup = 1
+let g:bakaup_backup_dir	= expand('~/.vim-temp/bakaup/')
+
+" }}}
+
 " Aref {{{
 
 let g:aref_web_source = {
@@ -563,6 +570,12 @@ augroup END
 
 " }}}
 
+" sokoban {{{
+
+let g:SokobanLevelDirectory = expand('~/.vim-temp/plug/sokoban.vim/')
+
+" }}}
+
 " sonictemplate {{{
 
 let g:sonictemplate_vim_template_dir = ['$HOME/.vim/template']
@@ -652,7 +665,7 @@ let g:vimfiler_as_default_explorer = 1
 " VimShell {{{
 
 " VimShell に選択文字列を送信
-function! s:vs_send_string (line1, line2)
+function! s:vs_send_string(line1, line2)
   let l:string = ''
   for l:line in getline(a:line1, a:line2)
     let l:string .= substitute(l:line, '^\s\+|\s\+$', ' ', 'g')
