@@ -42,7 +42,6 @@ let g:lightline = {
 \   'active': {
 \     'left': [
 \       ['readonly', 'filename', 'modified'],
-\       ['git_branch', 'git_traffic', 'git_status'],
 \       ['errors', 'quickrun'],
 \     ],
 \     'right': [
@@ -60,9 +59,7 @@ let g:lightline = {
 \     'fileencoding': 'w150 strlen(&fileencoding) ? &fileencoding : &encoding',
 \     'pokemon': 'pokemon#getdaze',
 \     'charcode': 'w150 g:myline.charCode',
-\     'git_branch': "w200 gita#statusline#preset('branch_fancy')",
-\     'git_traffic': "w200 gita#statusline#preset('traffic_fancy')",
-\     'git_status': "w200 gita#statusline#preset('status')",
+\     'git': 'w200 g:myline.git',
 \   },
 \   'component_expand': {
 \     'errors': 'g:myline.errors',
@@ -146,6 +143,12 @@ function! g:myline.errors()
   else
     return ''
   endif
+endfunction
+
+function! g:myline.git()
+  let l:components = [gina#component#repo#branch(), gina#component#status#preset('fancy'), gina#component#traffic#preset('fancy')]
+  let l:text = join(filter(l:components, "v:val !~# '^ *$'"), ' ')
+  return l:text
 endfunction
 
 " FIXME

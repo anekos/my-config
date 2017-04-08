@@ -224,6 +224,16 @@ endfunction
 
 command! -bar GoogleSuggestToggle call s:menu_google_suggest()
 
+function! s:menu_scrolloff()
+  if &scrolloff == 0
+    set scrolloff=666
+  else
+    set scrolloff=0
+  endif
+endfunction
+
+command! -bar ScrollOff call s:menu_scrolloff()
+
 " }}}
 
 " 色々なコマンドのメニュー {{{
@@ -251,7 +261,8 @@ function! s:init_unite_something_menu()
     \   'table-mode'              : 'TableModeToggle',
     \   'select-font'             : 'emenu Edit.Select\ Font\.\.\.',
     \   'sushi'                   : 'set statusline=%!sushibar#sushibar()',
-    \   'brightest'               : 'BrightestToggle'
+    \   'brightest'               : 'BrightestToggle',
+    \   'scrolloff'               : 'ScrollOff'
     \}
 
   " 上記で登録したコマンドを評価する関数

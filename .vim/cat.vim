@@ -1197,7 +1197,7 @@ Plug 'rhysd/git-messenger.vim'
 Plug 'rhysd/committia.vim'
 Plug 'tpope/vim-fugitive'
 if v:version >= 740
-  Plug 'lambdalisue/vim-gita'
+  Plug 'lambdalisue/gina.vim'
 endif
 
 " }}}
@@ -1412,7 +1412,7 @@ set cmdheight=1
 set nrformats=
 
 " スクロール余白
-set scrolloff=0
+set scrolloff=5
 
 " 貼り付け時の挙動
 set nopaste
@@ -2518,48 +2518,6 @@ command! -bar CleanupWindows call s:CleanupNotMicrosofts()
 
 " }}}
 
-" Swap ファイルいちいち聞いてくんなやなやなやー {{{
-
-" Pakuri from 翻車魚 https://github.com/thinca/config/blob/21a7d5f25bfa7d6c015870808a55a65183d01485/dotfiles/dot.vim/vimrc#L566
-
-augroup meowrc-swapfile
-  autocmd!
-  autocmd SwapExists * call s:on_SwapExists()
-augroup END
-
-function! s:on_SwapExists() abort
-  if !filereadable(expand('<afile>'))
-    let v:swapchoice = 'd'
-    return
-  endif
-  let v:swapchoice = get(b:, 'swapfile_choice', 'o')
-  unlet! b:swapfile_choice
-  if v:swapchoice !=# 'd'
-    let b:swapfile_exists = 1
-  endif
-endfunction
-
-command! SwapfileRecovery call s:swapfile_recovery()
-command! SwapfileDelete call s:swapfile_delete()
-
-function! s:swapfile_recovery() abort
-  if get(b:, 'swapfile_exists', 0)
-    let b:swapfile_choice = 'r'
-    unlet b:swapfile_exists
-    edit
-  endif
-endfunction
-
-function! s:swapfile_delete() abort
-  if get(b:, 'swapfile_exists', 0)
-    let b:swapfile_choice = 'd'
-    unlet b:swapfile_exists
-    edit
-  endif
-endfunction
-
-" }}}
-
 " which して開く {{{
 
 " FUXME Wonderful dependencism
@@ -2803,6 +2761,64 @@ endfunction
 
 " }}}
 
+" 読取専用でピカらせる {{{
+
+let s:ro_pika_ticktock = 0
+let s:ro_pika_timer = 0
+
+function! s:Mega(...)
+  execute 'colorscheme' (s:ro_pika_ticktock ? 'gruvbox' : 'morning')
+  let s:ro_pika_ticktock = !s:ro_pika_ticktock
+endfunction
+
+augroup meowrc-swapfile
+  autocmd!
+  autocmd SwapExists * call s:on_SwapExists()
+augroup END
+
+function! s:on_SwapExists() abort
+  if &readonly && &buftype ==# '' && !s:ro_pika_timer
+    let s:ro_pika_timer = timer_start(100, funcref('s:Mega'), {'repeat': -1})
+  endif
+endfunction
+
+" }}}
+
+" あやぴライン {{{
+
+" Pakurized from https://github.com/ayapi/dotfiles/blob/4d7c187b7d62f43d7ed4458927bc0f59a5cded61/.vimrc#L469
+
+" Cursor Vertical Guide
+" ------------------------------------
+"     console.log('ayp')
+" ^   ^        ^
+" 3   2        1
+" 
+" when cursor on and after 2 (like 1), hide vertical guide line
+" when cursor in range 2-3, show vertical guide line
+" ---------------------------------
+set nocursorcolumn
+
+function! s:vertical_guide() abort
+  if &buftype !=# '' || &filetype ==# 'markdown'
+    setlocal nocursorcolumn
+    return
+  endif
+  if indent('.') >= virtcol('.') - 1
+    setlocal cursorcolumn
+  else
+    setlocal nocursorcolumn
+  endif
+endfunction
+
+augroup vertguide
+  autocmd!
+  autocmd CursorMoved,CursorMovedI,WinEnter * call s:vertical_guide()
+  autocmd WinLeave,BufWinLeave * setlocal nocursorcolumn
+augroup END
+
+" }}}
+
 
 " from ~/.vim/part/term.vim
 "=========================
@@ -2885,7 +2901,6 @@ let g:lightline = {
 \   'active': {
 \     'left': [
 \       ['readonly', 'filename', 'modified'],
-\       ['git_branch', 'git_traffic', 'git_status'],
 \       ['errors', 'quickrun'],
 \     ],
 \     'right': [
@@ -2903,9 +2918,7 @@ let g:lightline = {
 \     'fileencoding': 'w150 strlen(&fileencoding) ? &fileencoding : &encoding',
 \     'pokemon': 'pokemon#getdaze',
 \     'charcode': 'w150 g:myline.charCode',
-\     'git_branch': "w200 gita#statusline#preset('branch_fancy')",
-\     'git_traffic': "w200 gita#statusline#preset('traffic_fancy')",
-\     'git_status': "w200 gita#statusline#preset('status')",
+\     'git': 'w200 g:myline.git',
 \   },
 \   'component_expand': {
 \     'errors': 'g:myline.errors',
@@ -2989,6 +3002,12 @@ function! g:myline.errors()
   else
     return ''
   endif
+endfunction
+
+function! g:myline.git()
+  let l:components = [gina#component#repo#branch(), gina#component#status#preset('fancy'), gina#component#traffic#preset('fancy')]
+  let l:text = join(filter(l:components, "v:val !~# '^ *$'"), ' ')
+  return l:text
 endfunction
 
 " FIXME
@@ -3264,6 +3283,16 @@ endfunction
 
 command! -bar GoogleSuggestToggle call s:menu_google_suggest()
 
+function! s:menu_scrolloff()
+  if &scrolloff == 0
+    set scrolloff=666
+  else
+    set scrolloff=0
+  endif
+endfunction
+
+command! -bar ScrollOff call s:menu_scrolloff()
+
 " }}}
 
 " 色々なコマンドのメニュー {{{
@@ -3291,7 +3320,8 @@ function! s:init_unite_something_menu()
     \   'table-mode'              : 'TableModeToggle',
     \   'select-font'             : 'emenu Edit.Select\ Font\.\.\.',
     \   'sushi'                   : 'set statusline=%!sushibar#sushibar()',
-    \   'brightest'               : 'BrightestToggle'
+    \   'brightest'               : 'BrightestToggle',
+    \   'scrolloff'               : 'ScrollOff'
     \}
 
   " 上記で登録したコマンドを評価する関数
@@ -3467,6 +3497,10 @@ let s:jobs = {
 \     'exec': '%c clean %a',
 \   },
 \   'rust/cargo/clippy': {
+\     'command': 'cargo',
+\     'exec': 'RUST_LOG=error %c +nightly clippy',
+\   },
+\   'rust/cargo/clippy/clean': {
 \     'command': 'cargo',
 \     'exec': ['RUST_LOG=error %c clean --target=debug', 'RUST_LOG=error %c +nightly clippy'],
 \   },

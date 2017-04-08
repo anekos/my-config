@@ -154,6 +154,10 @@ let s:jobs = {
 \   },
 \   'rust/cargo/clippy': {
 \     'command': 'cargo',
+\     'exec': 'RUST_LOG=error %c +nightly clippy',
+\   },
+\   'rust/cargo/clippy/clean': {
+\     'command': 'cargo',
 \     'exec': ['RUST_LOG=error %c clean --target=debug', 'RUST_LOG=error %c +nightly clippy'],
 \   },
 \   'rust/cargo/quickfix': {

@@ -307,7 +307,7 @@ Plug 'rhysd/git-messenger.vim'
 Plug 'rhysd/committia.vim'
 Plug 'tpope/vim-fugitive'
 if v:version >= 740
-  Plug 'lambdalisue/vim-gita'
+  Plug 'lambdalisue/gina.vim'
 endif
 
 " }}}

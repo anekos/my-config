@@ -148,3 +148,61 @@ endfunction
 " autocmd Meowrc BufReadPost * call s:wild_shot()
 
 " }}}
+
+" 読取専用でピカらせる {{{
+
+let s:ro_pika_ticktock = 0
+let s:ro_pika_timer = 0
+
+function! s:Mega(...)
+  execute 'colorscheme' (s:ro_pika_ticktock ? 'gruvbox' : 'morning')
+  let s:ro_pika_ticktock = !s:ro_pika_ticktock
+endfunction
+
+augroup meowrc-swapfile
+  autocmd!
+  autocmd SwapExists * call s:on_SwapExists()
+augroup END
+
+function! s:on_SwapExists() abort
+  if &readonly && &buftype ==# '' && !s:ro_pika_timer
+    let s:ro_pika_timer = timer_start(100, funcref('s:Mega'), {'repeat': -1})
+  endif
+endfunction
+
+" }}}
+
+" あやぴライン {{{
+
+" Pakurized from https://github.com/ayapi/dotfiles/blob/4d7c187b7d62f43d7ed4458927bc0f59a5cded61/.vimrc#L469
+
+" Cursor Vertical Guide
+" ------------------------------------
+"     console.log('ayp')
+" ^   ^        ^
+" 3   2        1
+" 
+" when cursor on and after 2 (like 1), hide vertical guide line
+" when cursor in range 2-3, show vertical guide line
+" ---------------------------------
+set nocursorcolumn
+
+function! s:vertical_guide() abort
+  if &buftype !=# '' || &filetype ==# 'markdown'
+    setlocal nocursorcolumn
+    return
+  endif
+  if indent('.') >= virtcol('.') - 1
+    setlocal cursorcolumn
+  else
+    setlocal nocursorcolumn
+  endif
+endfunction
+
+augroup vertguide
+  autocmd!
+  autocmd CursorMoved,CursorMovedI,WinEnter * call s:vertical_guide()
+  autocmd WinLeave,BufWinLeave * setlocal nocursorcolumn
+augroup END
+
+" }}}

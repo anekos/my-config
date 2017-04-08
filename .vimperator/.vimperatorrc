@@ -222,6 +222,9 @@ set! javascript.options.xml.chrome=true
 " 中クリックでクリップボードの URL を開かないように
 set! middlemouse.contentLoadURL=false
 
+" ダウンロードディレクトリ
+set! browser.download.dir=/tmp/xmosh/
+
 " }}}
 
 " Pref (firefox 高速化？)                                                                {{{
@@ -237,7 +240,7 @@ set! network.http.proxy.pipelining=true
 " タブの開閉編にアニメーション
 set! browser.tabs.animate=false
 
-set! network.dns.disableIPv6=true
+set! network.dns.disableIPv6=false
 
 " キャッシュの有効化
 set! browser.cache.memory.enable=true
@@ -532,6 +535,7 @@ nnoremap gnp P
 silent qmark b https://pinboard.in/
 silent qmark c https://www.google.com/calendar/render?pli=1#main_7
 silent qmark d https://drive.google.com/
+silent qmark D https://drive.google.com/drive/u/0/photos
 silent qmark e https://www.evernote.com/Home.action
 silent qmark f https://www.feedeen.com/d
 silent qmark g https://mail.google.com/mail/#mbox

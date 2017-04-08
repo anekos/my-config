@@ -84,7 +84,7 @@ set cmdheight=1
 set nrformats=
 
 " スクロール余白
-set scrolloff=0
+set scrolloff=5
 
 " 貼り付け時の挙動
 set nopaste
